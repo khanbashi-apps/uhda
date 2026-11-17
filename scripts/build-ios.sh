@@ -16,7 +16,7 @@ pb NSCameraUsageDescription "لتصوير الفواتير والضمانات و
 pb CFBundleDisplayName "عُهدة"
 pb CFBundleDevelopmentRegion "ar"
 /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VER" "$P" 2>/dev/null || pb CFBundleShortVersionString "$VER"
-npx @capacitor/assets generate --ios --iconBackgroundColor '#3B2A8C' --splashBackgroundColor '#0B0A18' --splashBackgroundColorDark '#0B0A18' || echo "!! تعذّر توليد الأيقونات، سيستمر البناء بالأيقونة الافتراضية"
+npx @capacitor/assets generate --ios --iconBackgroundColor '#3B2A8C' --splashBackgroundColor '#F4F2FB' --splashBackgroundColorDark '#F4F2FB' || echo "!! تعذّر توليد الأيقونات، سيستمر البناء بالأيقونة الافتراضية"
 npx cap sync ios
 if [ -d ios/App/App.xcworkspace ]; then SRC=(-workspace ios/App/App.xcworkspace); else SRC=(-project ios/App/App.xcodeproj); fi
 xcodebuild "${SRC[@]}" -scheme App -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' \

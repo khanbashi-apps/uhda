@@ -30,10 +30,10 @@ const html = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
-<meta name="theme-color" content="#0D1014">
+<meta name="theme-color" content="#EFF2F5">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="عُهدة">
 <title>عُهدة · Uhda ${VER}</title>
 <link rel="manifest" href="manifest.webmanifest">
@@ -43,8 +43,12 @@ const html = `<!doctype html>
 ${helmet.trim()}
 <style>
 /* تشغيل مستقل: ملء الشاشة + منع التكبير والتحديد */
-html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;background:#0D1014;-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
-body:has(.app:not(.dark)){background:#EFF2F5}
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+/* أعلى الشاشة بلون الصفحة وأسفلها بلون شريط التنقل، فلا يظهر شريط فارغ تحت التطبيق */
+body{background:linear-gradient(#EFF2F5 0 50%,#FFFFFF 50% 100%)}
+body:has(.app.dark){background:linear-gradient(#0D1014 0 50%,#161B21 50% 100%)}
+body:has(.app:not(.dark) .actionbar),body:has(.app:not(.dark) .ob){background:#EFF2F5}
+body:has(.app.dark .actionbar),body:has(.app.dark .ob){background:#0D1014}
 body:has(.app.dark .splash){background:#0B0A18}
 body:has(.app:not(.dark) .splash){background:#F4F2FB}
 #root{position:fixed;top:env(safe-area-inset-top);left:0;right:0;bottom:0;display:flex;justify-content:center}
@@ -59,6 +63,8 @@ input,textarea{-webkit-user-select:text;user-select:text}
 ${tpl}
 </template>
 <script src="lib/preact.min.js"></script>
+<script src="lib/html2canvas.min.js"></script>
+<script src="lib/jspdf.umd.min.js"></script>
 <script src="dc-runtime.js"></script>
 <script src="app.js"></script>
 <script>

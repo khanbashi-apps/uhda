@@ -29,6 +29,39 @@
     lastTouch = now;
   }, { passive: false });
 
+  /* سحب النافذة السفلية (الإعدادات وغيرها) للأسفل يغلقها */
+  var sw = null;
+  document.addEventListener('touchstart', function (e) {
+    var t = e.target && e.target.nodeType === 3 ? e.target.parentElement : e.target;
+    var sh = t && t.closest && t.closest('.sheet');
+    if (!sh || !e.touches || e.touches.length !== 1 || isField(t)) { sw = null; return; }
+    sw = { sh: sh, x: e.touches[0].clientX, y: e.touches[0].clientY, dy: 0, t: Date.now(), ok: sh.scrollTop <= 0, drag: false };
+  }, { passive: true });
+  document.addEventListener('touchmove', function (e) {
+    if (!sw || !sw.ok || !e.touches || e.touches.length !== 1) return;
+    var dy = e.touches[0].clientY - sw.y, dx = e.touches[0].clientX - sw.x;
+    if (!sw.drag) {
+      if (sw.sh.scrollTop > 0 || dy <= 4) { if (dy < 0) sw.ok = false; return; }
+      if (Math.abs(dx) > Math.abs(dy)) { sw.ok = false; return; }
+      sw.drag = true;
+    }
+    sw.dy = Math.max(0, dy);
+    sw.sh.style.transition = 'none';
+    sw.sh.style.transform = 'translateY(' + sw.dy + 'px)';
+    if (e.cancelable) e.preventDefault();
+  }, { passive: false });
+  document.addEventListener('touchend', function () {
+    var s = sw; sw = null;
+    if (!s || !s.drag) return;
+    var sh = s.sh, close = s.dy > 110 || (s.dy > 40 && Date.now() - s.t < 260);
+    sh.style.transition = 'transform .2s ease';
+    sh.style.transform = close ? 'translateY(100%)' : '';
+    setTimeout(function () {
+      sh.style.transition = '';
+      if (close) { var w = sh.closest('.sheetwrap'), sc = w && w.querySelector('.scrim'); sh.style.transform = ''; if (sc) sc.click(); }
+    }, 200);
+  });
+
   /* ---------- 2) جسر المشاركة والحفظ داخل تطبيق APK / IPA ---------- */
   var C = window.Capacitor;
   var native = !!(C && typeof C.isNativePlatform === 'function' && C.isNativePlatform());
@@ -143,7 +176,8 @@
     if (node.nodeType !== 1) return null;
     var tag = node.localName;
     var kids = Array.prototype.map.call(node.childNodes, compile).filter(Boolean);
-    var run = function (sc) { var out = []; for (var i = 0; i < kids.length; i++) { var r = kids[i](sc); if (r != null && r !== false) out.push(r); } return out; };
+    /* نُبقي مكان العنصر الغائب (null) حتى لا تُعاد صناعة ما بعده عند ظهور عنصر شرطي */
+    var run = function (sc) { var out = []; for (var i = 0; i < kids.length; i++) { var r = kids[i](sc); out.push(r == null || r === false ? null : r); } return out; };
     if (tag === 'sc-if') {
       var cond = node.getAttribute('value') || '';
       return function (sc) { return attrVal(cond, sc) ? run(sc) : null; };
@@ -178,7 +212,7 @@
   var tplEl = document.getElementById('dc-template');
   var frag = tplEl.content;
   var roots = Array.prototype.map.call(frag.childNodes, compile).filter(Boolean);
-  var renderTpl = function (vals) { var sc = [vals || {}], out = []; roots.forEach(function (f) { var r = f(sc); if (r != null) out.push(r); }); return out.length === 1 ? out[0] : h(P.Fragment, null, out); };
+  var renderTpl = function (vals) { var sc = [vals || {}], out = []; roots.forEach(function (f) { var r = f(sc); out.push(r == null || r === false ? null : r); }); return out.length === 1 ? out[0] : h(P.Fragment, null, out); };
 
   window.DCLogic = class DCLogic extends P.Component {
     renderVals() { return {}; }
@@ -188,6 +222,10 @@
   window.DCStart = function (Comp) {
     load().then(function (saved) {
       var timer = null, inst = null;
+      /* لون نص شريط الحالة في APK / IPA يتبع المظهر */
+      var bar = function (dark) {
+        try { var SB = native && C.Plugins && C.Plugins.StatusBar; if (SB) SB.setStyle({ style: dark ? 'DARK' : 'LIGHT' }); } catch (e) {}
+      };
       class App extends Comp {
         constructor(props) {
           super(props);
@@ -201,12 +239,14 @@
         componentDidUpdate(pp, ps) {
           if (super.componentDidUpdate) super.componentDidUpdate(pp, ps);
           inst = this;
+          if (ps.dark !== this.state.dark) bar(this.state.dark);
           var st = this.state, changed = KEEP.some(function (k) { return ps[k] !== st[k]; });
           if (changed) { clearTimeout(timer); timer = setTimeout(function () { save(st); }, 250); }
         }
       }
       var root = document.getElementById('root');
       P.render(h(App, {}), root);
+      bar(!!(saved && saved.dark));
       document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'hidden' && inst) { clearTimeout(timer); save(inst.state); } });
     });
   };

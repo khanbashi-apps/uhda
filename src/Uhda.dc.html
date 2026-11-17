@@ -20,6 +20,7 @@ a{color:#0B6BA8}a:hover{color:#08507F}
 :where(.app) input{font:inherit;color:var(--ink)}
 .scroll{position:absolute;top:0;right:0;left:0;overflow-y:auto;scrollbar-width:none}
 .scroll::-webkit-scrollbar{display:none}
+.scroll>*,.scroll>sc-if>*{flex-shrink:0}
 .iconbtn{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);color:var(--ink);box-shadow:var(--shadow)}
 .addbtn{background:var(--acc);border-color:var(--acc);color:var(--accInk)}
 .langbtn{font-size:14px;font-weight:600;color:var(--acc)}
@@ -164,7 +165,7 @@ a{color:#0B6BA8}a:hover{color:#08507F}
 .scrim{position:absolute;inset:0;width:100%;height:100%;background:rgba(0,0,0,.5)}
 .sheet{position:absolute;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);border-radius:26px 26px 0 0;padding:10px 16px calc(24px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px;max-height:90%;overflow-y:auto}
 .grab{width:40px;height:5px;border-radius:5px;background:var(--line);align-self:center}
-.toast{position:absolute;bottom:96px;left:16px;right:16px;z-index:40;background:var(--ink);color:var(--bg);padding-block:8px;padding-inline-start:16px;padding-inline-end:8px;min-height:50px;border-radius:14px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px}
+.toast{position:absolute;bottom:calc(96px + env(safe-area-inset-bottom));left:16px;right:16px;z-index:40;background:var(--ink);color:var(--bg);padding-block:8px;padding-inline-start:16px;padding-inline-end:8px;min-height:50px;border-radius:14px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px}
 .undo{flex:none;height:36px;padding:0 14px;border-radius:10px;background:var(--bg);color:var(--ink);font-weight:600;font-size:13.5px}
 .zoom{position:absolute;inset:0;z-index:50;background:#000;display:flex;flex-direction:column}
 .zoombtn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.14);color:#fff}
@@ -204,7 +205,7 @@ a{color:#0B6BA8}a:hover{color:#08507F}
 <div class="app {{themeClass}}" dir="{{dir}}" lang="{{langCode}}" style="direction: {{dir}}; width: 390px; height: 844px; position: relative; overflow: hidden; background: var(--bg); color: var(--ink); font-family: 'Almarai', system-ui, sans-serif; transition: background .25s">
 
 <sc-if value="{{isHome}}" hint-placeholder-val="{{ true }}">
-<div class="scroll" style="bottom: 72px; padding: 18px 16px 28px; display: flex; flex-direction: column; gap: 14px">
+<div class="scroll" style="bottom: calc(72px + env(safe-area-inset-bottom)); padding: 18px 16px 28px; display: flex; flex-direction: column; gap: 14px">
   <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px">
     <div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start; min-width: 0">
       <h1 style="margin: 0; font-size: 24px; font-weight: 600; line-height: 1.2">{{homeTitle}}</h1>
@@ -510,7 +511,7 @@ a{color:#0B6BA8}a:hover{color:#08507F}
 </sc-if>
 
 <sc-if value="{{isDetail}}" hint-placeholder-val="{{ false }}">
-<div class="scroll" style="bottom: 90px; padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+<div class="scroll" style="bottom: calc(90px + env(safe-area-inset-bottom)); padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 14px">
   <div style="display: flex; align-items: center; gap: 8px">
     <button class="iconbtn" onClick="{{back}}" aria-label="{{L.aBack}}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{backPath}}"></path></svg></button>
     <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
@@ -589,7 +590,7 @@ a{color:#0B6BA8}a:hover{color:#08507F}
   <div class="panel" style="display: flex; flex-direction: column; gap: 12px">
     <h2 class="sec">{{L.photoTitle}}</h2>
     <sc-if value="{{cur.hasPhoto}}" hint-placeholder-val="{{ false }}">
-      <button onClick="{{openZoom}}" aria-label="{{L.aZoom}}" style="display: block; width: 100%; height: 180px; border-radius: 14px; overflow: hidden; background: var(--card2)"><img src="{{cur.photo}}" alt="{{L.altPhoto}}" style="width: 100%; height: 100%; object-fit: cover; display: block"></button>
+      <button onClick="{{openZoom}}" aria-label="{{L.aZoom}}" style="display: block; width: 100%; border-radius: 14px; overflow: hidden; background: var(--card2)"><img src="{{cur.photo}}" alt="{{L.altPhoto}}" style="width: 100%; height: auto; max-height: 420px; object-fit: contain; display: block"></button>
       <span class="sb" style="display: flex; align-items: center; gap: 6px; color: var(--g)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M12 3l7 3v5c0 4.5-3 8-7 10c-4-2-7-5.5-7-10V6z M9 12l2 2 4-4"></path></svg>{{L.photoSafe}}</span>
       <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
         <button class="ghost" onClick="{{savePhoto}}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11 M8 11l4 4 4-4 M5 19h14"></path></svg>{{L.saveGallery}}</button>
@@ -632,7 +633,7 @@ a{color:#0B6BA8}a:hover{color:#08507F}
 </sc-if>
 
 <sc-if value="{{isAdd}}" hint-placeholder-val="{{ false }}">
-<div class="scroll" style="bottom: 90px; padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 16px">
+<div class="scroll" style="bottom: calc(90px + env(safe-area-inset-bottom)); padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 16px">
   <div style="display: flex; align-items: center; gap: 12px">
     <button class="iconbtn" onClick="{{cancelForm}}" aria-label="{{L.aBack}}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{backPath}}"></path></svg></button>
     <div style="display: flex; flex-direction: column">
@@ -700,7 +701,7 @@ a{color:#0B6BA8}a:hover{color:#08507F}
         </sc-if>
         <sc-if value="{{formHasPhoto}}" hint-placeholder-val="{{ true }}">
           <div class="fl"><span>{{formPhotoLabel}}</span>
-            <sc-if value="{{hasFormPhoto}}" hint-placeholder-val="{{ false }}"><img src="{{formPhoto}}" alt="{{L.altPreview}}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 14px; display: block"></sc-if>
+            <sc-if value="{{hasFormPhoto}}" hint-placeholder-val="{{ false }}"><img src="{{formPhoto}}" alt="{{L.altPreview}}" style="width: 100%; height: auto; max-height: 360px; object-fit: contain; border-radius: 14px; display: block; background: var(--card2)"></sc-if>
             <label class="attach">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z M12 10.5a3 3 0 1 0 0 6a3 3 0 1 0 0-6z"></path></svg>
               <span>{{L.takePhoto}}</span>
@@ -719,7 +720,7 @@ a{color:#0B6BA8}a:hover{color:#08507F}
 </sc-if>
 
 <sc-if value="{{isCarForm}}" hint-placeholder-val="{{ false }}">
-<div class="scroll" style="bottom: 90px; padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 16px">
+<div class="scroll" style="bottom: calc(90px + env(safe-area-inset-bottom)); padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 16px">
   <div style="display: flex; align-items: center; gap: 12px">
     <button class="iconbtn" onClick="{{cancelCar}}" aria-label="{{L.aBack}}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{backPath}}"></path></svg></button>
     <h1 style="margin: 0; font-size: 21px; font-weight: 600">{{carFormTitle}}</h1>
@@ -744,7 +745,7 @@ a{color:#0B6BA8}a:hover{color:#08507F}
 </sc-if>
 
 <sc-if value="{{isBackup}}" hint-placeholder-val="{{ false }}">
-<div class="scroll" style="bottom: 0; padding: 16px 16px 32px; display: flex; flex-direction: column; gap: 14px">
+<div class="scroll" style="bottom: 0; padding: 16px 16px calc(32px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; gap: 14px">
   <div style="display: flex; align-items: center; gap: 12px">
     <button class="iconbtn" onClick="{{goHome}}" aria-label="{{L.aBack}}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{backPath}}"></path></svg></button>
     <div style="display: flex; flex-direction: column">
@@ -811,16 +812,16 @@ a{color:#0B6BA8}a:hover{color:#08507F}
 </sc-if>
 
 <sc-if value="{{isReport}}" hint-placeholder-val="{{ false }}">
-<div class="scroll" style="bottom: 90px; padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 12px">
-  <div style="display: flex; align-items: center; gap: 12px">
-    <button class="iconbtn" onClick="{{backToBackup}}" aria-label="{{L.aBack}}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{backPath}}"></path></svg></button>
+<div class="scroll rep-wrap" style="bottom: calc(90px + env(safe-area-inset-bottom)); padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+  <div class="rep-head" style="display: flex; align-items: center; gap: 12px">
+    <button class="iconbtn pdf-skip" onClick="{{backToBackup}}" aria-label="{{L.aBack}}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{backPath}}"></path></svg></button>
     <div style="display: flex; flex-direction: column">
       <h1 style="margin: 0; font-size: 20px; font-weight: 600">{{L.repTitle}}</h1>
       <span class="sb">{{report.when}}</span>
     </div>
   </div>
   <sc-for list="{{report.sections}}" as="sec" hint-placeholder-count="3">
-    <div class="panel" style="padding: 12px 14px">
+    <div class="panel rep-sec" style="padding: 12px 14px">
       <h2 style="margin: 0; font-size: 15px; font-weight: 600">{{sec.title}}</h2>
       <sc-if value="{{sec.hasSub}}" hint-placeholder-val="{{ false }}"><span class="sb">{{sec.sub}}</span></sc-if>
       <div class="rgrid h" style="margin-top: 6px"><span>{{L.colName}}</span><span>{{L.colStatus}}</span><span>{{L.colDue}}</span></div>
@@ -969,11 +970,11 @@ a{color:#0B6BA8}a:hover{color:#08507F}
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--mute)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{fwdPath}}"></path></svg>
       </button>
       <h2 class="sec" style="margin-top: 4px">{{L.about}}</h2>
-      <button class="about" onClick="{{showSplash}}" aria-label="{{L.aLogo}}">
+      <div class="about">
         <svg class="alogo" viewBox="0 0 200 200" aria-hidden="true"><rect width="200" height="200" rx="46" fill="{{lg.sq}}"></rect><rect x="50" y="40" width="100" height="120" rx="15" fill="{{lg.card}}"></rect><rect x="66" y="62" width="72" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect><rect x="78" y="81" width="60" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect><rect x="88" y="100" width="50" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect><rect x="98" y="119" width="40" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect><circle cx="56" cy="152" r="27" fill="#3DDC97" stroke="{{lg.sq}}" stroke-width="7"></circle><path d="M44 152 L52.5 160.5 L68 144" fill="none" stroke="{{lg.chk}}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
         <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; align-items: flex-start"><span class="anm">عُهدة</span><span class="alat" dir="ltr">UHDA</span></span>
         <span class="ver">{{L.verLong}}</span>
-      </button>
+      </div>
     </sc-if>
   </div>
 </div>
@@ -1169,7 +1170,7 @@ class Component extends DCLogic {
     const part = (id, carId, name, lastDate, lastKm, n, u, km, cost, specs, history, extra) => ({ id: id, cat: 'car', carId: carId, name: name, cost: cost, specs: specs || [], rems: [{ id: 'b1', base: true, type: 'cycle', name: R.car, lastDate: d(lastDate), lastKm: lastKm, n: n, u: u, everyKm: km, before: [14] }].concat(extra || []), history: history || [] });
     const at = this.T0(); at.setHours(3, 0, 0, 0);
     return {
-      splash: 'in', onboarded: false, ob: 'welcome', obCar: { name: '', plate: '', odo: '' }, obDocs: {}, obErr: '', lang: 'ar', dark: true, tab: 'cars', carSel: null, carSub: 'parts', screen: 'home', from: 'home', sel: null, q: '', cat: 'all', st: 'all', showArch: false, showExtra: false, editId: null,
+      splash: 'in', onboarded: false, ob: 'welcome', obCar: { name: '', plate: '', odo: '' }, obDocs: {}, obErr: '', lang: 'ar', dark: false, tab: 'cars', carSel: null, carSub: 'parts', screen: 'home', from: 'home', sel: null, q: '', cat: 'all', st: 'all', showArch: false, showExtra: false, editId: null,
       sheet: null, form: null, formErr: '', rf: {}, remF: null, remErr: false, specF: { k: '', v: '' }, odoIn: '', fuelF: null, carF: null, carEditId: null, carErr: '',
       toast: '', undo: null, zoom: false, spendRange: 'year', spendScope: 'all', pending: null, lastExport: null, autoAt: at,
       nextId: 100, nextR: 10, nextF: 100, nextC: 3, notifTime: '09:00', odoEvery: 14,
@@ -1625,6 +1626,83 @@ class Component extends DCLogic {
     } catch (e) {}
     fallback();
   }
+  makePdf(mode) {
+    const H = window.html2canvas, J = window.jspdf && window.jspdf.jsPDF;
+    const wrap = document.querySelector('.rep-wrap');
+    if (!H || !J || !wrap) { this.toast(this.w('إنشاء ملف PDF يعمل في التطبيق وصفحة الويب', 'PDF export works in the app and the web page')); return; }
+    if (this._pdfBusy) return;
+    this._pdfBusy = true;
+    this.toast(this.w('جارٍ إنشاء ملف PDF…', 'Creating PDF…'));
+    const blockAt = (i) => { const w = document.querySelector('.rep-wrap'); if (!w) return null; return i === 0 ? w.querySelector('.rep-head') : w.querySelectorAll('.rep-sec')[i - 1]; };
+    const count = 1 + wrap.querySelectorAll('.rep-sec').length;
+    const opt = {
+      scale: 2, backgroundColor: '#EFF2F5', logging: false, useCORS: true,
+      ignoreElements: (el) => !!(el.classList && el.classList.contains('pdf-skip')),
+      onclone: (doc) => {
+        const a = doc.querySelector('.app'); if (a) { a.classList.remove('dark'); a.style.height = 'auto'; a.style.overflow = 'visible'; }
+        const w = doc.querySelector('.rep-wrap'); if (w) { w.style.position = 'relative'; w.style.overflow = 'visible'; w.style.bottom = 'auto'; }
+        doc.querySelectorAll('.toast,.nav,.actionbar').forEach((n) => { n.style.display = 'none'; });
+      }
+    };
+    const shots = [];
+    const next = (i) => {
+      if (i >= count) return Promise.resolve();
+      const el = blockAt(i); if (!el) return Promise.reject(new Error('report-closed'));
+      const top = el.getBoundingClientRect().top;
+      const cuts = Array.prototype.slice.call(el.querySelectorAll('.rgrid')).map((r) => r.getBoundingClientRect().top - top);
+      const w = el.offsetWidth, hh = el.offsetHeight;
+      return H(el, opt).then((cv) => { shots.push({ cv: cv, w: w, h: hh, cuts: cuts, head: i === 0 }); return next(i + 1); });
+    };
+    next(0).then(() => {
+      const pdf = new J({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true });
+      const PW = 210, PH = 297, M = 12, GAP = 4, CW = PW - M * 2, BOTTOM = PH - M - 6;
+      const paint = () => { pdf.setFillColor(239, 242, 245); pdf.rect(0, 0, PW, PH, 'F'); };
+      paint();
+      let y = M, pages = 1;
+      const newPage = () => { pdf.addPage(); paint(); y = M; pages += 1; };
+      shots.forEach((sh) => {
+        const f = CW / sh.w, hmm = sh.h * f;
+        if (y + hmm <= BOTTOM) { pdf.addImage(sh.cv, 'JPEG', M, y, CW, hmm, undefined, 'FAST'); y += hmm + GAP; return; }
+        if (hmm <= BOTTOM - M) { newPage(); pdf.addImage(sh.cv, 'JPEG', M, y, CW, hmm, undefined, 'FAST'); y += hmm + GAP; return; }
+        let from = 0;
+        const k = sh.cv.height / sh.h;
+        while (from < sh.h - 1) {
+          if (BOTTOM - y < 30) newPage();
+          const room = (BOTTOM - y) / f;
+          let to = Math.min(sh.h, from + room);
+          if (to < sh.h) { const ok = sh.cuts.filter((c) => c > from + 20 && c <= to); if (ok.length) to = ok[ok.length - 1]; }
+          const part = document.createElement('canvas');
+          part.width = sh.cv.width; part.height = Math.max(1, Math.round((to - from) * k));
+          part.getContext('2d').drawImage(sh.cv, 0, Math.round(from * k), sh.cv.width, part.height, 0, 0, sh.cv.width, part.height);
+          pdf.addImage(part, 'JPEG', M, y, CW, (to - from) * f, undefined, 'FAST');
+          y += (to - from) * f + GAP; from = to;
+          if (from < sh.h - 1) newPage();
+        }
+      });
+      for (let p = 1; p <= pages; p++) { pdf.setPage(p); pdf.setFontSize(9); pdf.setTextColor(120, 128, 138); pdf.text(p + ' / ' + pages, PW / 2, PH - 7, { align: 'center' }); }
+      const name = 'uhda-report-' + this.iso(this.T0()) + '.pdf';
+      const blob = pdf.output('blob');
+      let file = null; try { file = new File([blob], name, { type: 'application/pdf' }); } catch (e) { file = null; }
+      this._pdfBusy = false;
+      const canShare = () => { try { return !!(file && navigator.canShare && navigator.canShare({ files: [file] })); } catch (e) { return false; } };
+      const dl = () => { if (this.dlFile(blob, name, 'application/pdf')) this.toast(this.w('تم إنشاء الملف: ', 'File created: ') + name); else this.toast(this.w('تعذّر حفظ الملف', 'Could not save the file')); };
+      if (mode === 'share') {
+        if (canShare()) { navigator.share({ files: [file], title: name }).catch(() => {}); return; }
+        dl(); return;
+      }
+      try {
+        if (window.showSaveFilePicker) {
+          window.showSaveFilePicker({ suggestedName: name, types: [{ description: 'PDF', accept: { 'application/pdf': ['.pdf'] } }] })
+            .then((h) => h.createWritable().then((wr) => wr.write(blob).then(() => wr.close())))
+            .then(() => this.toast(this.w('حُفظ الملف: ', 'Saved: ') + name))
+            .catch((err) => { if (!err || err.name !== 'AbortError') dl(); });
+          return;
+        }
+      } catch (e) {}
+      if (/iPhone|iPad/.test(navigator.userAgent) && canShare()) { navigator.share({ files: [file], title: name }).catch(() => {}); this.toast(this.w('اختر «حفظ في الملفات»', 'Choose “Save to Files”')); return; }
+      dl();
+    }).catch((err) => { try { console.error('pdf', err && err.message, err && err.stack); } catch (e) {} this._pdfBusy = false; this.toast(this.w('تعذّر إنشاء ملف PDF', 'Could not create the PDF')); });
+  }
   readImage(file) {
     return new Promise((res) => {
       const fr = new FileReader();
@@ -1969,11 +2047,11 @@ class Component extends DCLogic {
       bk: { autoLast: this.fmtT(s.autoAt), nCars: String(s.cars.length), nItems: String(s.items.length), nFuel: String(nFuel), lastExport: s.lastExport ? this.w('آخر تصدير: ', 'Last export: ') + this.fmtT(s.lastExport) : this.w('لم تُصدَّر أي نسخة يدوية بعد', 'No manual backup exported yet') },
       openBackup: () => this.setState({ screen: 'backup', sheet: null }),
       exportBackup: () => this.exportBackup(), saveBackup: () => this.saveBackup(), savePhoto: () => this.savePhoto(), sharePhoto: () => this.sharePhoto(),
-      sharePdf: () => this.toast(this.w('في التطبيق يُنشأ ملف PDF ويفتح نافذة المشاركة (واتساب، البريد…)', 'In the app this creates a PDF and opens the share sheet (WhatsApp, Mail…)')), onImportFile: (e) => this.onImportFile(e), confirmImport: () => this.confirmImport(),
+      sharePdf: () => this.makePdf('share'), onImportFile: (e) => this.onImportFile(e), confirmImport: () => this.confirmImport(),
       impInfo: pend ? this.w('نسخة بتاريخ ', 'Backup from ') + this.fmtT(new Date(pend.at)) + ' · ' + pend.cars.length + this.w(' سيارات · ', ' cars · ') + pend.items.length + this.w(' عناصر', ' items') : '',
       openReport: () => this.setState({ screen: 'report' }), backToBackup: () => this.setState({ screen: 'backup' }),
       report: s.screen === 'report' ? this.report() : { when: '', sections: [] },
-      printReport: () => { try { window.print(); } catch (e) {} this.toast(this.w('في التطبيق يُنشأ ملف PDF ويفتح نافذة المشاركة', 'In the app this creates a PDF and opens the share sheet')); },
+      printReport: () => this.makePdf('save'),
       ...this.obVals(s),
       sheetCars: s.sheet === 'cars', sheetImport: s.sheet === 'import', sheetRenew: s.sheet === 'renew', sheetRem: s.sheet === 'rem', sheetSpec: s.sheet === 'spec', sheetDel: s.sheet === 'del', sheetDelCar: s.sheet === 'delCar', sheetOdo: s.sheet === 'odo', sheetSettings: s.sheet === 'settings', sheetFuel: s.sheet === 'fuel', hasSheet: !!s.sheet,
       closeSheet: () => this.setState({ sheet: null, pending: null }),

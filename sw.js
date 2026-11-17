@@ -1,7 +1,7 @@
 /* عُهدة · Uhda — يحفظ ملفات التطبيق ليعمل بدون إنترنت */
 const CACHE = 'uhda-v1.0';
 const ASSETS = [
-  './', './index.html', './app.js', './dc-runtime.js', './lib/preact.min.js', './manifest.webmanifest',
+  './', './index.html', './app.js', './dc-runtime.js', './lib/preact.min.js', './lib/html2canvas.min.js', './lib/jspdf.umd.min.js', './manifest.webmanifest',
   './fonts/almarai.css',
   './fonts/almarai-arabic-300-normal.woff2', './fonts/almarai-arabic-400-normal.woff2', './fonts/almarai-arabic-700-normal.woff2',
   './fonts/almarai-latin-300-normal.woff2', './fonts/almarai-latin-400-normal.woff2', './fonts/almarai-latin-700-normal.woff2',

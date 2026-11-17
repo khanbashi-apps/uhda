@@ -59,7 +59,7 @@ class Component extends DCLogic {
     const part = (id, carId, name, lastDate, lastKm, n, u, km, cost, specs, history, extra) => ({ id: id, cat: 'car', carId: carId, name: name, cost: cost, specs: specs || [], rems: [{ id: 'b1', base: true, type: 'cycle', name: R.car, lastDate: d(lastDate), lastKm: lastKm, n: n, u: u, everyKm: km, before: [14] }].concat(extra || []), history: history || [] });
     const at = this.T0(); at.setHours(3, 0, 0, 0);
     return {
-      splash: 'in', onboarded: false, ob: 'welcome', obCar: { name: '', plate: '', odo: '' }, obDocs: {}, obErr: '', lang: 'ar', dark: true, tab: 'cars', carSel: null, carSub: 'parts', screen: 'home', from: 'home', sel: null, q: '', cat: 'all', st: 'all', showArch: false, showExtra: false, editId: null,
+      splash: 'in', onboarded: false, ob: 'welcome', obCar: { name: '', plate: '', odo: '' }, obDocs: {}, obErr: '', lang: 'ar', dark: false, tab: 'cars', carSel: null, carSub: 'parts', screen: 'home', from: 'home', sel: null, q: '', cat: 'all', st: 'all', showArch: false, showExtra: false, editId: null,
       sheet: null, form: null, formErr: '', rf: {}, remF: null, remErr: false, specF: { k: '', v: '' }, odoIn: '', fuelF: null, carF: null, carEditId: null, carErr: '',
       toast: '', undo: null, zoom: false, spendRange: 'year', spendScope: 'all', pending: null, lastExport: null, autoAt: at,
       nextId: 100, nextR: 10, nextF: 100, nextC: 3, notifTime: '09:00', odoEvery: 14,
@@ -515,6 +515,83 @@ class Component extends DCLogic {
     } catch (e) {}
     fallback();
   }
+  makePdf(mode) {
+    const H = window.html2canvas, J = window.jspdf && window.jspdf.jsPDF;
+    const wrap = document.querySelector('.rep-wrap');
+    if (!H || !J || !wrap) { this.toast(this.w('إنشاء ملف PDF يعمل في التطبيق وصفحة الويب', 'PDF export works in the app and the web page')); return; }
+    if (this._pdfBusy) return;
+    this._pdfBusy = true;
+    this.toast(this.w('جارٍ إنشاء ملف PDF…', 'Creating PDF…'));
+    const blockAt = (i) => { const w = document.querySelector('.rep-wrap'); if (!w) return null; return i === 0 ? w.querySelector('.rep-head') : w.querySelectorAll('.rep-sec')[i - 1]; };
+    const count = 1 + wrap.querySelectorAll('.rep-sec').length;
+    const opt = {
+      scale: 2, backgroundColor: '#EFF2F5', logging: false, useCORS: true,
+      ignoreElements: (el) => !!(el.classList && el.classList.contains('pdf-skip')),
+      onclone: (doc) => {
+        const a = doc.querySelector('.app'); if (a) { a.classList.remove('dark'); a.style.height = 'auto'; a.style.overflow = 'visible'; }
+        const w = doc.querySelector('.rep-wrap'); if (w) { w.style.position = 'relative'; w.style.overflow = 'visible'; w.style.bottom = 'auto'; }
+        doc.querySelectorAll('.toast,.nav,.actionbar').forEach((n) => { n.style.display = 'none'; });
+      }
+    };
+    const shots = [];
+    const next = (i) => {
+      if (i >= count) return Promise.resolve();
+      const el = blockAt(i); if (!el) return Promise.reject(new Error('report-closed'));
+      const top = el.getBoundingClientRect().top;
+      const cuts = Array.prototype.slice.call(el.querySelectorAll('.rgrid')).map((r) => r.getBoundingClientRect().top - top);
+      const w = el.offsetWidth, hh = el.offsetHeight;
+      return H(el, opt).then((cv) => { shots.push({ cv: cv, w: w, h: hh, cuts: cuts, head: i === 0 }); return next(i + 1); });
+    };
+    next(0).then(() => {
+      const pdf = new J({ unit: 'mm', format: 'a4', orientation: 'portrait', compress: true });
+      const PW = 210, PH = 297, M = 12, GAP = 4, CW = PW - M * 2, BOTTOM = PH - M - 6;
+      const paint = () => { pdf.setFillColor(239, 242, 245); pdf.rect(0, 0, PW, PH, 'F'); };
+      paint();
+      let y = M, pages = 1;
+      const newPage = () => { pdf.addPage(); paint(); y = M; pages += 1; };
+      shots.forEach((sh) => {
+        const f = CW / sh.w, hmm = sh.h * f;
+        if (y + hmm <= BOTTOM) { pdf.addImage(sh.cv, 'JPEG', M, y, CW, hmm, undefined, 'FAST'); y += hmm + GAP; return; }
+        if (hmm <= BOTTOM - M) { newPage(); pdf.addImage(sh.cv, 'JPEG', M, y, CW, hmm, undefined, 'FAST'); y += hmm + GAP; return; }
+        let from = 0;
+        const k = sh.cv.height / sh.h;
+        while (from < sh.h - 1) {
+          if (BOTTOM - y < 30) newPage();
+          const room = (BOTTOM - y) / f;
+          let to = Math.min(sh.h, from + room);
+          if (to < sh.h) { const ok = sh.cuts.filter((c) => c > from + 20 && c <= to); if (ok.length) to = ok[ok.length - 1]; }
+          const part = document.createElement('canvas');
+          part.width = sh.cv.width; part.height = Math.max(1, Math.round((to - from) * k));
+          part.getContext('2d').drawImage(sh.cv, 0, Math.round(from * k), sh.cv.width, part.height, 0, 0, sh.cv.width, part.height);
+          pdf.addImage(part, 'JPEG', M, y, CW, (to - from) * f, undefined, 'FAST');
+          y += (to - from) * f + GAP; from = to;
+          if (from < sh.h - 1) newPage();
+        }
+      });
+      for (let p = 1; p <= pages; p++) { pdf.setPage(p); pdf.setFontSize(9); pdf.setTextColor(120, 128, 138); pdf.text(p + ' / ' + pages, PW / 2, PH - 7, { align: 'center' }); }
+      const name = 'uhda-report-' + this.iso(this.T0()) + '.pdf';
+      const blob = pdf.output('blob');
+      let file = null; try { file = new File([blob], name, { type: 'application/pdf' }); } catch (e) { file = null; }
+      this._pdfBusy = false;
+      const canShare = () => { try { return !!(file && navigator.canShare && navigator.canShare({ files: [file] })); } catch (e) { return false; } };
+      const dl = () => { if (this.dlFile(blob, name, 'application/pdf')) this.toast(this.w('تم إنشاء الملف: ', 'File created: ') + name); else this.toast(this.w('تعذّر حفظ الملف', 'Could not save the file')); };
+      if (mode === 'share') {
+        if (canShare()) { navigator.share({ files: [file], title: name }).catch(() => {}); return; }
+        dl(); return;
+      }
+      try {
+        if (window.showSaveFilePicker) {
+          window.showSaveFilePicker({ suggestedName: name, types: [{ description: 'PDF', accept: { 'application/pdf': ['.pdf'] } }] })
+            .then((h) => h.createWritable().then((wr) => wr.write(blob).then(() => wr.close())))
+            .then(() => this.toast(this.w('حُفظ الملف: ', 'Saved: ') + name))
+            .catch((err) => { if (!err || err.name !== 'AbortError') dl(); });
+          return;
+        }
+      } catch (e) {}
+      if (/iPhone|iPad/.test(navigator.userAgent) && canShare()) { navigator.share({ files: [file], title: name }).catch(() => {}); this.toast(this.w('اختر «حفظ في الملفات»', 'Choose “Save to Files”')); return; }
+      dl();
+    }).catch((err) => { try { console.error('pdf', err && err.message, err && err.stack); } catch (e) {} this._pdfBusy = false; this.toast(this.w('تعذّر إنشاء ملف PDF', 'Could not create the PDF')); });
+  }
   readImage(file) {
     return new Promise((res) => {
       const fr = new FileReader();
@@ -859,11 +936,11 @@ class Component extends DCLogic {
       bk: { autoLast: this.fmtT(s.autoAt), nCars: String(s.cars.length), nItems: String(s.items.length), nFuel: String(nFuel), lastExport: s.lastExport ? this.w('آخر تصدير: ', 'Last export: ') + this.fmtT(s.lastExport) : this.w('لم تُصدَّر أي نسخة يدوية بعد', 'No manual backup exported yet') },
       openBackup: () => this.setState({ screen: 'backup', sheet: null }),
       exportBackup: () => this.exportBackup(), saveBackup: () => this.saveBackup(), savePhoto: () => this.savePhoto(), sharePhoto: () => this.sharePhoto(),
-      sharePdf: () => this.toast(this.w('في التطبيق يُنشأ ملف PDF ويفتح نافذة المشاركة (واتساب، البريد…)', 'In the app this creates a PDF and opens the share sheet (WhatsApp, Mail…)')), onImportFile: (e) => this.onImportFile(e), confirmImport: () => this.confirmImport(),
+      sharePdf: () => this.makePdf('share'), onImportFile: (e) => this.onImportFile(e), confirmImport: () => this.confirmImport(),
       impInfo: pend ? this.w('نسخة بتاريخ ', 'Backup from ') + this.fmtT(new Date(pend.at)) + ' · ' + pend.cars.length + this.w(' سيارات · ', ' cars · ') + pend.items.length + this.w(' عناصر', ' items') : '',
       openReport: () => this.setState({ screen: 'report' }), backToBackup: () => this.setState({ screen: 'backup' }),
       report: s.screen === 'report' ? this.report() : { when: '', sections: [] },
-      printReport: () => { try { window.print(); } catch (e) {} this.toast(this.w('في التطبيق يُنشأ ملف PDF ويفتح نافذة المشاركة', 'In the app this creates a PDF and opens the share sheet')); },
+      printReport: () => this.makePdf('save'),
       ...this.obVals(s),
       sheetCars: s.sheet === 'cars', sheetImport: s.sheet === 'import', sheetRenew: s.sheet === 'renew', sheetRem: s.sheet === 'rem', sheetSpec: s.sheet === 'spec', sheetDel: s.sheet === 'del', sheetDelCar: s.sheet === 'delCar', sheetOdo: s.sheet === 'odo', sheetSettings: s.sheet === 'settings', sheetFuel: s.sheet === 'fuel', hasSheet: !!s.sheet,
       closeSheet: () => this.setState({ sheet: null, pending: null }),

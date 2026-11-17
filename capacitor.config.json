@@ -2,7 +2,18 @@
   "appId": "com.khanbashi.uhda",
   "appName": "عُهدة",
   "webDir": "www",
-  "backgroundColor": "#0B0A18",
-  "ios": { "contentInset": "never", "scrollEnabled": false },
-  "android": { "allowMixedContent": false }
+  "backgroundColor": "#F4F2FB",
+  "ios": {
+    "contentInset": "never",
+    "scrollEnabled": false
+  },
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "StatusBar": {
+      "style": "LIGHT",
+      "overlaysWebView": true
+    }
+  }
 }
