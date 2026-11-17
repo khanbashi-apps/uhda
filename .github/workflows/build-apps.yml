@@ -71,6 +71,7 @@ jobs:
   ios:
     name: IPA (آيفون، بدون توقيع)
     runs-on: macos-latest
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -128,6 +129,7 @@ jobs:
           files=$(find dl -name '*.apk' -o -name '*.ipa' -o -name '*.zip' | tr '\n' ' ')
           if [ -z "$files" ]; then echo "لا توجد ملفات للنشر"; exit 0; fi
           tag="v${VER}-build${{ github.run_number }}"
+          if gh release view "$tag" > /dev/null 2>&1; then gh release upload "$tag" $files --clobber; exit 0; fi
           gh release create "$tag" $files --target "${{ github.sha }}" --latest \
             --title "عُهدة v${VER} (بناء ${{ github.run_number }})" \
             --notes "APK: ثبّته مباشرة على أندرويد (اسمح بالتثبيت من مصادر غير معروفة). IPA: غير موقّع، وقّعه بتطبيق التوقيع ثم ثبّته. Uhda-web-offline.zip: نسخة الويب كاملة تعمل بدون إنترنت."
