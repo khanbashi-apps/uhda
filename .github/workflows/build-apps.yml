@@ -69,8 +69,13 @@ jobs:
           if-no-files-found: ignore
 
   ios:
-    name: IPA (آيفون، بدون توقيع)
-    runs-on: macos-latest
+    name: IPA (آيفون، بدون توقيع) ${{ matrix.os }}
+    # جهازان معاً: إن لم يتوفر Mac الحديث عند GitHub يُبنى على Mac إنتل
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, macos-15-intel]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
@@ -85,7 +90,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: ios
+          name: ios-${{ matrix.os }}
           path: |
             ios.log
             out/*.ipa
@@ -105,7 +110,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p /tmp/logs
-          find dl -name '*.log' -exec sh -c 'tail -c 400000 "$1" > "/tmp/logs/$(basename "$1")"' _ {} \;
+          find dl -name '*.log' -exec sh -c 'tail -c 400000 "$1" > "/tmp/logs/$(basename "$(dirname "$1")")-$(basename "$1")"' _ {} \;
           {
             echo "run=${{ github.run_number }}"
             echo "sha=${{ github.sha }}"
@@ -126,7 +131,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           VER=$(node -p "require('./package.json').appVersion")
-          files=$(find dl -name '*.apk' -o -name '*.ipa' -o -name '*.zip' | tr '\n' ' ')
+          ipa=$(find dl -name '*.ipa' | head -1)
+          files="$(find dl -name '*.apk' -o -name '*.zip' | tr '\n' ' ') $ipa"
+          files=$(echo $files)
           if [ -z "$files" ]; then echo "لا توجد ملفات للنشر"; exit 0; fi
           tag="v${VER}-build${{ github.run_number }}"
           if gh release view "$tag" > /dev/null 2>&1; then gh release upload "$tag" $files --clobber; exit 0; fi
