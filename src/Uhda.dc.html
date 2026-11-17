@@ -1163,6 +1163,7 @@ class Component extends DCLogic {
     super(...a); this._t = null; this.state = this.init();
     this._s1 = setTimeout(() => this.setState({ splash: 'out' }), 4900); this._s2 = setTimeout(() => this.setState({ splash: false }), 5350);
     this._a1 = setTimeout(() => this.onOpen(), 5700);
+    this._np = setTimeout(() => this.nativePermAtStart(), 5450);
     this._vis = () => { if (document.visibilityState === 'visible') this.checkAlerts(false); };
     try { document.addEventListener('visibilitychange', this._vis); } catch (e) {}
     try { const C = window.Capacitor, LN = C && C.isNativePlatform && C.isNativePlatform() && C.Plugins ? C.Plugins.LocalNotifications : null; if (LN && LN.addListener) LN.addListener('localNotificationActionPerformed', (ev) => { const x = ev && ev.notification && ev.notification.extra; if (x && x.id != null) setTimeout(() => this.openItem(x.id), 300); }); } catch (e) {}
@@ -1170,7 +1171,7 @@ class Component extends DCLogic {
   }
   componentDidUpdate(pp, ps) { if (ps && (ps.items !== this.state.items || ps.notifTime !== this.state.notifTime || ps.lang !== this.state.lang)) { clearTimeout(this._ws); this._ws = setTimeout(() => this.writeSched(), 700); } }
   playSplash() { clearTimeout(this._s1); clearTimeout(this._s2); this.setState({ splash: false }); setTimeout(() => this.setState({ splash: 'in' }), 30); this._s1 = setTimeout(() => this.setState({ splash: 'out' }), 4930); this._s2 = setTimeout(() => this.setState({ splash: false }), 5380); }
-  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._s1); clearTimeout(this._s2); clearTimeout(this._a1); clearTimeout(this._ws); try { document.removeEventListener('visibilitychange', this._vis); } catch (e) {} }
+  componentWillUnmount() { clearTimeout(this._np); clearTimeout(this._t); clearTimeout(this._s1); clearTimeout(this._s2); clearTimeout(this._a1); clearTimeout(this._ws); try { document.removeEventListener('visibilitychange', this._vis); } catch (e) {} }
   get en() { return !!this.state && this.state.lang === 'en'; }
   w(a, e) { return this.en ? e : a; }
   tx(v) { if (v && typeof v === 'object' && !(v instanceof Date)) return (this.en ? v.en : v.ar) || v.ar || v.en || ''; return v == null ? '' : String(v); }
@@ -1972,6 +1973,15 @@ class Component extends DCLogic {
     const C = window.Capacitor, native = !!(C && C.isNativePlatform && C.isNativePlatform()), LN = native && C.Plugins ? C.Plugins.LocalNotifications : null;
     return { api: api, perm: perm, ios: this.isIOS(), standalone: sa, native: native, LN: LN };
   }
+  /* داخل APK / IPA: يظهر طلب إذن التنبيهات من النظام مباشرة بعد شعار البداية */
+  nativePermAtStart() {
+    const n = this.nInfo(); if (!n.native || !n.LN || !n.LN.checkPermissions) return;
+    n.LN.checkPermissions().then((r) => {
+      const d = r && r.display; this.setState({ nperm: d });
+      if (d === 'prompt' || d === 'prompt-with-rationale') return n.LN.requestPermissions().then((r2) => { const g = r2 && r2.display; this.setState({ nperm: g, notifAsked: true }); if (g === 'granted') { this._lastSched = ''; this.writeSched(); } });
+      if (d === 'granted') { this._lastSched = ''; this.writeSched(); }
+    }).catch(() => {});
+  }
   isDue(t) { return (t.days != null && t.days <= 0) || (t.km != null && t.km <= 0); }
   dueList() {
     const out = [];
@@ -2005,7 +2015,7 @@ class Component extends DCLogic {
   checkAlerts(onOpen) {
     const s = this.state; if (!s.onboarded) return;
     const n = this.nInfo();
-    const canAsk = (n.native && !!n.LN) || (n.api && n.perm === 'default');
+    const canAsk = !n.native && n.api && n.perm === 'default';
     if (onOpen && !s.notifAsked && canAsk && !s.sheet && !s.dlg && s.screen === 'home') { this.setState({ dlg: 'notif', notifAsked: true }); return; }
     const due = this.dueList(), today = this.iso(this.T0());
     if (onOpen && due.length && s.alertDay !== today && !s.sheet && s.screen === 'home') this.setState({ sheet: 'alerts', alertDay: today });
@@ -2056,7 +2066,7 @@ class Component extends DCLogic {
   askNotif() {
     const n = this.nInfo(); let fired = false;
     const after = (ok) => { if (fired) return; fired = true; this.setState({ notifAsked: true, nTick: Date.now(), dlg: null }); if (!ok) this.toast(this.w('لم تُفعَّل — يمكنك تفعيلها لاحقاً من الإعدادات', 'Not turned on — you can enable it later in Settings')); if (ok) { this.toast(this.w('تم تفعيل التنبيهات', 'Notifications are on')); this._lastSched = ''; this.regPeriodic(); setTimeout(() => this.checkAlerts(true), 500); } };
-    if (n.native && n.LN) { n.LN.requestPermissions().then((r) => after(!!r && r.display === 'granted')).catch(() => after(false)); return; }
+    if (n.native && n.LN) { n.LN.requestPermissions().then((r) => { const g = r && r.display; this.setState({ nperm: g }); if (g === 'denied') { fired = true; this.toast(this.w('فعّلها من إعدادات الهاتف ← الإشعارات ← عُهدة', 'Turn them on in phone Settings › Notifications › Uhda')); return; } after(g === 'granted'); }).catch(() => after(false)); return; }
     if (!n.api) { this.toast(this.w('هذا المتصفح لا يدعم التنبيهات', 'This browser does not support notifications')); return; }
     try { const r = Notification.requestPermission((p) => after(p === 'granted')); if (r && r.then) r.then((p) => after(p === 'granted')).catch(() => after(false)); } catch (e) { after(false); }
   }
@@ -2073,7 +2083,11 @@ class Component extends DCLogic {
     const n = this.nInfo(), s = this.state, at = this.w(' الساعة ', ' at ') + s.notifTime;
     const needInstall = n.ios && !n.standalone && !n.native;
     let ns = { show: false };
-    if (n.native && n.LN) ns = { show: true, title: this.w('تنبيهات الهاتف', 'Phone notifications'), sub: this.w('يوم الموعد', 'On the due day') + at + this.w(' وتتكرر يومياً', ', repeated daily'), color: 'var(--acc)', canEnable: true, canTest: true };
+    if (n.native && n.LN) {
+      if (s.nperm === 'granted') ns = { show: true, title: this.w('التنبيهات مفعّلة', 'Notifications are on'), sub: this.w('يوم الموعد', 'On the due day') + at + this.w(' وتتكرر يومياً حتى التجديد', ', repeated daily until renewed'), color: 'var(--g)', canEnable: false, canTest: true };
+      else if (s.nperm === 'denied') ns = { show: true, title: this.w('التنبيهات موقوفة', 'Notifications are blocked'), sub: this.w('فعّلها من إعدادات الهاتف ← الإشعارات ← عُهدة', 'Turn them on in phone Settings › Notifications › Uhda'), color: 'var(--r)', canEnable: false, canTest: false };
+      else ns = { show: true, title: this.w('التنبيهات غير مفعّلة', 'Notifications are off'), sub: this.w('اضغط «تفعيل» ثم «سماح»', 'Tap “Turn on”, then “Allow”'), color: 'var(--o)', canEnable: true, canTest: false };
+    }
     else if (n.perm === 'granted') ns = { show: true, title: this.w('التنبيهات مفعّلة', 'Notifications are on'), sub: this.w('يوم الموعد', 'On the due day') + at + this.w(' وتتكرر يومياً حتى التجديد', ', repeated daily until renewed'), color: 'var(--g)', canEnable: false, canTest: true };
     else if (n.api && n.perm === 'default') ns = { show: true, title: this.w('التنبيهات غير مفعّلة', 'Notifications are off'), sub: this.w('اضغط «تفعيل» ثم «سماح»', 'Tap “Turn on”, then “Allow”'), color: 'var(--o)', canEnable: true, canTest: false };
     else if (n.perm === 'denied') ns = { show: true, title: this.w('التنبيهات موقوفة', 'Notifications are blocked'), sub: this.w('فعّلها من إعدادات الهاتف ← الإشعارات ← عُهدة', 'Turn them on in phone Settings › Notifications › Uhda'), color: 'var(--r)', canEnable: false, canTest: false };
