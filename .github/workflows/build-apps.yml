@@ -12,7 +12,7 @@ permissions:
 
 concurrency:
   group: build-apps
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   web:
@@ -140,3 +140,11 @@ jobs:
           gh release create "$tag" $files --target "${{ github.sha }}" --latest \
             --title "عُهدة v${VER}" \
             --notes "APK: ثبّته مباشرة على أندرويد (اسمح بالتثبيت من مصادر غير معروفة). IPA: غير موقّع، وقّعه بتطبيق التوقيع ثم ثبّته. Uhda-web-offline.zip: نسخة الويب كاملة تعمل بدون إنترنت."
+      - name: حذف الإصدارات القديمة (v*-build*) بطلب صاحب المستودع
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for t in $(gh release list --limit 100 --json tagName -q '.[].tagName' | grep -E '^v[0-9.]+-build[0-9]+$' || true); do
+            gh release delete "$t" --yes --cleanup-tag && echo "حُذف $t"
+          done
