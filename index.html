@@ -24,7 +24,6 @@ a{color:#0B6BA8}a:hover{color:#08507F}
 :where(.app) input{font:inherit;color:var(--ink)}
 .scroll{position:absolute;top:0;right:0;left:0;overflow-y:auto;scrollbar-width:none}
 .scroll::-webkit-scrollbar{display:none}
-.scroll.pickfull{bottom:0!important}
 .scroll>*,.scroll>sc-if>*{flex-shrink:0}
 .iconbtn{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);color:var(--ink);box-shadow:var(--shadow)}
 .addbtn{background:var(--acc);border-color:var(--acc);color:var(--accInk)}
@@ -120,7 +119,6 @@ a{color:#0B6BA8}a:hover{color:#08507F}
 .chip{flex:none;display:flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:6px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-size:13.5px;color:var(--mute);text-align:center}
 .chip .c{font-size:11.5px;padding:1px 6px;border-radius:6px;background:var(--card2)}
 .chip.on{border-color:var(--acc);color:var(--accInk);background:var(--acc);font-weight:600}
-.chip.on .c{background:rgba(255,255,255,.24);color:inherit}
 .chip.add{border-style:dashed;color:var(--acc);border-color:var(--acc)}
 .lrow{display:flex;align-items:center;gap:12px;width:100%;padding:14px 4px;border-bottom:1px solid var(--line);text-align:start}
 .lrow:last-child{border-bottom:0}
@@ -150,8 +148,15 @@ a{color:#0B6BA8}a:hover{color:#08507F}
 .mini{display:flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:999px;background:var(--acc);color:var(--accInk);font-size:13px;font-weight:600}
 .minix{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);color:var(--mute)}
 .link{color:var(--acc);font-weight:500;font-size:14px;min-height:44px;padding:0 6px}
-.nav{position:absolute;bottom:0;left:0;right:0;height:calc(72px + env(safe-area-inset-bottom));padding:6px 10px env(safe-area-inset-bottom);display:flex;align-items:stretch;background:var(--card);border-top:1px solid var(--line);z-index:5}
-.navb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;color:var(--mute);min-height:56px;text-align:center}
+.nav{position:absolute;bottom:0;left:0;right:0;height:calc(72px + env(safe-area-inset-bottom));padding:6px 10px env(safe-area-inset-bottom);display:flex;align-items:stretch;z-index:5}
+.navbg{position:absolute;inset:0;filter:drop-shadow(0 -1px 0 var(--line));pointer-events:none}
+.navbg span{position:absolute;inset:0;display:block;background:var(--card);-webkit-mask:radial-gradient(circle 40px at 50% 4px,transparent 39px,#000 40px);mask:radial-gradient(circle 40px at 50% 4px,transparent 39px,#000 40px)}
+.navgap{flex:0 0 92px}
+.fab{position:absolute;left:50%;top:-26px;width:62px;height:62px;margin-left:-31px;border-radius:50%;display:grid;place-items:center;background:var(--acc);color:var(--accInk);box-shadow:0 6px 16px rgba(11,107,168,.35),0 2px 4px rgba(16,24,40,.12);z-index:6;transition:transform .15s}
+.fab:active{transform:scale(.94)}
+.app.dark .fab{box-shadow:0 6px 18px rgba(125,211,252,.25)}
+.themebtn{color:var(--acc)}
+.navb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;color:var(--mute);min-height:56px;text-align:center;position:relative}
 .navb.on{color:var(--acc);font-weight:600}
 .fl{display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:var(--mute)}
 .in{height:50px;border-radius:13px;border:1px solid var(--line);background:var(--card2);padding:0 14px;font-size:16px;outline:none;width:100%;min-width:0;-webkit-appearance:none;appearance:none;text-align:start}
@@ -161,7 +166,6 @@ a{color:#0B6BA8}a:hover{color:#08507F}
 .in::-webkit-date-and-time-value{text-align:start;margin:0}
 .in[type=date]::-webkit-calendar-picker-indicator,.in[type=time]::-webkit-calendar-picker-indicator{position:absolute;inset-inline-end:0;top:0;width:52px;height:100%;opacity:0;cursor:pointer}
 .datebox{position:relative;display:block}
-.datebox .in{padding-inline-end:46px}
 .calic{position:absolute;inset-inline-end:15px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--mute)}
 .durrow{display:flex;gap:8px;align-items:stretch}
 .segs{display:flex;gap:4px;padding:4px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
@@ -172,7 +176,7 @@ a{color:#0B6BA8}a:hover{color:#08507F}
 .scrim{position:absolute;inset:0;width:100%;height:100%;background:rgba(0,0,0,.5)}
 .sheet{position:absolute;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);border-radius:26px 26px 0 0;padding:10px 16px calc(24px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px;max-height:90%;overflow-y:auto}
 .grab{width:40px;height:5px;border-radius:5px;background:var(--line);align-self:center}
-.toast{position:absolute;bottom:calc(96px + env(safe-area-inset-bottom));left:16px;right:16px;z-index:40;background:var(--ink);color:var(--bg);padding-block:8px;padding-inline-start:16px;padding-inline-end:8px;min-height:50px;border-radius:14px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px}
+.toast{position:absolute;top:12px;left:16px;right:16px;z-index:40;box-shadow:0 8px 24px rgba(16,24,40,.18);background:var(--ink);color:var(--bg);padding-block:8px;padding-inline-start:16px;padding-inline-end:8px;min-height:50px;border-radius:14px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px}
 .undo{flex:none;height:36px;padding:0 14px;border-radius:10px;background:var(--bg);color:var(--ink);font-weight:600;font-size:13.5px}
 .zoom{position:absolute;inset:0;z-index:50;background:#000;display:flex;flex-direction:column}
 .zoombtn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.14);color:#fff}
@@ -207,6 +211,37 @@ a{color:#0B6BA8}a:hover{color:#08507F}
 .rgrid:last-child{border-bottom:0}
 .rgrid.h{font-size:11px;color:var(--mute);font-weight:600;padding-top:4px}
 .rspec{display:block;font-size:11px;color:var(--mute);margin-top:2px;line-height:1.5}
+.lrow.flash{animation:rowFlash 2.2s ease-out}
+@keyframes rowFlash{0%,35%{background:var(--gS)}100%{background:transparent}}
+.alertbox{display:flex;flex-direction:column;gap:10px;padding:12px;border-radius:14px;background:var(--rS);color:var(--r)}
+.alertbox.muted{background:var(--nS);color:var(--n)}
+.alertbox.soon{background:var(--oS);color:var(--o)}
+.alertbox .at{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;line-height:1.5}
+.abtns{display:flex;flex-wrap:wrap;gap:8px}
+.abtn{display:flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:999px;border:1px solid currentColor;font-size:13px;font-weight:600;background:var(--card)}
+.hthumb{flex:none;width:44px;height:44px;border-radius:10px;overflow:hidden;background:var(--card2);border:1px solid var(--line);display:block}
+.hthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.notifrow{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;background:var(--card2);border:1px solid var(--line)}
+.stp{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.7}
+.stp b{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--acc);color:var(--accInk);font-size:12px}
+.sheet>*,.sheet>sc-if>*,.sheet>sc-if>sc-if>*{flex-shrink:0}
+.dlgwrap{position:absolute;inset:0;z-index:45;display:grid;place-items:center;padding:24px}
+.dlg{position:relative;width:100%;max-width:320px;background:var(--card);border-radius:22px;padding:22px 18px 16px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.dlg .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;margin-top:6px}
+.hrowb{width:100%;text-align:start;cursor:pointer}
+.recimg{display:block;width:100%;border-radius:14px;overflow:hidden;background:var(--card2)}
+.recimg img{display:block;width:100%;height:auto;max-height:340px;object-fit:contain}
+.chip svg{flex:none}
+.dirtydot{width:8px;height:8px;border-radius:50%;background:var(--o);display:inline-block}
+.navbg span{-webkit-mask:none;mask:none}
+.fab{top:8px;width:56px;height:56px;margin-left:-28px;box-shadow:0 4px 12px rgba(11,107,168,.28)}
+.app.dark .fab{box-shadow:0 4px 14px rgba(125,211,252,.22)}
+.navgap{flex:0 0 84px}
+.scroll.pickfull{bottom:0!important}
+.chip.on .c{background:rgba(255,255,255,.24);color:inherit}
+.datebox .in{padding-inline-end:46px}
+.about .aby{font-size:12px;color:var(--mute);margin-top:2px}
+.chg{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:12px;background:var(--card2);font-size:13.5px}
 </style>
 <style>
 /* تشغيل مستقل: ملء الشاشة + منع التكبير والتحديد */
@@ -230,14 +265,14 @@ input,textarea{-webkit-user-select:text;user-select:text}
 <div class="app {{themeClass}}" dir="{{dir}}" lang="{{langCode}}" style="direction: {{dir}}; width: 390px; height: 844px; position: relative; overflow: hidden; background: var(--bg); color: var(--ink); font-family: 'Almarai', system-ui, sans-serif; transition: background .25s">
 
 <sc-if value="{{isHome}}" hint-placeholder-val="{{ true }}">
-<div class="scroll" style="bottom: calc(72px + env(safe-area-inset-bottom)); padding: 18px 16px 28px; display: flex; flex-direction: column; gap: 14px">
+<div class="scroll homescroll" style="bottom: calc(72px + env(safe-area-inset-bottom)); padding: 18px 16px 28px; display: flex; flex-direction: column; gap: 14px">
   <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px">
     <div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start; min-width: 0">
       <h1 style="margin: 0; font-size: 24px; font-weight: 600; line-height: 1.2">{{homeTitle}}</h1>
       <span class="sb">{{todayText}}</span>
     </div>
     <div style="display: flex; gap: 6px; flex: none">
-      <sc-if value="{{showAddBtn}}" hint-placeholder-val="{{ true }}"><button class="iconbtn addbtn" onClick="{{openAdd}}" aria-label="{{L.add}}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14 M5 12h14"></path></svg></button></sc-if>
+      <button class="iconbtn themebtn" onClick="{{toggleTheme}}" aria-label="{{themeAria}}"><sc-if value="{{isLight}}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg></sc-if><sc-if value="{{isDark}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8z M12 2.5v2 M12 19.5v2 M2.5 12h2 M19.5 12h2 M5.3 5.3l1.4 1.4 M17.3 17.3l1.4 1.4 M5.3 18.7l1.4-1.4 M17.3 6.7l1.4-1.4"></path></svg></sc-if></button>
       <button class="iconbtn langbtn" onClick="{{toggleLang}}" aria-label="{{L.aLang}}">{{L.langBtn}}</button>
       <button class="iconbtn" onClick="{{openSettings}}" aria-label="{{L.settings}}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9 M17 7h3 M15 5v4 M4 17h3 M11 17h9 M9 15v4"></path></svg></button>
     </div>
@@ -337,7 +372,7 @@ input,textarea{-webkit-user-select:text;user-select:text}
       <sc-if value="{{subParts}}" hint-placeholder-val="{{ true }}">
         <div class="panel" style="padding: 4px 14px">
           <sc-for list="{{carParts}}" as="it" hint-placeholder-count="4">
-            <button class="lrow" onClick="{{it.open}}">
+            <button class="lrow {{it.flash}}" onClick="{{it.open}}">
               <span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.icon}}"></path></svg></span>
               <span class="mid"><span class="nm">{{it.name}}</span><span style="display: flex; align-items: center; gap: 6px"><span class="ldot d-{{it.lv}}" style="width: 7px; height: 7px"></span><span class="sb">{{it.lvText}} · {{it.mainName}}</span></span></span>
               <span class="val"><span class="b tx-{{it.lv}}">{{it.big}}</span><span class="u">{{it.unit}}</span></span>
@@ -345,13 +380,12 @@ input,textarea{-webkit-user-select:text;user-select:text}
           </sc-for>
           <sc-if value="{{noParts}}" hint-placeholder-val="{{ false }}"><div style="padding: 20px 4px; color: var(--mute); font-size: 14px; text-align: center">{{L.noParts}}</div></sc-if>
         </div>
-        <button class="dashed" onClick="{{addPartForCar}}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14 M5 12h14"></path></svg>{{L.addPart}}</button>
       </sc-if>
 
       <sc-if value="{{subDocs}}" hint-placeholder-val="{{ false }}">
         <div class="panel" style="padding: 4px 14px">
           <sc-for list="{{carDocs}}" as="it" hint-placeholder-count="2">
-            <button class="lrow" onClick="{{it.open}}">
+            <button class="lrow {{it.flash}}" onClick="{{it.open}}">
               <span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.icon}}"></path></svg></span>
               <span class="mid"><span class="nm">{{it.name}}</span><span style="display: flex; align-items: center; gap: 6px"><span class="ldot d-{{it.lv}}" style="width: 7px; height: 7px"></span><span class="sb">{{it.lvText}} · {{it.due}}</span></span></span>
               <span class="val"><span class="b tx-{{it.lv}}">{{it.big}}</span><span class="u">{{it.unit}}</span></span>
@@ -359,34 +393,8 @@ input,textarea{-webkit-user-select:text;user-select:text}
           </sc-for>
           <sc-if value="{{noCarDocs}}" hint-placeholder-val="{{ false }}"><div style="padding: 20px 4px; color: var(--mute); font-size: 14px; text-align: center">{{L.noCarDocs}}</div></sc-if>
         </div>
-        <sc-if value="{{hasCarDocTpls}}" hint-placeholder-val="{{ true }}">
-          <div style="display: flex; flex-direction: column; gap: 8px">
-            <span class="sec">{{L.tplQuick}}</span>
-            <div class="wrapchips"><sc-for list="{{carDocTpls}}" as="p" hint-placeholder-count="3"><button class="chip add" onClick="{{p.pick}}">+ {{p.label}}</button></sc-for></div>
-          </div>
-        </sc-if>
-        <button class="dashed" onClick="{{addDocForCar}}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14 M5 12h14"></path></svg>{{L.addCarDoc}}</button>
       </sc-if>
 
-      <sc-if value="{{subFuel}}" hint-placeholder-val="{{ false }}">
-        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
-          <div class="stat"><span class="cap">{{L.kmpl}}</span><span class="sv">{{fuel.kmpl}}</span><span class="cap">{{L.kmplU}}</span></div>
-          <div class="stat"><span class="cap">{{L.cpk}}</span><span class="sv">{{fuel.cpk}}</span><span class="cap">{{L.cpkU}}</span></div>
-          <div class="stat"><span class="cap">{{L.fuelMonth}}</span><span class="sv">{{fuel.month}}</span><span class="cap">{{L.omr}}</span></div>
-        </div>
-        <div class="panel" style="padding: 4px 14px">
-          <sc-for list="{{fuel.rows}}" as="fr" hint-placeholder-count="3">
-            <div class="hrow">
-              <span class="ic"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V5h9v15 M4 20h11 M7.5 8.5h4 M14 9l3 2v6.5a1.5 1.5 0 0 0 3 0V9l-3-3"></path></svg></span>
-              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column"><span style="font-size: 14px">{{fr.main}}</span><span class="sb">{{fr.date}} · {{fr.eff}}</span></span>
-              <span style="font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums">{{fr.cost}}</span>
-              <button class="minix" onClick="{{fr.del}}" aria-label="{{L.aDelFuel}}" style="border: 0"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12 M18 6L6 18"></path></svg></button>
-            </div>
-          </sc-for>
-          <sc-if value="{{fuel.empty}}" hint-placeholder-val="{{ false }}"><div style="padding: 20px 4px; color: var(--mute); font-size: 14px; text-align: center">{{L.noFuel}}</div></sc-if>
-        </div>
-        <button class="primary" onClick="{{openFuelCur}}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14 M5 12h14"></path></svg>{{L.addFuel}}</button>
-      </sc-if>
     </sc-if>
     <sc-if value="{{noCars}}" hint-placeholder-val="{{ false }}">
       <div class="panel" style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 28px 16px; text-align: center">
@@ -456,7 +464,7 @@ input,textarea{-webkit-user-select:text;user-select:text}
     </div>
     <div class="panel" style="padding: 4px 14px">
       <sc-for list="{{docList}}" as="it" hint-placeholder-count="6">
-        <button class="lrow" onClick="{{it.open}}">
+        <button class="lrow {{it.flash}}" onClick="{{it.open}}">
           <span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.icon}}"></path></svg></span>
           <span class="mid">
             <span class="nm">{{it.name}}</span>
@@ -477,7 +485,7 @@ input,textarea{-webkit-user-select:text;user-select:text}
       <sc-if value="{{showArch}}" hint-placeholder-val="{{ false }}">
         <div class="panel" style="padding: 4px 14px">
           <sc-for list="{{archList}}" as="it" hint-placeholder-count="1">
-            <button class="lrow" onClick="{{it.open}}">
+            <button class="lrow {{it.flash}}" onClick="{{it.open}}">
               <span class="ic" style="color: var(--mute)"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.icon}}"></path></svg></span>
               <span class="mid"><span class="nm" style="color: var(--mute)">{{it.name}}</span><span class="sb">{{it.catLine}} · {{it.sub}}</span></span>
             </button>
@@ -487,51 +495,14 @@ input,textarea{-webkit-user-select:text;user-select:text}
     </sc-if>
   </sc-if>
 
-  <sc-if value="{{isSpendTab}}" hint-placeholder-val="{{ false }}">
-    <div class="segs"><sc-for list="{{rangeOpts}}" as="o" hint-placeholder-count="3"><button class="seg {{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
-    <div class="chips"><sc-for list="{{scopeOpts}}" as="o" hint-placeholder-count="4"><button class="chip {{o.on}}" onClick="{{o.pick}}" style="white-space: nowrap">{{o.label}}</button></sc-for></div>
-    <div class="panel" style="display: flex; flex-direction: column; gap: 4px">
-      <span class="cap">{{L.totalDash}} {{sp.rangeText}} · {{sp.scopeText}}</span>
-      <span style="font-size: 32px; font-weight: 600; font-variant-numeric: tabular-nums">{{sp.total}}</span>
-      <span class="sb">{{sp.count}} {{L.opsWord}}</span>
-    </div>
-    <sc-if value="{{sp.empty}}" hint-placeholder-val="{{ false }}"><div class="panel" style="text-align: center; color: var(--mute); font-size: 14px">{{L.noSpendRange}}</div></sc-if>
-    <sc-if value="{{sp.has}}" hint-placeholder-val="{{ true }}">
-      <div class="panel" style="display: flex; flex-direction: column; gap: 14px">
-        <h2 class="sec">{{L.byCat}}</h2>
-        <sc-for list="{{sp.cats}}" as="c" hint-placeholder-count="4">
-          <div style="display: flex; flex-direction: column; gap: 6px">
-            <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
-              <span style="display: flex; align-items: center; gap: 8px; font-size: 14px"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="var(--acc)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>{{c.label}}</span>
-              <span style="font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums">{{c.amount}} <span class="sb">· {{c.share}}</span></span>
-            </div>
-            <span class="bar" style="height: 8px"><span class="fill f-a" style="width: {{c.w}}%"></span></span>
-          </div>
-        </sc-for>
-      </div>
-      <div class="panel" style="padding: 8px 16px">
-        <h2 class="sec" style="padding-top: 6px">{{L.topCost}}</h2>
-        <sc-for list="{{sp.top}}" as="tp" hint-placeholder-count="3">
-          <button class="row" onClick="{{tp.open}}" style="width: 100%"><span style="font-size: 14px; text-align: start">{{tp.name}}</span><span style="font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums">{{tp.amount}}</span></button>
-        </sc-for>
-      </div>
-      <div class="panel" style="padding: 8px 16px">
-        <h2 class="sec" style="padding-top: 6px">{{L.recentOps}}</h2>
-        <sc-for list="{{sp.recent}}" as="r" hint-placeholder-count="4">
-          <div class="hrow">
-            <span class="ic" style="width: 34px; height: 34px"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.icon}}"></path></svg></span>
-            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column"><span style="font-size: 14px">{{r.name}}</span><span class="sb">{{r.note}} · {{r.date}}</span></span>
-            <span style="font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums">{{r.cost}}</span>
-          </div>
-        </sc-for>
-      </div>
-    </sc-if>
-  </sc-if>
 </div>
 <nav class="nav" aria-label="{{L.aNav}}">
-  <sc-for list="{{navTabs}}" as="nt" hint-placeholder-count="3">
+  <div class="navbg" aria-hidden="true"><span></span></div>
+  <sc-for list="{{navTabs}}" as="nt" hint-placeholder-count="2">
+    <sc-if value="{{nt.gap}}" hint-placeholder-val="{{ false }}"><span class="navgap" aria-hidden="true"></span></sc-if>
     <button class="navb {{nt.on}}" onClick="{{nt.pick}}"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{nt.icon}}"></path></svg>{{nt.label}}</button>
   </sc-for>
+  <button class="fab" onClick="{{fabTap}}" aria-label="{{fabAria}}"><svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14 M5 12h14"></path></svg></button>
 </nav>
 </sc-if>
 
@@ -539,6 +510,7 @@ input,textarea{-webkit-user-select:text;user-select:text}
 <div class="scroll" style="bottom: calc(90px + env(safe-area-inset-bottom)); padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 14px">
   <div style="display: flex; align-items: center; gap: 8px">
     <button class="iconbtn" onClick="{{back}}" aria-label="{{L.aBack}}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{backPath}}"></path></svg></button>
+    <span class="ic"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{cur.icon}}"></path></svg></span>
     <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
       <span class="cap">{{cur.catLine}}</span>
       <h1 style="margin: 0; font-size: 20px; font-weight: 600; line-height: 1.25">{{cur.name}}</h1>
@@ -567,25 +539,30 @@ input,textarea{-webkit-user-select:text;user-select:text}
   </div>
 
   <div class="panel" style="display: flex; flex-direction: column; padding-bottom: 14px">
-    <h2 class="sec">{{L.reminders}} ({{cur.remCount}})</h2>
-    <sc-for list="{{cur.ts}}" as="t" hint-placeholder-count="2">
+    <h2 class="sec">{{L.schedTitle}}</h2>
+    <sc-for list="{{cur.ts}}" as="t" hint-placeholder-count="1">
       <div class="rem">
         <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px"><span style="font-size: 15px; font-weight: 600">{{t.name}}</span><span class="pill p-{{t.lv}}">{{t.lvText}}</span></div>
         <span class="sb">{{t.typeText}}</span>
         <span class="bar"><span class="fill f-{{t.lv}}" style="width: {{t.left}}%"></span></span>
         <div style="display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap"><span class="sb tx-{{t.lv}}" style="font-weight: 500">{{t.text}}</span><span class="sb">{{t.dueText}}</span></div>
         <sc-if value="{{t.hasPredict}}" hint-placeholder-val="{{ false }}"><span class="sb">{{t.predict}}</span></sc-if>
-        <sc-if value="{{t.hasBefore}}" hint-placeholder-val="{{ true }}"><span class="sb" style="display: flex; align-items: center; gap: 6px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z M10 20.5h4"></path></svg>{{t.beforeText}}</span></sc-if>
-        <sc-if value="{{t.hasActions}}" hint-placeholder-val="{{ true }}">
-          <div style="display: flex; gap: 8px; margin-top: 4px">
-            <sc-if value="{{t.canDone}}" hint-placeholder-val="{{ true }}"><button class="mini" onClick="{{t.done}}"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{t.doneLabel}}</button></sc-if>
-            <sc-if value="{{t.custom}}" hint-placeholder-val="{{ false }}"><button class="minix" onClick="{{t.del}}" aria-label="{{L.aDelRem}}"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14 M10 7V4h4v3 M7 7l1 13h8l1-13"></path></svg></button></sc-if>
+        <sc-if value="{{t.showAlert}}" hint-placeholder-val="{{ true }}">
+          <div class="alertbox {{t.abCls}}" style="margin-top: 4px">
+            <span class="at"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z M10 20.5h4"></path></svg>{{t.alertText}}</span>
+            <div class="abtns">
+              <sc-if value="{{t.canDone}}" hint-placeholder-val="{{ true }}"><button class="abtn" onClick="{{t.done}}"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{t.doneLabel}}</button></sc-if>
+              <sc-if value="{{t.canMute}}" hint-placeholder-val="{{ true }}"><button class="abtn" onClick="{{t.mute}}"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 0 1 9.5-4.9 M18 11v5l1.5 2H8 M10 20.5h4 M4 4l16 16"></path></svg>{{L.mute}}</button></sc-if>
+              <sc-if value="{{t.canUnmute}}" hint-placeholder-val="{{ false }}"><button class="abtn" onClick="{{t.unmute}}"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z M10 20.5h4"></path></svg>{{L.unmute}}</button></sc-if>
+            </div>
           </div>
         </sc-if>
+        <sc-if value="{{t.showInfo}}" hint-placeholder-val="{{ false }}"><span class="sb" style="display: flex; align-items: center; gap: 6px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z M10 20.5h4"></path></svg>{{t.infoText}}</span></sc-if>
+        <sc-if value="{{t.canCancel}}" hint-placeholder-val="{{ false }}"><button class="link" onClick="{{t.cancel}}" style="align-self: flex-start; padding: 0; color: var(--r); font-size: 13px">{{t.cancelLabel}}</button></sc-if>
+        <sc-if value="{{t.custom}}" hint-placeholder-val="{{ false }}"><button class="link" onClick="{{t.del}}" style="align-self: flex-start; padding: 0; color: var(--r); font-size: 13px">{{L.aDelRem}}</button></sc-if>
       </div>
     </sc-for>
     <sc-if value="{{cur.noTracks}}" hint-placeholder-val="{{ false }}"><span class="sb" style="padding: 10px 0">{{L.noRems}}</span></sc-if>
-    <button class="dashed" onClick="{{openRem}}" style="margin-top: 6px"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14 M5 12h14"></path></svg>{{L.addRem}}</button>
   </div>
 
   <div class="panel" style="display: flex; flex-direction: column; padding-bottom: 14px">
@@ -613,7 +590,7 @@ input,textarea{-webkit-user-select:text;user-select:text}
   </sc-if>
 
   <div class="panel" style="display: flex; flex-direction: column; gap: 12px">
-    <h2 class="sec">{{L.photoTitle}}</h2>
+    <h2 class="sec">{{cur.photoTitle}}</h2>
     <sc-if value="{{cur.hasPhoto}}" hint-placeholder-val="{{ false }}">
       <button onClick="{{openZoom}}" aria-label="{{L.aZoom}}" style="display: block; width: 100%; border-radius: 14px; overflow: hidden; background: var(--card2)"><img src="{{cur.photo}}" alt="{{L.altPhoto}}" style="width: 100%; height: auto; max-height: 420px; object-fit: contain; display: block"></button>
       <span class="sb" style="display: flex; align-items: center; gap: 6px; color: var(--g)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M12 3l7 3v5c0 4.5-3 8-7 10c-4-2-7-5.5-7-10V6z M9 12l2 2 4-4"></path></svg>{{L.photoSafe}}</span>
@@ -637,23 +614,20 @@ input,textarea{-webkit-user-select:text;user-select:text}
     </div>
     <div>
       <sc-for list="{{cur.hist}}" as="h" hint-placeholder-count="2">
-        <div class="hrow">
-          <span class="ldot" style="background: var(--acc)"></span>
+        <button class="hrow hrowb" onClick="{{h.view}}">
+          <sc-if value="{{h.hasPhoto}}" hint-placeholder-val="{{ false }}"><span class="hthumb"><img src="{{h.photo}}" alt=""></span></sc-if>
+          <sc-if value="{{h.noPhoto}}" hint-placeholder-val="{{ true }}"><span class="ldot" style="background: var(--acc)"></span></sc-if>
           <span style="flex: 1; min-width: 0; display: flex; flex-direction: column"><span style="font-size: 14px">{{h.note}}</span><span class="sb">{{h.date}}<sc-if value="{{h.hasKm}}" hint-placeholder-val="{{ false }}"> · {{h.km}}</sc-if></span></span>
           <span style="font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums">{{h.cost}}</span>
-        </div>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--mute)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{fwdPath}}"></path></svg>
+        </button>
       </sc-for>
       <sc-if value="{{cur.noHist}}" hint-placeholder-val="{{ false }}"><span class="sb">{{L.noHist}}</span></sc-if>
     </div>
   </div>
 </div>
 <div class="actionbar">
-  <sc-if value="{{cur.hasMain}}" hint-placeholder-val="{{ true }}">
-    <button class="primary" onClick="{{cur.doMain}}"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{cur.mainLabel}}</button>
-  </sc-if>
-  <sc-if value="{{cur.noMain}}" hint-placeholder-val="{{ false }}">
-    <button class="ghost" onClick="{{openRem}}">{{L.addRemFor}}</button>
-  </sc-if>
+  <button class="primary" onClick="{{detailSave}}"><sc-if value="{{cur.dirty}}" hint-placeholder-val="{{ false }}"><span class="dirtydot"></span></sc-if>{{cur.saveLabel}}</button>
 </div>
 </sc-if>
 
@@ -696,7 +670,7 @@ input,textarea{-webkit-user-select:text;user-select:text}
     <sc-if value="{{hasPresets}}" hint-placeholder-val="{{ true }}">
       <div style="display: flex; flex-direction: column; gap: 8px">
         <span class="sec">{{L.quickPick}}</span>
-        <div class="wrapchips"><sc-for list="{{presets}}" as="p" hint-placeholder-count="4"><button class="chip {{p.on}}" onClick="{{p.pick}}">{{p.label}}</button></sc-for></div>
+        <div class="wrapchips"><sc-for list="{{presets}}" as="p" hint-placeholder-count="4"><button class="chip {{p.on}}" onClick="{{p.pick}}"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{p.icon}}"></path></svg>{{p.label}}</button></sc-for></div>
       </div>
     </sc-if>
     <sc-if value="{{isCustomForm}}" hint-placeholder-val="{{ false }}">
@@ -709,6 +683,36 @@ input,textarea{-webkit-user-select:text;user-select:text}
       <sc-if value="{{fd.isDate}}" hint-placeholder-val="{{ false }}"><label class="fl"><span>{{fd.label}}</span><span class="datebox"><input class="in" type="date" value="{{fd.value}}" onChange="{{fd.onChange}}"><svg class="calic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4"></path></svg></span></label></sc-if>
       <sc-if value="{{fd.isDur}}" hint-placeholder-val="{{ false }}"><div class="fl"><span>{{fd.label}}</span><div class="durrow"><input class="in" type="text" inputmode="numeric" value="{{fd.value}}" placeholder="{{fd.ph}}" onChange="{{fd.onChange}}" aria-label="{{fd.label}}" style="width: 84px; flex: none; text-align: center"><div class="segs" style="flex: 1; min-width: 0"><sc-for list="{{fd.units}}" as="un" hint-placeholder-count="4"><button class="seg {{un.on}}" onClick="{{un.pick}}">{{un.label}}</button></sc-for></div></div></div></sc-if>
     </sc-for>
+    <sc-if value="{{isPartForm}}" hint-placeholder-val="{{ false }}">
+      <div class="fl"><span>{{L.odoAtChange}}</span>
+        <div class="segs"><sc-for list="{{odoModes}}" as="om" hint-placeholder-count="2"><button class="seg {{om.on}}" onClick="{{om.pick}}">{{om.label}}</button></sc-for></div>
+        <sc-if value="{{odoNewMode}}" hint-placeholder-val="{{ false }}"><input class="in" type="text" inputmode="numeric" value="{{odoNewVal}}" placeholder="{{odoNewPh}}" onChange="{{setOdoNew}}" aria-label="{{L.odoAtChange}}"></sc-if>
+        <span class="sb" style="display: flex; align-items: center; gap: 6px"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M4 16a8 8 0 1 1 16 0 M12 16l4-5 M12 16h.01"></path></svg>{{odoHint}}</span>
+      </div>
+    </sc-if>
+    <sc-if value="{{formHasPhoto}}" hint-placeholder-val="{{ true }}">
+      <div class="fl"><span>{{formPhotoLabel}}</span>
+        <sc-if value="{{hasFormPhoto}}" hint-placeholder-val="{{ false }}"><img src="{{formPhoto}}" alt="{{L.altPreview}}" style="width: 100%; height: auto; max-height: 360px; object-fit: contain; border-radius: 14px; display: block; background: var(--card2)"></sc-if>
+        <label class="attach">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z M12 10.5a3 3 0 1 0 0 6a3 3 0 1 0 0-6z"></path></svg>
+          <span>{{formPhotoBtn}}</span>
+          <input class="hidefile" type="file" accept="image/*" onChange="{{onFormPhoto}}" aria-label="{{formPhotoBtn}}">
+        </label>
+      </div>
+    </sc-if>
+    <sc-if value="{{isDevForm}}" hint-placeholder-val="{{ false }}">
+      <div class="fl"><span>{{L.maintTitle}}</span>
+        <div class="wrapchips"><sc-for list="{{maintOpts}}" as="m" hint-placeholder-count="6"><button class="chip {{m.on}}" onClick="{{m.pick}}">{{m.label}}</button></sc-for></div>
+      </div>
+      <sc-if value="{{maintOn}}" hint-placeholder-val="{{ false }}">
+        <sc-if value="{{maintCustom}}" hint-placeholder-val="{{ false }}">
+          <div class="fl"><span>{{L.maintEvery}}</span><div class="durrow"><input class="in" type="text" inputmode="numeric" value="{{maintNVal}}" onChange="{{setMaintN}}" aria-label="{{L.maintEvery}}" style="width: 84px; flex: none; text-align: center"><div class="segs" style="flex: 1; min-width: 0"><sc-for list="{{maintUnits}}" as="un" hint-placeholder-count="4"><button class="seg {{un.on}}" onClick="{{un.pick}}">{{un.label}}</button></sc-for></div></div></div>
+        </sc-if>
+        <label class="fl"><span>{{L.maintName}}</span><input class="in" type="text" value="{{maintNameVal}}" placeholder="{{maintNamePh}}" onChange="{{setMaintName}}"></label>
+        <label class="fl"><span>{{L.maintLast}}</span><span class="datebox"><input class="in" type="date" value="{{maintLastVal}}" onChange="{{setMaintLast}}"><svg class="calic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4"></path></svg></span></label>
+        <div class="ob-note"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z M10 20.5h4"></path></svg><span>{{maintNote}}</span></div>
+      </sc-if>
+    </sc-if>
     <sc-if value="{{hasExtra}}" hint-placeholder-val="{{ true }}">
       <button class="extra" onClick="{{toggleExtra}}">
         <span>{{L.extraDetails}} ({{extraCount}})</span>
@@ -719,21 +723,6 @@ input,textarea{-webkit-user-select:text;user-select:text}
           <sc-if value="{{fd.isText}}" hint-placeholder-val="{{ true }}"><label class="fl"><span>{{fd.label}}</span><input class="in" type="text" inputmode="{{fd.im}}" value="{{fd.value}}" placeholder="{{fd.ph}}" onChange="{{fd.onChange}}"></label></sc-if>
           <sc-if value="{{fd.isDate}}" hint-placeholder-val="{{ false }}"><label class="fl"><span>{{fd.label}}</span><span class="datebox"><input class="in" type="date" value="{{fd.value}}" onChange="{{fd.onChange}}"><svg class="calic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4"></path></svg></span></label></sc-if>
         </sc-for>
-        <sc-if value="{{formHasBefore}}" hint-placeholder-val="{{ true }}">
-          <div class="fl"><span>{{L.alertBefore}}</span>
-            <div class="wrapchips"><sc-for list="{{formBefore}}" as="b" hint-placeholder-count="6"><button class="chip {{b.on}}" onClick="{{b.pick}}">{{b.label}}</button></sc-for></div>
-          </div>
-        </sc-if>
-        <sc-if value="{{formHasPhoto}}" hint-placeholder-val="{{ true }}">
-          <div class="fl"><span>{{formPhotoLabel}}</span>
-            <sc-if value="{{hasFormPhoto}}" hint-placeholder-val="{{ false }}"><img src="{{formPhoto}}" alt="{{L.altPreview}}" style="width: 100%; height: auto; max-height: 360px; object-fit: contain; border-radius: 14px; display: block; background: var(--card2)"></sc-if>
-            <label class="attach">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z M12 10.5a3 3 0 1 0 0 6a3 3 0 1 0 0-6z"></path></svg>
-              <span>{{L.takePhoto}}</span>
-              <input class="hidefile" type="file" accept="image/*" onChange="{{onFormPhoto}}" aria-label="{{L.takePhoto}}">
-            </label>
-          </div>
-        </sc-if>
       </sc-if>
     </sc-if>
     <sc-if value="{{hasErr}}" hint-placeholder-val="{{ false }}"><span class="err" role="alert">{{formErr}}</span></sc-if>
@@ -802,7 +791,7 @@ input,textarea{-webkit-user-select:text;user-select:text}
     <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
       <div class="stat"><span class="cap">{{L.cars}}</span><span class="sv">{{bk.nCars}}</span></div>
       <div class="stat"><span class="cap">{{L.itemsW}}</span><span class="sv">{{bk.nItems}}</span></div>
-      <div class="stat"><span class="cap">{{L.fills}}</span><span class="sv">{{bk.nFuel}}</span></div>
+      <div class="stat"><span class="cap">{{L.photosW}}</span><span class="sv">{{bk.nPhotos}}</span></div>
     </div>
     <span class="sec">{{L.exportB}}</span>
     <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
@@ -903,51 +892,22 @@ input,textarea{-webkit-user-select:text;user-select:text}
         <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{renewTitle}}</h2>
         <span class="sb">{{renewHint}}</span>
       </div>
-      <sc-if value="{{rfKm}}" hint-placeholder-val="{{ false }}"><label class="fl"><span>{{L.odoNow}}</span><input class="in" type="text" inputmode="numeric" value="{{rf.km}}" onChange="{{setRfKm}}"></label></sc-if>
+      <label class="fl"><span>{{rfDateLabel}}</span><span class="datebox"><input class="in" type="date" value="{{rf.date}}" onChange="{{setRfDate}}"><svg class="calic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4"></path></svg></span></label>
+      <sc-if value="{{rfKm}}" hint-placeholder-val="{{ false }}">
+        <div class="fl"><span>{{L.odoAtChange}}</span>
+          <div class="segs"><sc-for list="{{rfOdoModes}}" as="om" hint-placeholder-count="2"><button class="seg {{om.on}}" onClick="{{om.pick}}">{{om.label}}</button></sc-for></div>
+          <sc-if value="{{rfOdoNew}}" hint-placeholder-val="{{ false }}"><input class="in" type="text" inputmode="numeric" value="{{rf.km}}" placeholder="{{odoNewPh}}" onChange="{{setRfKm}}" aria-label="{{L.odoAtChange}}"></sc-if>
+        </div>
+      </sc-if>
       <sc-if value="{{rfExp}}" hint-placeholder-val="{{ false }}"><label class="fl"><span>{{rfExpLabel}}</span><span class="datebox"><input class="in" type="date" value="{{rf.exp}}" onChange="{{setRfExp}}"><svg class="calic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4"></path></svg></span></label></sc-if>
       <label class="fl"><span>{{L.cost}}</span><input class="in" type="text" inputmode="decimal" value="{{rf.cost}}" placeholder="0" onChange="{{setRfCost}}"></label>
       <label class="fl"><span>{{L.noteOpt}}</span><input class="in" type="text" value="{{rf.note}}" placeholder="{{L.notePh}}" onChange="{{setRfNote}}"></label>
+      <div class="fl"><span>{{rfPhotoLabel}}</span>
+        <sc-if value="{{rf.hasPhoto}}" hint-placeholder-val="{{ false }}"><img src="{{rf.photo}}" alt="{{L.altPreview}}" style="width: 100%; height: auto; max-height: 260px; object-fit: contain; border-radius: 14px; display: block; background: var(--card2)"></sc-if>
+        <label class="attach"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z M12 10.5a3 3 0 1 0 0 6a3 3 0 1 0 0-6z"></path></svg><span>{{rf.photoBtn}}</span><input class="hidefile" type="file" accept="image/*" onChange="{{onRfPhoto}}" aria-label="{{rf.photoBtn}}"></label>
+        <span class="sb">{{L.oldInvKept}}</span>
+      </div>
       <button class="primary" onClick="{{confirmRenew}}">{{L.saveLog}}</button>
-    </sc-if>
-    <sc-if value="{{sheetFuel}}" hint-placeholder-val="{{ false }}">
-      <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{L.addFuel}}</h2>
-      <sc-if value="{{multiCars}}" hint-placeholder-val="{{ true }}">
-        <div class="fl"><span>{{L.car}}</span><div class="wrapchips"><sc-for list="{{fuelCarOpts}}" as="o" hint-placeholder-count="2"><button class="chip {{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div></div>
-      </sc-if>
-      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
-        <label class="fl"><span>{{L.liters}}</span><input class="in" type="text" inputmode="decimal" value="{{fuelF.liters}}" placeholder="45" onChange="{{setFuelL}}"></label>
-        <label class="fl"><span>{{L.fuelCost}}</span><input class="in" type="text" inputmode="decimal" value="{{fuelF.cost}}" placeholder="10.750" onChange="{{setFuelC}}"></label>
-      </div>
-      <label class="fl"><span>{{L.odoAtFill}}</span><input class="in" type="text" inputmode="numeric" value="{{fuelF.km}}" onChange="{{setFuelK}}"></label>
-      <label class="fl"><span>{{L.date}}</span><span class="datebox"><input class="in" type="date" value="{{fuelF.date}}" onChange="{{setFuelD}}"><svg class="calic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4"></path></svg></span></label>
-      <div class="fl"><span>{{L.tank}}</span><div class="segs"><sc-for list="{{tankOpts}}" as="o" hint-placeholder-count="2"><button class="seg {{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div></div>
-      <span class="sb">{{fuelHint}}</span>
-      <button class="primary" onClick="{{saveFuel}}">{{L.saveFuel}}</button>
-    </sc-if>
-    <sc-if value="{{sheetRem}}" hint-placeholder-val="{{ false }}">
-      <div style="display: flex; flex-direction: column; gap: 4px">
-        <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{L.newRem}}</h2>
-        <span class="sb">{{remHint}}</span>
-      </div>
-      <sc-if value="{{hasTpl}}" hint-placeholder-val="{{ true }}">
-        <div style="display: flex; flex-direction: column; gap: 8px"><span class="sec">{{L.tplTitle}}</span>
-          <div class="wrapchips"><sc-for list="{{remTpls}}" as="p" hint-placeholder-count="3"><button class="chip {{p.on}}" onClick="{{p.pick}}">{{p.label}}</button></sc-for></div>
-        </div>
-      </sc-if>
-      <label class="fl"><span>{{L.remName}}</span><input class="in" type="text" value="{{remF.name}}" placeholder="{{L.remNamePh}}" onChange="{{setRemName}}"></label>
-      <div class="fl"><span>{{L.type}}</span>
-        <div class="segs"><sc-for list="{{remKinds}}" as="k" hint-placeholder-count="3"><button class="seg {{k.on}}" onClick="{{k.pick}}">{{k.label}}</button></sc-for></div>
-      </div>
-      <sc-if value="{{kindEvery}}" hint-placeholder-val="{{ true }}">
-        <div class="fl"><span>{{L.repeatEvery}}</span><div class="durrow"><input class="in" type="text" inputmode="numeric" value="{{remF.n}}" onChange="{{setRemN}}" aria-label="{{L.repeatEvery}}" style="width: 84px; flex: none; text-align: center"><div class="segs" style="flex: 1; min-width: 0"><sc-for list="{{remUnits}}" as="un" hint-placeholder-count="4"><button class="seg {{un.on}}" onClick="{{un.pick}}">{{un.label}}</button></sc-for></div></div></div>
-      </sc-if>
-      <sc-if value="{{kindKm}}" hint-placeholder-val="{{ false }}"><label class="fl"><span>{{L.everyKm}}</span><input class="in" type="text" inputmode="numeric" value="{{remF.km}}" onChange="{{setRemKm}}"></label></sc-if>
-      <sc-if value="{{kindOnce}}" hint-placeholder-val="{{ false }}"><label class="fl"><span>{{L.date}}</span><span class="datebox"><input class="in" type="date" value="{{remF.date}}" onChange="{{setRemDate}}"><svg class="calic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4"></path></svg></span></label></sc-if>
-      <div class="fl"><span>{{L.alertBefore}}</span>
-        <div class="wrapchips"><sc-for list="{{remBefore}}" as="b" hint-placeholder-count="6"><button class="chip {{b.on}}" onClick="{{b.pick}}">{{b.label}}</button></sc-for></div>
-      </div>
-      <sc-if value="{{remErr}}" hint-placeholder-val="{{ false }}"><span class="err" role="alert">{{L.remNameErr}}</span></sc-if>
-      <button class="primary" onClick="{{saveRem}}">{{L.addRemBtn}}</button>
     </sc-if>
     <sc-if value="{{sheetSpec}}" hint-placeholder-val="{{ false }}">
       <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{L.newSpec}}</h2>
@@ -966,6 +926,64 @@ input,textarea{-webkit-user-select:text;user-select:text}
       <span class="sb">{{L.delCarMsg}}</span>
       <button class="danger" onClick="{{confirmDelCar}}">{{L.delBtn}}</button>
       <button class="ghost" onClick="{{closeSheet}}">{{L.cancel}}</button>
+    </sc-if>
+    <sc-if value="{{sheetRec}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <span class="cap">{{rec.item}}</span>
+        <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{rec.title}}</h2>
+      </div>
+      <div class="panel" style="padding: 2px 14px; background: var(--card2); box-shadow: none">
+        <sc-for list="{{rec.rows}}" as="rr" hint-placeholder-count="3"><div class="row"><span class="sb">{{rr.k}}</span><span style="font-size: 14px; text-align: end">{{rr.v}}</span></div></sc-for>
+      </div>
+      <sc-if value="{{rec.hasPhoto}}" hint-placeholder-val="{{ true }}"><button class="recimg" onClick="{{rec.zoom}}" aria-label="{{L.aZoom}}"><img src="{{rec.photo}}" alt="{{L.altPhoto}}"></button></sc-if>
+      <sc-if value="{{rec.noPhoto}}" hint-placeholder-val="{{ false }}"><span class="sb">{{L.recNoPhoto}}</span></sc-if>
+      <span class="sb" style="display: flex; align-items: center; gap: 6px"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M6 11V8a6 6 0 0 1 12 0v3 M5 11h14v10H5z"></path></svg>{{L.recRO}}</span>
+      <button class="danger" onClick="{{askHistDel}}">{{L.aDelHist}}</button>
+      <button class="ghost" onClick="{{closeSheet}}">{{L.aClose}}</button>
+    </sc-if>
+    <sc-if value="{{sheetHistDel}}" hint-placeholder-val="{{ false }}">
+      <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{L.histDelTitle}}</h2>
+      <span class="sb">{{histDelInfo}}</span>
+      <span class="sb" style="color: var(--o)">{{L.histDelWarn}}</span>
+      <button class="danger" onClick="{{confirmHistDel}}">{{L.delBtn}}</button>
+      <button class="ghost" onClick="{{backToRec}}">{{L.cancel}}</button>
+    </sc-if>
+    <sc-if value="{{sheetCancelMaint}}" hint-placeholder-val="{{ false }}">
+      <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{cancelMaintTitle}}</h2>
+      <span class="sb">{{L.cancelMaintMsg}}</span>
+      <button class="danger" onClick="{{confirmCancelMaint}}">{{L.cancelMaintBtn}}</button>
+      <button class="ghost" onClick="{{closeSheet}}">{{L.keepIt}}</button>
+    </sc-if>
+    <sc-if value="{{sheetSaveConfirm}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{L.confirmChgTitle}}</h2>
+        <span class="sb">{{L.confirmChgSub}}</span>
+      </div>
+      <sc-for list="{{changeList}}" as="cg" hint-placeholder-count="2"><div class="chg"><span class="cap">{{cg.label}}</span><span><span style="color: var(--mute); text-decoration: line-through">{{cg.from}}</span> {{L.arrow}} <b>{{cg.to}}</b></span></div></sc-for>
+      <button class="primary" onClick="{{confirmSave}}">{{L.confirmSave}}</button>
+      <button class="ghost" onClick="{{closeSheet}}">{{L.keepEditing}}</button>
+    </sc-if>
+    <sc-if value="{{sheetDiscard}}" hint-placeholder-val="{{ false }}">
+      <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{L.discardTitle}}</h2>
+      <span class="sb">{{L.discardMsg}}</span>
+      <button class="danger" onClick="{{confirmDiscard}}">{{L.discardBtn}}</button>
+      <button class="ghost" onClick="{{closeSheet}}">{{L.keepEditing}}</button>
+    </sc-if>
+    <sc-if value="{{sheetAlerts}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; align-items: center; gap: 12px">
+        <span class="ic" style="color: var(--r)"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z M10 20.5h4"></path></svg></span>
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 2px"><h2 style="margin: 0; font-size: 19px; font-weight: 600">{{L.alertsTitle}} ({{alertsCount}})</h2><span class="sb">{{L.alertsSub}}</span></div>
+      </div>
+      <sc-for list="{{alertsList}}" as="al" hint-placeholder-count="2">
+        <div class="alertbox {{al.cls}}">
+          <button onClick="{{al.open}}" style="display: flex; flex-direction: column; gap: 2px; text-align: start; color: var(--ink)"><span class="cap">{{al.cat}}</span><span style="font-size: 15px; font-weight: 600">{{al.name}}</span><span class="sb tx-{{al.lv}}" style="font-weight: 600">{{al.text}}</span></button>
+          <div class="abtns">
+            <sc-if value="{{al.canDone}}" hint-placeholder-val="{{ true }}"><button class="abtn" onClick="{{al.done}}">{{al.doneLabel}}</button></sc-if>
+            <sc-if value="{{al.canMute}}" hint-placeholder-val="{{ true }}"><button class="abtn" onClick="{{al.mute}}">{{L.mute}}</button></sc-if>
+          </div>
+        </div>
+      </sc-for>
+      <button class="ghost" onClick="{{closeSheet}}">{{L.later}}</button>
     </sc-if>
     <sc-if value="{{sheetOdo}}" hint-placeholder-val="{{ false }}">
       <div style="display: flex; flex-direction: column; gap: 4px">
@@ -995,6 +1013,16 @@ input,textarea{-webkit-user-select:text;user-select:text}
       <div class="fl"><span>{{L.odoRemind}}</span>
         <div class="segs"><sc-for list="{{odoEveryOpts}}" as="o" hint-placeholder-count="3"><button class="seg {{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
       </div>
+      <sc-if value="{{ns.show}}" hint-placeholder-val="{{ true }}">
+        <div class="fl"><span>{{L.notifSec}}</span>
+          <div class="notifrow">
+            <span class="ic" style="color: {{ns.color}}"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z M10 20.5h4"></path></svg></span>
+            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14.5px; font-weight: 600">{{ns.title}}</span><span class="sb">{{ns.sub}}</span></span>
+            <sc-if value="{{ns.canEnable}}" hint-placeholder-val="{{ true }}"><button class="outline" onClick="{{askNotif}}">{{L.enable}}</button></sc-if>
+          </div>
+          <sc-if value="{{ns.canTest}}" hint-placeholder-val="{{ false }}"><button class="ghost" onClick="{{testNotif}}" style="height: 44px">{{L.testNotif}}</button></sc-if>
+        </div>
+      </sc-if>
       <button class="catrow" onClick="{{openBackup}}">
         <span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.5-8A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9z M12 16v-5 M9.5 13.5L12 11l2.5 2.5"></path></svg></span>
         <span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{{L.bkTitle}}</span><span class="sb">{{L.bkRowDesc}}</span></span>
@@ -1003,7 +1031,7 @@ input,textarea{-webkit-user-select:text;user-select:text}
       <h2 class="sec" style="margin-top: 4px">{{L.about}}</h2>
       <div class="about">
         <svg class="alogo" viewBox="0 0 200 200" aria-hidden="true"><rect width="200" height="200" rx="46" fill="{{lg.sq}}"></rect><rect x="50" y="40" width="100" height="120" rx="15" fill="{{lg.card}}"></rect><rect x="66" y="62" width="72" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect><rect x="78" y="81" width="60" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect><rect x="88" y="100" width="50" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect><rect x="98" y="119" width="40" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect><circle cx="56" cy="152" r="27" fill="#3DDC97" stroke="{{lg.sq}}" stroke-width="7"></circle><path d="M44 152 L52.5 160.5 L68 144" fill="none" stroke="{{lg.chk}}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-        <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; align-items: flex-start"><span class="anm">عُهدة</span><span class="alat" dir="ltr">UHDA</span></span>
+        <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; align-items: flex-start"><span class="anm">عُهدة</span><span class="alat" dir="ltr">UHDA</span><span class="aby">{{L.byLine}}</span></span>
         <span class="ver">{{L.verLong}}</span>
       </div>
     </sc-if>
@@ -1020,7 +1048,7 @@ input,textarea{-webkit-user-select:text;user-select:text}
       <button class="zoombtn" onClick="{{savePhoto}}" aria-label="{{L.saveGallery}}"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11 M8 11l4 4 4-4 M5 19h14"></path></svg></button>
     </div>
   </div>
-  <div style="flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 12px"><img src="{{cur.photo}}" alt="{{L.altPhoto}}" style="max-width: 100%; max-height: 100%; object-fit: contain"></div>
+  <div style="flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 12px"><img src="{{zoomSrc}}" alt="{{L.altPhoto}}" style="max-width: 100%; max-height: 100%; object-fit: contain"></div>
 </div>
 </sc-if>
 
@@ -1094,6 +1122,17 @@ input,textarea{-webkit-user-select:text;user-select:text}
 </div>
 </sc-if>
 
+<sc-if value="{{dlgNotif}}" hint-placeholder-val="{{ false }}">
+<div class="dlgwrap" role="dialog" aria-modal="true" aria-label="{{L.naQ}}">
+  <button class="scrim" onClick="{{notifLater}}" aria-label="{{L.aClose}}"></button>
+  <div class="dlg">
+    <span class="ic" style="width: 52px; height: 52px; border-radius: 16px"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z M10 20.5h4"></path></svg></span>
+    <h2 style="margin: 0; font-size: 18px; font-weight: 700">{{L.naQ}}</h2>
+    <span class="sb" style="font-size: 13.5px">{{L.naQs}}</span>
+    <div class="btns"><button class="ghost" onClick="{{notifLater}}" style="height: 46px">{{L.notNow}}</button><button class="primary" onClick="{{askNotif}}" style="height: 46px; font-size: 15px">{{L.ok}}</button></div>
+  </div>
+</div>
+</sc-if>
 <sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}"><div class="toast" role="status"><span style="flex: 1">{{toast}}</span><sc-if value="{{hasUndo}}" hint-placeholder-val="{{ false }}"><button class="undo" onClick="{{doUndo}}">{{L.undo}}</button></sc-if></div></sc-if>
 <sc-if value="{{splashOn}}" hint-placeholder-val="{{ false }}">
 <div class="splash {{splashCls}}" role="img" aria-label="{{L.aLogo}}">

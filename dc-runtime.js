@@ -109,7 +109,7 @@
   }
 
   /* ---------- 3) حفظ البيانات في الجهاز (IndexedDB) ---------- */
-  var KEEP = ['lang', 'dark', 'cars', 'items', 'nextId', 'nextR', 'nextF', 'nextC', 'notifTime', 'odoEvery', 'lastExport', 'autoAt', 'spendRange', 'spendScope', 'carSel', 'tab', 'carSub', 'onboarded'];
+  var KEEP = ['lang', 'dark', 'cars', 'items', 'nextId', 'nextR', 'nextF', 'nextC', 'notifTime', 'odoEvery', 'lastExport', 'carSel', 'tab', 'carSub', 'onboarded', 'notified', 'notifAsked', 'alertDay'];
   var DBN = 'uhda', ST = 'kv', KEY = 'state-v2';
   var idb = function () {
     return new Promise(function (res, rej) {
@@ -138,10 +138,15 @@
     return idb().then(function (db) {
       return new Promise(function (res) {
         var t = db.transaction(ST, 'readwrite'); t.objectStore(ST).put(txt, KEY);
-        t.oncomplete = res; t.onerror = res;
+        t.oncomplete = function () { window.__uhdaSavedAt = new Date(); res(); }; t.onerror = res;
       });
-    }).catch(function () { try { localStorage.setItem('uhda:' + KEY, txt); } catch (e) {} });
+    }).catch(function () { try { localStorage.setItem('uhda:' + KEY, txt); window.__uhdaSavedAt = new Date(); } catch (e) {} });
   }
+  /* مخزن صغير يقرؤه عامل الخدمة (sw.js) لإرسال التنبيهات في الخلفية */
+  window.UhdaKV = {
+    set: function (k, v) { return idb().then(function (db) { return new Promise(function (res) { var t = db.transaction(ST, 'readwrite'); t.objectStore(ST).put(v, k); t.oncomplete = res; t.onerror = res; }); }).catch(function () {}); },
+    get: function (k) { return idb().then(function (db) { return new Promise(function (res) { var q = db.transaction(ST, 'readonly').objectStore(ST).get(k); q.onsuccess = function () { res(q.result); }; q.onerror = function () { res(null); }; }); }).catch(function () { return null; }); }
+  };
   try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
 
   /* ---------- 4) تحويل القالب ---------- */

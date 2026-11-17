@@ -135,8 +135,8 @@ jobs:
           files="$(find dl -name '*.apk' -o -name '*.zip' | tr '\n' ' ') $ipa"
           files=$(echo $files)
           if [ -z "$files" ]; then echo "لا توجد ملفات للنشر"; exit 0; fi
-          tag="v${VER}-build${{ github.run_number }}"
+          tag="v${VER}"
           if gh release view "$tag" > /dev/null 2>&1; then gh release upload "$tag" $files --clobber; exit 0; fi
           gh release create "$tag" $files --target "${{ github.sha }}" --latest \
-            --title "عُهدة v${VER} (بناء ${{ github.run_number }})" \
+            --title "عُهدة v${VER}" \
             --notes "APK: ثبّته مباشرة على أندرويد (اسمح بالتثبيت من مصادر غير معروفة). IPA: غير موقّع، وقّعه بتطبيق التوقيع ثم ثبّته. Uhda-web-offline.zip: نسخة الويب كاملة تعمل بدون إنترنت."

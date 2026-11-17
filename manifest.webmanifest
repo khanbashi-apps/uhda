@@ -1,4 +1,5 @@
 {
+  "id": "./",
   "name": "عُهدة · Uhda",
   "short_name": "عُهدة",
   "description": "وثائقك وضماناتك وصيانة سياراتك وأجهزتك في مكان واحد",
@@ -7,9 +8,16 @@
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
+  "display_override": [
+    "standalone"
+  ],
   "orientation": "portrait",
   "background_color": "#F4F2FB",
   "theme_color": "#EFF2F5",
+  "categories": [
+    "productivity",
+    "utilities"
+  ],
   "icons": [
     {
       "src": "icons/icon-192.png",
