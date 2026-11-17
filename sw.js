@@ -1,5 +1,5 @@
 /* عُهدة · Uhda — يحفظ ملفات التطبيق ليعمل بدون إنترنت */
-const CACHE = 'uhda-v1.0';
+const CACHE = 'uhda-v1.0-r2';
 const ASSETS = [
   './', './index.html', './app.js', './dc-runtime.js', './lib/preact.min.js', './lib/html2canvas.min.js', './lib/jspdf.umd.min.js', './manifest.webmanifest',
   './fonts/almarai.css',
@@ -16,13 +16,16 @@ self.addEventListener('activate', e => {
 self.addEventListener('fetch', e => {
   const req = e.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
+  // الشبكة أولاً (حتى تصل الإصلاحات فوراً)، وبدون نت نرجع للنسخة المحفوظة
   e.respondWith(
-    caches.match(req, { ignoreSearch: true }).then(hit => {
-      const net = fetch(req).then(res => {
+    new Promise(resolve => {
+      let done = false;
+      const fromCache = () => caches.match(req, { ignoreSearch: true }).then(hit => hit || caches.match('./index.html'));
+      const timer = setTimeout(() => { if (!done) { done = true; resolve(fromCache()); } }, 4000);
+      fetch(req, { cache: 'no-cache' }).then(res => {
         if (res && res.ok) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(req, copy)); }
-        return res;
-      }).catch(() => hit || caches.match('./index.html'));
-      return hit || net;
+        if (!done) { done = true; clearTimeout(timer); resolve(res); }
+      }).catch(() => { if (!done) { done = true; clearTimeout(timer); resolve(fromCache()); } });
     })
   );
 });
