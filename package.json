@@ -1,0 +1,22 @@
+{
+  "name": "uhda",
+  "version": "1.0.0",
+  "appVersion": "1.0",
+  "private": true,
+  "description": "عُهدة · Uhda — وثائقك وضماناتك وصيانة سياراتك وأجهزتك في مكان واحد",
+  "scripts": {
+    "build": "node scripts/build-web.mjs",
+    "prepare-www": "bash scripts/prepare-www.sh"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.6.2",
+    "@capacitor/core": "^8.6.2",
+    "@capacitor/filesystem": "^8.1.5",
+    "@capacitor/ios": "^8.6.2",
+    "@capacitor/share": "^8.0.3"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^4.0.0",
+    "@capacitor/cli": "^8.6.2"
+  }
+}

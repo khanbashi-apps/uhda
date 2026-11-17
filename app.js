@@ -1,0 +1,880 @@
+/* عُهدة · Uhda 1.0 — منطق التطبيق (مأخوذ كما هو من src/Uhda.dc.html) */
+class Component extends DCLogic {
+  constructor(...a) { super(...a); this._t = null; this.state = this.init(); this._s1 = setTimeout(() => this.setState({ splash: 'out' }), 4900); this._s2 = setTimeout(() => this.setState({ splash: false }), 5350); }
+  playSplash() { clearTimeout(this._s1); clearTimeout(this._s2); this.setState({ splash: false }); setTimeout(() => this.setState({ splash: 'in' }), 30); this._s1 = setTimeout(() => this.setState({ splash: 'out' }), 4930); this._s2 = setTimeout(() => this.setState({ splash: false }), 5380); }
+  componentWillUnmount() { clearTimeout(this._t); clearTimeout(this._s1); clearTimeout(this._s2); }
+  get en() { return !!this.state && this.state.lang === 'en'; }
+  w(a, e) { return this.en ? e : a; }
+  tx(v) { if (v && typeof v === 'object' && !(v instanceof Date)) return (this.en ? v.en : v.ar) || v.ar || v.en || ''; return v == null ? '' : String(v); }
+  T0() { const d = new Date(); d.setHours(0, 0, 0, 0); return d; }
+  dA(n) { const d = this.T0(); d.setDate(d.getDate() + n); return d; }
+  addM(d, m) { const x = new Date(d.getTime()); x.setMonth(x.getMonth() + Number(m || 0)); return x; }
+  addD(d, n) { const x = new Date(d.getTime()); x.setDate(x.getDate() + Number(n || 0)); return x; }
+  addDur(d, n, u) { n = Number(n) || 0; if (u === 'd') return this.addD(d, n); if (u === 'w') return this.addD(d, n * 7); if (u === 'y') return this.addM(d, n * 12); return this.addM(d, n); }
+  dd(d) { return Math.round((d.getTime() - this.T0().getTime()) / 864e5); }
+  iso(d) { const z = (n) => String(n).padStart(2, '0'); return d.getFullYear() + '-' + z(d.getMonth() + 1) + '-' + z(d.getDate()); }
+  pd(s) { const p = String(s || '').split('-'); if (p.length < 3 || !p[0]) return null; const d = new Date(+p[0], +p[1] - 1, +p[2]); return isNaN(d.getTime()) ? null : d; }
+  fmt(d) { if (!d) return ''; try { return d.toLocaleDateString(this.en ? 'en-GB' : 'ar-OM-u-nu-latn', { day: 'numeric', month: this.en ? 'short' : 'long', year: 'numeric' }); } catch (e) { return this.iso(d); } }
+  fmtT(d) { if (!d) return ''; try { return this.fmt(d) + ' · ' + d.toLocaleTimeString(this.en ? 'en-GB' : 'ar-OM-u-nu-latn', { hour: '2-digit', minute: '2-digit' }); } catch (e) { return this.fmt(d); } }
+  num(n, dec) { return Number(n || 0).toLocaleString('en-US', { maximumFractionDigits: dec == null ? 3 : dec }); }
+  money(n) { return this.num(n) + this.w(' ر.ع', ' OMR'); }
+  P(v) { return Number(String(v == null ? '' : v).replace(/[^0-9.]/g, '')) || 0; }
+  dU(n) { if (this.en) return n === 1 ? '1 day' : n + ' days'; return n === 1 ? 'يوم واحد' : (n === 2 ? 'يومان' : (n <= 10 ? n + ' أيام' : n + ' يوماً')); }
+  wU(n) { if (this.en) return n === 1 ? '1 week' : n + ' weeks'; return n === 1 ? 'أسبوع' : (n === 2 ? 'أسبوعان' : (n <= 10 ? n + ' أسابيع' : n + ' أسبوعاً')); }
+  mU(m) { if (this.en) return m === 1 ? '1 month' : m + ' months'; return m === 1 ? 'شهر' : (m === 2 ? 'شهران' : (m <= 10 ? m + ' أشهر' : m + ' شهراً')); }
+  yU(y) { if (this.en) return y === 1 ? '1 year' : y + ' years'; return y === 1 ? 'سنة' : (y === 2 ? 'سنتان' : (y <= 10 ? y + ' سنوات' : y + ' سنة')); }
+  dtext(n) {
+    n = Math.abs(n);
+    if (n >= 365) { let y = Math.floor(n / 365), m = Math.round((n - y * 365) / 30); if (m >= 12) { y++; m = 0; } return this.yU(y) + (m ? this.w(' و', ' ') + this.mU(m) : ''); }
+    if (n >= 60) return this.mU(Math.round(n / 30));
+    return this.dU(n);
+  }
+  durText(n, u) { n = Number(n) || 0; return u === 'd' ? this.dU(n) : (u === 'w' ? this.wU(n) : (u === 'y' ? this.yU(n) : this.mU(n))); }
+  kul(s) {
+    if (this.en) return 'every ' + String(s).replace(/^1 /, '').replace(/ or 1 /, ' or ');
+    return 'كل ' + String(s).replace('سنتان', 'سنتين').replace('شهران', 'شهرين').replace('يومان', 'يومين').replace('أسبوعان', 'أسبوعين').replace('يوم واحد', 'يوم');
+  }
+  N(ar, en) { return { ar: ar, en: en }; }
+  ICON(k) {
+    return ({
+      doc: 'M3 6.5h18v11H3z M7 10.5h5 M7 14h7 M16 10.5h1.5',
+      car: 'M4 16.5V12l2.4-5h11.2L20 12v4.5z M4 12h16 M7 16.5v2 M17 16.5v2 M7.5 14.2h1.5 M15 14.2h1.5',
+      dev: 'M3 5h18v11H3z M8 20h8 M12 16v4',
+      custom: 'M3.5 12.5v-9h9l8.5 8.5-9 9z M8 8h.01',
+      all: 'M4 4h7v7H4z M13 4h7v7h-7z M4 13h7v7H4z M13 13h7v7h-7z',
+      fuel: 'M5 20V5h9v15 M4 20h11 M7.5 8.5h4 M14 9l3 2v6.5a1.5 1.5 0 0 0 3 0V9l-3-3',
+      chart: 'M5 20V11 M11 20V5 M17 20v-7 M3 20h18',
+      carplus: 'M3 16.5V12l2.4-5h8 M3 12h11 M6 16.5v2 M3 16.5h11 M18 9v8 M14 13h8'
+    })[k];
+  }
+  RN() {
+    return {
+      doc: this.N('انتهاء الوثيقة', 'Document expiry'), car: this.N('التغيير القادم', 'Next change'), war: this.N('انتهاء الضمان', 'Warranty end'),
+      maint: this.N('الصيانة الدورية', 'Periodic maintenance'), cdate: this.N('الموعد', 'Due date'), crep: this.N('الموعد القادم', 'Next due')
+    };
+  }
+  init() {
+    const d = (n) => this.dA(n), N = (a, e) => this.N(a, e), R = this.RN();
+    const doc = (id, carId, name, issue, exp, before, specs, history) => ({ id: id, cat: 'doc', carId: carId, name: name, number: '', issue: d(issue), specs: specs || [], rems: [{ id: 'b1', base: true, type: 'date', name: R.doc, date: d(exp), start: d(issue), renew: true, before: before || [30, 7] }], history: history || [] });
+    const part = (id, carId, name, lastDate, lastKm, n, u, km, cost, specs, history, extra) => ({ id: id, cat: 'car', carId: carId, name: name, cost: cost, specs: specs || [], rems: [{ id: 'b1', base: true, type: 'cycle', name: R.car, lastDate: d(lastDate), lastKm: lastKm, n: n, u: u, everyKm: km, before: [14] }].concat(extra || []), history: history || [] });
+    const at = this.T0(); at.setHours(3, 0, 0, 0);
+    return {
+      splash: 'in', onboarded: false, ob: 'welcome', obCar: { name: '', plate: '', odo: '' }, obDocs: {}, obErr: '', lang: 'ar', dark: true, tab: 'cars', carSel: null, carSub: 'parts', screen: 'home', from: 'home', sel: null, q: '', cat: 'all', st: 'all', showArch: false, showExtra: false, editId: null,
+      sheet: null, form: null, formErr: '', rf: {}, remF: null, remErr: false, specF: { k: '', v: '' }, odoIn: '', fuelF: null, carF: null, carEditId: null, carErr: '',
+      toast: '', undo: null, zoom: false, spendRange: 'year', spendScope: 'all', pending: null, lastExport: null, autoAt: at,
+      nextId: 100, nextR: 10, nextF: 100, nextC: 3, notifTime: '09:00', odoEvery: 14,
+      cars: [],
+      items: []
+    };
+  }
+  OBDEFS(withCar) {
+    const N = (a, e) => this.N(a, e);
+    const own = [{ key: 'id', name: N('البطاقة الشخصية', 'National ID card') }, { key: 'lic', name: N('رخصة القيادة', 'Driving licence') }, { key: 'pass', name: N('جواز السفر', 'Passport') }];
+    const car = withCar ? this.CTPL().map((t, i) => ({ key: 'c' + i, name: t, car: true })) : [];
+    return own.concat(car);
+  }
+  obGo(step) { this.setState({ ob: step, obErr: '' }); }
+  obNextStep() {
+    const s = this.state, st = s.ob;
+    if (st === 'car') {
+      const c = s.obCar || {};
+      const any = String(c.plate || '').trim() || String(c.odo || '').trim();
+      if (!String(c.name || '').trim() && any) { this.setState({ obErr: this.w('اكتب اسم السيارة، أو اضغط «ليس لدي سيارة الآن»', 'Enter the car name, or tap “No car for now”') }); return; }
+      this.obGo('docs'); return;
+    }
+    if (st === 'docs') {
+      const hasCar = !!String((s.obCar || {}).name || '').trim();
+      const miss = this.OBDEFS(hasCar).find((d) => { const v = (s.obDocs || {})[d.key]; return v && v.on && !this.pd(v.exp); });
+      if (miss) { this.setState({ obErr: this.w('اكتب تاريخ انتهاء «' + this.tx(miss.name) + '»', 'Enter the expiry date for “' + this.tx(miss.name) + '”') }); return; }
+      this.obGo('rem'); return;
+    }
+    if (st === 'rem') this.obFinish();
+  }
+  obBackStep() { const st = this.state.ob; this.obGo(st === 'rem' ? 'docs' : (st === 'docs' ? 'car' : 'welcome')); }
+  obFinish() {
+    const s = this.state, oc = s.obCar || {}, od = s.obDocs || {}, T = this.T0();
+    const nm = String(oc.name || '').trim();
+    let cars = s.cars, nextC = s.nextC, nextId = s.nextId, carId = null;
+    if (nm) {
+      carId = 'c' + nextC; nextC += 1;
+      const odo = Math.round(this.P(oc.odo));
+      cars = cars.concat([{ id: carId, name: nm, plate: String(oc.plate || '').trim(), photo: null, odo: odo, odoLog: [{ date: T, km: odo }], fuel: [] }]);
+    }
+    const items = [];
+    this.OBDEFS(!!nm).forEach((d) => {
+      const v = od[d.key]; if (!v || !v.on) return;
+      const ex = this.pd(v.exp); if (!ex) return;
+      const iss = ex.getTime() >= T.getTime() ? T : this.addM(ex, -12);
+      const f = Object.assign(this.defaults('doc', d.car ? carId : null), { name: this.tx(d.name), nameObj: d.name, issue: this.iso(iss), expiry: this.iso(ex) });
+      const it = this.build(f, null); if (typeof it === 'string') return;
+      it.id = nextId; nextId += 1; items.push(it);
+    });
+    this.setState({ cars: cars, items: items.concat(s.items), nextC: nextC, nextId: nextId, carSel: carId || s.carSel, tab: nm || !items.length ? 'cars' : 'docs', carSub: items.some((x) => x.carId) ? 'docs' : 'parts', screen: 'home', onboarded: true, ob: null, obCar: { name: '', plate: '', odo: '' }, obDocs: {}, obErr: '' });
+    const parts = [];
+    if (nm) parts.push(this.w('سيارتك', 'your car'));
+    if (items.length) parts.push(this.w(items.length === 1 ? 'وثيقة واحدة' : (items.length === 2 ? 'وثيقتان' : items.length + ' وثائق'), items.length === 1 ? '1 document' : items.length + ' documents'));
+    this.toast(parts.length ? this.w('جاهز! أُضيفت ', 'All set! Added ') + parts.join(this.w(' و', ' and ')) : this.w('جاهز! ابدأ بإضافة ما تريد متابعته', 'All set! Start adding what you want to track'));
+  }
+  obVals(s) {
+    const en = this.en, st = s.onboarded ? null : (s.ob || 'welcome');
+    const O = {
+      aria: this.w('الترحيب والإعداد', 'Welcome and setup'),
+      hi: this.w('أهلاً بك في عُهدة', 'Welcome to Uhda'),
+      hiSub: this.w('وثائقك وضماناتك وصيانة سياراتك وأجهزتك في مكان واحد، مع تذكير قبل كل موعد.', 'Your documents, warranties, car and device maintenance in one place, with a reminder before every date.'),
+      f1: this.w('سياراتي', 'My cars'), f1s: this.w('الزيت والقطع والوقود بالكيلومتر أو بالوقت', 'Oil, parts and fuel by km or by time'),
+      f2: this.w('وثائقي وأجهزتي', 'Documents & devices'), f2s: this.w('تواريخ الانتهاء والضمانات والفواتير', 'Expiry dates, warranties and invoices'),
+      f3: this.w('تذكير قبل الموعد', 'Reminders ahead of time'), f3s: this.w('يصلك تنبيه قبل الانتهاء بوقت كافٍ', 'Get alerted well before anything expires'),
+      start: this.w('ابدأ الإعداد', 'Start setup'), restore: this.w('لدي نسخة احتياطية — استرجاع', 'I have a backup — restore'), skip: this.w('تخطٍّ، سأضيف لاحقاً', 'Skip, I’ll add things later'),
+      back: this.w('رجوع', 'Back'),
+      carName: this.w('اسم السيارة', 'Car name'), carNamePh: this.w('مثال: سيارتي الشخصية', 'e.g. My car'),
+      plate: this.w('رقم اللوحة (اختياري)', 'Plate number (optional)'), platePh: this.w('مثال: 12345 أ ب', 'e.g. 12345 AB'),
+      odo: this.w('قراءة العداد الآن (كم)', 'Odometer now (km)'), odoPh: this.w('مثال: 84650', 'e.g. 84650'),
+      noCar: this.w('ليس لدي سيارة الآن', 'No car for now'), expiry: this.w('تاريخ الانتهاء', 'Expiry date'),
+      remNote: this.w('نذكّرك قبل انتهاء الوثائق بشهر وبأسبوع، ويمكنك تغيير كل ذلك لاحقاً من الإعدادات.', 'We remind you a month and a week before documents expire. You can change all this later in Settings.')
+    };
+    const oc = s.obCar || { name: '', plate: '', odo: '' }, hasCar = !!String(oc.name || '').trim(), od = s.obDocs || {};
+    const steps = ['car', 'docs', 'rem'], idx = steps.indexOf(st);
+    const row = (d) => {
+      const v = od[d.key] || { on: false, exp: '' };
+      const upd = (patch) => this.setState({ obErr: '', obDocs: Object.assign({}, this.state.obDocs, { [d.key]: Object.assign({ on: false, exp: '' }, (this.state.obDocs || {})[d.key], patch) }) });
+      return { label: this.tx(d.name), on: v.on ? 'on' : '', isOn: !!v.on, pressed: v.on ? 'true' : 'false', exp: v.exp || '', pick: () => upd({ on: !v.on }), onExp: (e) => upd({ exp: e.target.value }) };
+    };
+    const defs = this.OBDEFS(hasCar);
+    const groups = [{ title: this.w('وثائقك الشخصية', 'Personal documents'), rows: defs.filter((d) => !d.car).map(row) }];
+    if (hasCar) groups.push({ title: this.w('وثائق «', 'Documents for “') + String(oc.name).trim() + this.w('»', '”'), rows: defs.filter((d) => d.car).map(row) });
+    const nDocs = defs.filter((d) => (od[d.key] || {}).on).length;
+    const sum = [];
+    if (hasCar) sum.push(this.w('سيارة: ', 'Car: ') + String(oc.name).trim());
+    sum.push(nDocs ? this.w('وثائق للمتابعة: ', 'Documents to track: ') + nDocs : this.w('بدون وثائق الآن — يمكنك إضافتها لاحقاً', 'No documents yet — you can add them later'));
+    return {
+      O: O, obOn: !!st, obWelcome: st === 'welcome', obStep: idx >= 0, obCarStep: st === 'car', obDocsStep: st === 'docs', obRemStep: st === 'rem',
+      obProg: steps.map((x, i) => ({ on: i <= idx ? 'on' : '' })), obStepText: idx >= 0 ? this.w('الخطوة ' + (idx + 1) + ' من 3', 'Step ' + (idx + 1) + ' of 3') : '',
+      obTitle: st === 'car' ? this.w('سيارتك', 'Your car') : (st === 'docs' ? this.w('وثائقك', 'Your documents') : this.w('التذكيرات', 'Reminders')),
+      obSub: st === 'car' ? this.w('أضف سيارتك لمتابعة الزيت والقطع والوقود. يمكنك إضافة سيارات أخرى لاحقاً.', 'Add your car to track oil, parts and fuel. You can add more cars later.') : (st === 'docs' ? this.w('اختر ما تريد متابعته واكتب تاريخ انتهائه.', 'Choose what to track and enter its expiry date.') : this.w('متى يصلك التذكير؟', 'When should reminders arrive?')),
+      obNextText: st === 'rem' ? this.w('ابدأ استخدام عُهدة', 'Start using Uhda') : this.w('التالي', 'Next'),
+      obCar: oc, obHasCar: hasCar, obGroups: groups, obSummary: sum.join(' · '), obErr: s.obErr, obHasErr: !!s.obErr,
+      obStart: () => this.obGo('car'), obSkip: () => this.setState({ onboarded: true, ob: null, obErr: '' }),
+      obImport: (e) => { this.setState({ onboarded: true, ob: null, obErr: '' }); this.onImportFile(e); },
+      obBack: () => this.obBackStep(), obNext: () => this.obNextStep(), obNoCar: () => this.setState({ obCar: { name: '', plate: '', odo: '' }, ob: 'docs', obErr: '' }),
+      obCarName: (e) => this.setState({ obErr: '', obCar: Object.assign({}, this.state.obCar, { name: e.target.value }) }),
+      obCarPlate: (e) => this.setState({ obCar: Object.assign({}, this.state.obCar, { plate: e.target.value }) }),
+      obCarOdo: (e) => this.setState({ obCar: Object.assign({}, this.state.obCar, { odo: String(e.target.value).replace(/[^0-9]/g, '') }) })
+    };
+  }
+  setLang(l) {
+    if (l === this.state.lang) return;
+    this.setState({ lang: l, flip: true });
+    setTimeout(() => this.setState({ flip: false }), 40);
+  }
+  car(id) { return (this.state.cars || []).find((c) => c.id === id) || null; }
+  curCar() { const s = this.state; return this.car(s.carSel) || s.cars[0] || null; }
+  avgKnown(c) { const L = (c && c.odoLog) || []; if (L.length < 2) return false; const a = L[0], b = L[L.length - 1]; return (b.date.getTime() - a.date.getTime()) / 864e5 >= 7 && b.km > a.km; }
+  avg(c) {
+    if (!this.avgKnown(c)) return 40;
+    const L = c.odoLog, a = L[0], b = L[L.length - 1];
+    return (b.km - a.km) / ((b.date.getTime() - a.date.getTime()) / 864e5);
+  }
+  bfa(a, dflt) { return a && a.length ? a.slice().sort((x, y) => y - x) : dflt; }
+  BOPTS() { return [[1, 'يوم', '1 day'], [3, '3 أيام', '3 days'], [7, 'أسبوع', '1 week'], [14, 'أسبوعان', '2 weeks'], [30, 'شهر', '1 month'], [60, 'شهران', '2 months']]; }
+  UNITS() { return [['d', 'أيام', 'Days'], ['w', 'أسابيع', 'Weeks'], ['m', 'أشهر', 'Months'], ['y', 'سنوات', 'Years']]; }
+  track(it, r) {
+    const c = it.carId ? this.car(it.carId) : null;
+    const o = c ? c.odo : 0, avg = this.avg(c);
+    let due = null, start = null, dueKm = null, startKm = null;
+    if (r.type === 'date') { due = r.date; start = r.start; }
+    else {
+      start = r.lastDate;
+      if (Number(r.n)) due = this.addDur(r.lastDate, r.n, r.u);
+      if (Number(r.everyKm) && c) { startKm = Number(r.lastKm) || 0; dueKm = startKm + Number(r.everyKm); }
+    }
+    const days = due ? this.dd(due) : null;
+    const km = dueKm != null ? dueKm - o : null;
+    const inactive = !!r.warranty && days != null && days < 0;
+    let lv = 'g';
+    if ((days != null && days < 0) || (km != null && km < 0)) lv = 'r';
+    else if ((days != null && days < 15) || (km != null && km < 500)) lv = 'o';
+    if (inactive) lv = 'x';
+    let p = 0;
+    if (due && start) { const tot = due.getTime() - start.getTime(); p = tot > 0 ? (this.T0().getTime() - start.getTime()) / tot : 1; }
+    if (km != null && dueKm > startKm) p = Math.max(p, (o - startKm) / (dueKm - startKm));
+    p = Math.min(1, Math.max(0, p));
+    const kmDays = km != null ? Math.round(km / avg) : null;
+    const u = Math.min(days != null ? days : 1e9, km != null ? km / avg : 1e9);
+    const useKm = km != null && (days == null || km / avg < days);
+    const doc = it.cat === 'doc';
+    let text;
+    if (inactive) text = this.w('الضمان منتهي', 'Warranty expired');
+    else if (useKm) text = km < 0 ? this.w('تجاوز بـ ' + this.num(-km) + ' كم', 'Over by ' + this.num(-km) + ' km') : this.w('متبقي ' + this.num(km) + ' كم', this.num(km) + ' km left');
+    else if (days == null) text = this.w('بدون تنبيه', 'No alert');
+    else if (days < 0) text = this.en ? (doc ? 'Expired ' + this.dtext(-days) + ' ago' : 'Overdue by ' + this.dtext(-days)) : (doc ? 'انتهت منذ ' : 'متأخر ') + this.dtext(-days);
+    else if (days === 0) text = this.w('الموعد اليوم', 'Due today');
+    else text = this.w('متبقي ' + this.dtext(days), this.dtext(days) + ' left');
+    let dueText = due ? this.fmt(due) : '';
+    if (dueKm != null) dueText += (dueText ? this.w(' أو عند ', ' or at ') : this.w('عند ', 'at ')) + this.num(dueKm) + this.w(' كم', ' km');
+    let predict = '';
+    if (km != null && km >= 0 && this.avgKnown(c)) predict = this.w('حسب معدّل قيادتك: متوقع ', 'At your driving rate: expected ') + (kmDays <= 0 ? this.w('اليوم', 'today') : this.w('خلال ', 'in ') + this.dtext(kmDays));
+    const bf = (r.before || []).filter((n) => n > 0);
+    const beforeText = r.warranty || !bf.length ? '' : this.w('تنبيه قبل ', 'Alert ') + bf.map((n) => this.dtext(n)).join(this.w(' ثم ', ', ')) + this.w('', ' before') + this.w(' · الساعة ', ' · at ') + this.state.notifTime;
+    let typeText;
+    if (r.warranty) typeText = this.w('ضمان — ينتهي ', 'Warranty — ends ') + this.fmt(due);
+    else if (r.once) typeText = this.w('تذكير لمرة واحدة', 'One-time reminder');
+    else if (r.type === 'date') typeText = this.w('تاريخ ثابت — يُجدَّد', 'Fixed date — renewable');
+    else { const parts = []; if (Number(r.n)) parts.push(this.durText(r.n, r.u)); if (Number(r.everyKm)) parts.push(this.num(r.everyKm) + this.w(' كم', ' km')); typeText = this.w('يتكرر ', 'Repeats ') + this.kul(parts.join(this.w(' أو ', ' or '))) + (parts.length > 1 ? this.w(' (أيهما أولاً)', ' (whichever first)') : ''); }
+    const LT = { r: doc ? this.w('منتهي', 'Expired') : this.w('متأخر', 'Overdue'), o: this.w('قريب', 'Due soon'), g: this.w('ساري', 'Valid'), x: this.w('منتهي', 'Expired') };
+    const canDone = !r.warranty;
+    const doneLabel = r.once ? this.w('تم', 'Done') : (r.type === 'date' ? this.w('تم التجديد', 'Renewed') : this.w('تمت', 'Done'));
+    return { id: r.id, doc: doc, name: this.tx(r.name), days: days, km: km, lv: lv, lvText: LT[lv], inactive: inactive, p: p, left: Math.round((1 - p) * 100), u: u, useKm: useKm, text: text, dueText: dueText, predict: predict, hasPredict: !!predict, beforeText: beforeText, hasBefore: !!beforeText, typeText: typeText, canDone: canDone, custom: !r.base, hasActions: canDone || !r.base, doneLabel: doneLabel };
+  }
+  big(t) {
+    if (!t) return { big: '—', unit: this.w('بدون تنبيه', 'no alert') };
+    if (t.inactive) return { big: '—', unit: this.w('الضمان منتهي', 'warranty expired') };
+    if (t.useKm) return { big: this.num(Math.abs(t.km)), unit: t.km < 0 ? this.w('كم تجاوز', 'km over') : this.w('كم', 'km') };
+    const a = Math.abs(t.days), pre = t.days < 0 ? (t.doc ? this.w('منتهي منذ · ', 'expired · ') : this.w('متأخر · ', 'overdue · ')) : '';
+    if (a >= 365) { let y = Math.floor(a / 365), m = Math.round((a - y * 365) / 30); if (m >= 12) { y++; m = 0; } return { big: String(y), unit: pre + (this.en ? (y === 1 ? 'year' : 'years') + (m ? ' ' + this.mU(m) : '') : (y >= 3 && y <= 10 ? 'سنوات' : 'سنة') + (m ? ' و' + this.mU(m) : '')) }; }
+    if (a >= 60) { const m = Math.round(a / 30); return { big: String(m), unit: pre + (this.en ? 'months' : (m <= 10 ? 'أشهر' : 'شهراً')) }; }
+    return { big: String(a), unit: pre + (this.en ? (a === 1 ? 'day' : 'days') : (a >= 3 && a <= 10 ? 'أيام' : 'يوم')) };
+  }
+  dash(left) { return (Math.max(0.03, (left == null ? 100 : left) / 100) * 301.6).toFixed(1) + ' 301.6'; }
+  CNAME(c) { return ({ doc: this.w('وثيقة', 'Document'), car: this.w('قطعة سيارة', 'Car part'), dev: this.w('جهاز', 'Device'), custom: this.w('مخصص', 'Custom') })[c]; }
+  view(it) {
+    const ts = (it.rems || []).filter((r) => !r.done).map((r) => this.track(it, r));
+    const act = ts.filter((t) => !t.inactive);
+    let m = null; act.forEach((t) => { if (!m || t.u < m.u) m = t; });
+    let dn = null; act.filter((t) => t.canDone).forEach((t) => { if (!dn || t.u < dn.u) dn = t; });
+    const lv = m ? m.lv : 'n';
+    const arch = ts.length > 0 && act.length === 0;
+    const doc = it.cat === 'doc';
+    const LT = { r: doc ? this.w('منتهي', 'Expired') : this.w('متأخر', 'Overdue'), o: this.w('قريب', 'Due soon'), g: this.w('ساري', 'Valid'), n: arch ? this.w('مؤرشف', 'Archived') : this.w('بدون تنبيه', 'No alert') };
+    const b = this.big(m || ts[0]);
+    const c = it.carId ? this.car(it.carId) : null;
+    const catName = this.CNAME(it.cat);
+    return Object.assign({}, it, {
+      name: this.tx(it.name), ts: ts, lv: lv, lvText: LT[lv], arch: arch, u: m ? m.u : 1e12,
+      sub: m ? m.text : (ts.length ? ts[0].text : this.w('حفظ بيانات فقط', 'Data only')), mainName: m ? m.name : '',
+      due: m ? m.dueText : '', left: m ? m.left : 100, ringDash: this.dash(m ? m.left : 100),
+      big: b.big, unit: b.unit, icon: this.ICON(it.cat), catName: catName, carName: c ? this.tx(c.name) : '', catLine: catName + (c ? ' · ' + this.tx(c.name) : ''),
+      mainRem: dn ? dn.id : null, mainRemName: dn ? dn.name : '', mainDoneLabel: dn ? dn.doneLabel : '',
+      open: () => this.setState({ screen: 'detail', from: 'home', sel: it.id, zoom: false })
+    });
+  }
+  FD() {
+    return {
+      doc: [['name', 'اسم الوثيقة', 'Document name', 'text', 'مثال: جواز السفر', 'e.g. Passport', 0], ['expiry', 'تاريخ الانتهاء', 'Expiry date', 'date', '', '', 0], ['number', 'رقم الوثيقة', 'Document number', 'text', 'اختياري', 'Optional', 1], ['issue', 'تاريخ الإصدار', 'Issue date', 'date', '', '', 1]],
+      car: [['name', 'اسم القطعة أو الصيانة', 'Part or service name', 'text', 'مثال: زيت المكينة', 'e.g. Engine oil', 0], ['life', 'العمر الافتراضي بالزمن', 'Lifespan by time', 'dur', '6', '6', 0], ['everyKm', 'العمر الافتراضي (بالكيلومترات)', 'Lifespan (km)', 'num', '5000', '5000', 0], ['lastDate', 'تاريخ التركيب أو التغيير', 'Installed / changed on', 'date', '', '', 1], ['lastKm', 'قراءة العداد عند التغيير (كم)', 'Odometer at change (km)', 'num', '', '', 1], ['cost', 'التكلفة (ر.ع)', 'Cost (OMR)', 'dec', '', '', 1]],
+      dev: [['name', 'اسم الجهاز', 'Device name', 'text', 'مثال: مكيف غرفة النوم', 'e.g. Bedroom AC', 0], ['purchase', 'تاريخ الشراء', 'Purchase date', 'date', '', '', 0], ['warranty', 'مدة الضمان', 'Warranty period', 'dur', '2', '2', 0], ['maint', 'صيانة دورية كل — اختياري', 'Maintenance every — optional', 'dur', '—', '—', 0], ['maintName', 'اسم الصيانة الدورية', 'Maintenance name', 'text', 'مثال: تنظيف الفلتر', 'e.g. Clean filter', 1], ['model', 'الموديل أو الرقم التسلسلي', 'Model or serial number', 'text', '', '', 1]],
+      custom: [['name', 'اسم العنصر', 'Item name', 'text', 'مثال: تجديد اشتراك النادي', 'e.g. Gym membership renewal', 0]]
+    };
+  }
+  CTPL() { return [this.N('ملكية السيارة', 'Car registration'), this.N('التأمين', 'Insurance'), this.N('الفحص الدوري', 'Inspection')]; }
+  PRE(cat, carId) {
+    const N = (a, e) => this.N(a, e);
+    if (cat === 'doc') return carId ? this.CTPL().map((x) => [x, {}]) : [[N('البطاقة الشخصية', 'National ID card'), {}], [N('رخصة القيادة', 'Driving licence'), {}], [N('جواز السفر', 'Passport'), {}]];
+    if (cat === 'car') return [[N('زيت المكينة', 'Engine oil'), { lifeN: '6', lifeU: 'm', everyKm: '5000' }], [N('زيت الجير', 'Transmission oil'), { lifeN: '2', lifeU: 'y', everyKm: '40000' }], [N('البطارية', 'Battery'), { lifeN: '2', lifeU: 'y', everyKm: '' }], [N('الإطارات', 'Tires'), { lifeN: '4', lifeU: 'y', everyKm: '50000' }], [N('فحمات الفرامل', 'Brake pads'), { lifeN: '', everyKm: '35000' }], [N('فلتر الهواء', 'Air filter'), { lifeN: '1', lifeU: 'y', everyKm: '15000' }]];
+    if (cat === 'dev') return [[N('مكيف', 'AC'), { warrantyN: '2', warrantyU: 'y', maintN: '3', maintU: 'm', maintName: '', maintObj: N('تنظيف الفلتر', 'Clean filter') }], [N('ثلاجة', 'Fridge'), { warrantyN: '2', warrantyU: 'y', maintN: '6', maintU: 'm', maintName: '', maintObj: N('تغيير فلتر الماء', 'Replace water filter') }], [N('تلفزيون', 'TV'), { warrantyN: '2', warrantyU: 'y', maintN: '', maintName: '', maintObj: null }], [N('هاتف', 'Phone'), { warrantyN: '1', warrantyU: 'y', maintN: '', maintName: '', maintObj: null }], [N('غسالة', 'Washing machine'), { warrantyN: '2', warrantyU: 'y', maintN: '1', maintU: 'm', maintName: '', maintObj: N('تنظيف الحوض', 'Clean drum') }]];
+    return [];
+  }
+  TPL(it) {
+    const N = (a, e) => this.N(a, e), n = this.tx(it.name) + ' ' + (it.name && it.name.ar ? it.name.ar : '');
+    if (it.cat === 'car') return [[N('تدوير الإطارات', 'Tire rotation'), { kind: 'km', km: '10000' }], [N('فحص ضغط الهواء', 'Tire pressure check'), { kind: 'cycle', n: '1', u: 'm' }], [N('فحص الفرامل', 'Brake check'), { kind: 'km', km: '20000' }]];
+    if (/مكيف|AC/i.test(n)) return [[N('تنظيف الفلتر', 'Clean filter'), { kind: 'cycle', n: '3', u: 'm' }], [N('فحص الغاز', 'Gas check'), { kind: 'cycle', n: '1', u: 'y' }], [N('صيانة شاملة', 'Full service'), { kind: 'cycle', n: '1', u: 'y' }]];
+    if (/ثلاج|fridge/i.test(n)) return [[N('تغيير فلتر الماء', 'Replace water filter'), { kind: 'cycle', n: '6', u: 'm' }], [N('تنظيف الملف الخلفي', 'Clean rear coil'), { kind: 'cycle', n: '1', u: 'y' }]];
+    if (/غسال|wash/i.test(n)) return [[N('تنظيف الحوض', 'Clean drum'), { kind: 'cycle', n: '1', u: 'm' }], [N('تنظيف فلتر التصريف', 'Clean drain filter'), { kind: 'cycle', n: '3', u: 'm' }]];
+    if (it.cat === 'doc') return [[N('تجهيز أوراق التجديد', 'Prepare renewal papers'), { kind: 'once' }]];
+    return [[N('فحص دوري', 'Routine check'), { kind: 'cycle', n: '6', u: 'm' }]];
+  }
+  defaults(c, carId) {
+    const t = this.iso(this.T0());
+    if (c === 'doc') return { cat: c, carId: carId || null, name: '', number: '', issue: t, expiry: this.iso(this.addM(this.T0(), 12)), before: [30, 7], specK: '', specV: '' };
+    if (c === 'car') { const cr = this.car(carId) || this.curCar(); return { cat: c, carId: cr ? cr.id : null, name: '', lastDate: t, lastKm: cr ? String(cr.odo) : '', lifeN: '6', lifeU: 'm', everyKm: '5000', before: [14], cost: '', specK: '', specV: '' }; }
+    if (c === 'dev') return { cat: c, name: '', model: '', purchase: t, warrantyN: '2', warrantyU: 'y', maintN: '', maintU: 'm', maintName: '', before: [3], specK: '', specV: '' };
+    return { cat: c, name: '', mode: 'repeat', date: this.iso(this.dA(30)), everyN: '1', everyU: 'm', lastDate: t, before: [3], specK: '', specV: '' };
+  }
+  toForm(it) {
+    const R = it.rems || [], b1 = R.find((r) => r.id === 'b1') || {}, b2 = R.find((r) => r.id === 'b2') || {};
+    const base = { cat: it.cat, carId: it.carId || null, name: this.tx(it.name), nameObj: typeof it.name === 'object' ? it.name : null };
+    if (it.cat === 'doc') return Object.assign(base, { number: this.tx(it.number), issue: this.iso(it.issue || this.T0()), expiry: b1.date ? this.iso(b1.date) : '', before: b1.before || [30, 7], photo: it.photo || null });
+    if (it.cat === 'car') return Object.assign(base, { lastDate: this.iso(b1.lastDate || this.T0()), lastKm: String(b1.lastKm || ''), lifeN: b1.n ? String(b1.n) : '', lifeU: b1.u || 'm', everyKm: b1.everyKm ? String(b1.everyKm) : '', before: b1.before || [14], cost: it.cost ? String(it.cost) : '' });
+    if (it.cat === 'dev') return Object.assign(base, { model: this.tx(it.model), purchase: this.iso(it.purchase || this.T0()), warrantyN: it.warrantyN ? String(it.warrantyN) : '', warrantyU: it.warrantyU || 'm', maintN: b2.n ? String(b2.n) : '', maintU: b2.u || 'm', maintName: b2.name ? this.tx(b2.name) : '', maintObj: b2.name && typeof b2.name === 'object' ? b2.name : null, before: b2.before || [3], photo: it.photo || null });
+    return Object.assign(base, { mode: it.mode || 'none', date: b1.type === 'date' && b1.date ? this.iso(b1.date) : this.iso(this.dA(30)), everyN: b1.n ? String(b1.n) : '1', everyU: b1.u || 'm', lastDate: this.iso(b1.lastDate || this.T0()), before: b1.before || [3] });
+  }
+  build(f, old) {
+    const T = this.T0(), n = (v) => this.P(v), R = this.RN();
+    const keep = old ? (old.rems || []).filter((r) => !r.base) : [];
+    const nm = String(f.name).trim();
+    const it = Object.assign({}, old || { id: this.state.nextId, history: [], specs: [] }, { cat: f.cat, name: f.nameObj && this.tx(f.nameObj) === nm ? f.nameObj : nm });
+    if (f.photo) it.photo = f.photo;
+    if (!old && String(f.specV || '').trim()) it.specs = [{ k: String(f.specK || '').trim() || this.w('مواصفات', 'Spec'), v: String(f.specV).trim() }];
+    let base = [];
+    if (f.cat === 'doc') {
+      it.carId = f.carId || null; it.number = f.number; it.issue = this.pd(f.issue) || T;
+      const ex = this.pd(f.expiry) || this.addM(T, 12);
+      if (ex.getTime() < it.issue.getTime()) return this.w('تاريخ الانتهاء قبل تاريخ الإصدار — راجع التاريخين', 'Expiry date is before issue date — please check');
+      base = [{ id: 'b1', base: true, type: 'date', name: R.doc, date: ex, start: it.issue, renew: true, before: this.bfa(f.before, [30, 7]) }];
+    }
+    if (f.cat === 'car') {
+      const cr = this.car(f.carId);
+      if (!cr) return this.w('اختر السيارة أولاً', 'Choose a car first');
+      if (!n(f.lifeN) && !n(f.everyKm)) return this.w('حدد العمر الافتراضي بالزمن أو بالكيلومترات', 'Set a lifespan by time or by km');
+      it.carId = cr.id; it.cost = n(f.cost);
+      base = [{ id: 'b1', base: true, type: 'cycle', name: R.car, lastDate: this.pd(f.lastDate) || T, lastKm: n(f.lastKm) || cr.odo, n: n(f.lifeN), u: f.lifeU || 'm', everyKm: n(f.everyKm), before: this.bfa(f.before, [14]) }];
+      if (!old && it.cost) it.history = [{ date: base[0].lastDate, km: base[0].lastKm, cost: it.cost, note: this.N('التسجيل الأول', 'First entry') }];
+    }
+    if (f.cat === 'dev') {
+      it.model = f.model; it.purchase = this.pd(f.purchase) || T; it.warrantyN = n(f.warrantyN); it.warrantyU = f.warrantyU || 'm';
+      if (it.warrantyN) base.push({ id: 'b1', base: true, type: 'date', name: R.war, date: this.addDur(it.purchase, it.warrantyN, it.warrantyU), start: it.purchase, warranty: true });
+      if (n(f.maintN)) {
+        const ob = old ? (old.rems || []).find((r) => r.id === 'b2') : null;
+        const mn = String(f.maintName || '').trim();
+        const mname = mn ? (f.maintObj && this.tx(f.maintObj) === mn ? f.maintObj : mn) : (f.maintObj || R.maint);
+        base.push({ id: 'b2', base: true, type: 'cycle', name: mname, lastDate: ob ? ob.lastDate : T, n: n(f.maintN), u: f.maintU || 'm', before: this.bfa(f.before, [3]) });
+      }
+    }
+    if (f.cat === 'custom') {
+      it.mode = f.mode;
+      if (f.mode === 'date') base = [{ id: 'b1', base: true, type: 'date', name: R.cdate, date: this.pd(f.date) || this.dA(30), start: T, renew: true, before: this.bfa(f.before, [3]) }];
+      if (f.mode === 'repeat') base = [{ id: 'b1', base: true, type: 'cycle', name: R.crep, lastDate: this.pd(f.lastDate) || T, n: n(f.everyN) || 1, u: f.everyU || 'm', before: this.bfa(f.before, [3]) }];
+    }
+    it.rems = base.concat(keep);
+    return it;
+  }
+  bumpCar(cars, carId, km) {
+    const T = this.T0();
+    return cars.map((c) => (c.id === carId && km > c.odo ? Object.assign({}, c, { odo: km, odoLog: c.odoLog.concat([{ date: T, km: km }]) }) : c));
+  }
+  toast(msg, undo) { clearTimeout(this._t); this.setState({ toast: msg, undo: undo || null }); this._t = setTimeout(() => this.setState({ toast: '', undo: null }), undo ? 5000 : 2800); }
+  snap() { return { items: this.state.items, cars: this.state.cars }; }
+  cur() { return this.state.items.find((x) => x.id === this.state.sel); }
+  upCur(fn) { const id = this.state.sel; this.setState({ items: this.state.items.map((x) => (x.id === id ? fn(x) : x)) }); }
+  saveForm() {
+    const s = this.state, f = s.form;
+    if (!f || !String(f.name || '').trim()) { this.setState({ formErr: this.w('اكتب الاسم أولاً', 'Enter a name first') }); return; }
+    const old = s.editId ? s.items.find((x) => x.id === s.editId) : null;
+    const it = this.build(f, old);
+    if (typeof it === 'string') { this.setState({ formErr: it, showExtra: true }); return; }
+    const items = old ? s.items.map((x) => (x.id === old.id ? it : x)) : [it].concat(s.items);
+    const cr = f.cat === 'car' ? this.car(f.carId) : null;
+    const lk = f.cat === 'car' ? this.P(f.lastKm) : 0;
+    const bump = !!cr && lk > cr.odo;
+    this.setState({ items: items, nextId: old ? s.nextId : s.nextId + 1, screen: 'detail', from: 'home', sel: it.id, form: null, formErr: '', editId: null, showExtra: false, cars: bump ? this.bumpCar(s.cars, cr.id, lk) : s.cars });
+    const nmx = this.tx(it.name);
+    this.toast((old ? this.w('تم حفظ التعديلات', 'Changes saved') : this.w('تمت إضافة «' + nmx + '»', '“' + nmx + '” added')) + (bump ? this.w(' · وتحدّث العداد', ' · odometer updated') : ''));
+  }
+  openRenew(remId) {
+    const it = this.cur(); if (!it) return;
+    const r = (it.rems || []).find((x) => x.id === remId); if (!r) return;
+    const c = it.carId ? this.car(it.carId) : null;
+    let exp = '';
+    if (r.type === 'date' && r.renew) { const len = r.start ? Math.max(30, Math.round((r.date.getTime() - r.start.getTime()) / 864e5)) : 365; exp = this.iso(this.dA(len)); }
+    this.setState({ sheet: 'renew', rf: { remId: remId, cost: r.base && it.cost ? String(it.cost) : '', note: '', km: c ? String(c.odo) : '', exp: exp } });
+  }
+  confirmRenew() {
+    const s = this.state, rf = s.rf || {}, it = this.cur(); if (!it) return;
+    const r = (it.rems || []).find((x) => x.id === rf.remId); if (!r) return;
+    const c = it.carId ? this.car(it.carId) : null;
+    const T = this.T0(), km = this.P(rf.km) || (c ? c.odo : 0);
+    const usesKm = !!c && (it.cat === 'car' || !!Number(r.everyKm));
+    const h = { date: T, cost: this.P(rf.cost), note: String(rf.note || '').trim() || r.name };
+    if (usesKm) h.km = km;
+    const nr = Object.assign({}, r);
+    if (r.type === 'cycle') { nr.lastDate = T; if (usesKm) nr.lastKm = km; }
+    else if (r.once) nr.done = true;
+    else if (r.renew) { nr.start = T; nr.date = this.pd(rf.exp) || this.addM(T, 12); }
+    const u = Object.assign({}, it, { rems: it.rems.map((x) => (x.id === r.id ? nr : x)), history: it.history.concat([h]) });
+    if (it.cat === 'doc' && r.base) u.issue = T;
+    if (r.base && h.cost && (it.cat === 'car' || it.cat === 'custom')) u.cost = h.cost;
+    this.setState({ items: s.items.map((x) => (x.id === it.id ? u : x)), sheet: null, cars: usesKm ? this.bumpCar(s.cars, c.id, km) : s.cars });
+    this.toast(r.once ? this.w('تم — أُغلق التذكير وحُفظ في السجل', 'Done — reminder closed and saved to history') : this.w('حُفظت العملية في السجل وبدأت دورة جديدة', 'Saved to history — a new cycle has started'));
+  }
+  saveRem() {
+    const s = this.state, f = s.remF || {}, it = this.cur();
+    const nm = String(f.name || '').trim();
+    if (!nm) { this.setState({ remErr: true }); return; }
+    const T = this.T0(), c = it && it.carId ? this.car(it.carId) : null;
+    const r = { id: 'c' + s.nextR, name: f.nameObj && this.tx(f.nameObj) === nm ? f.nameObj : nm, before: this.bfa(f.before, [3]) };
+    if (f.kind === 'once') { r.type = 'date'; r.once = true; r.date = this.pd(f.date) || this.dA(7); r.start = T; }
+    else if (f.kind === 'km') { r.type = 'cycle'; r.lastDate = T; r.everyKm = this.P(f.km) || 10000; r.lastKm = c ? c.odo : 0; }
+    else { r.type = 'cycle'; r.lastDate = T; r.n = this.P(f.n) || 1; r.u = f.u || 'm'; }
+    this.upCur((x) => Object.assign({}, x, { rems: (x.rems || []).concat([r]) }));
+    this.setState({ sheet: null, remF: null, remErr: false, nextR: s.nextR + 1 });
+    this.toast(this.w('أُضيف تذكير «' + nm + '»', 'Reminder “' + nm + '” added'));
+  }
+  delRem(id) {
+    const snap = this.snap(), it = this.cur(), r = it && (it.rems || []).find((x) => x.id === id);
+    this.upCur((x) => Object.assign({}, x, { rems: x.rems.filter((y) => y.id !== id) }));
+    this.toast(this.w('حُذف التذكير', 'Reminder deleted') + (r ? ' «' + this.tx(r.name) + '»' : ''), snap);
+  }
+  saveSpec() {
+    const f = this.state.specF || {};
+    if (!String(f.v || '').trim()) { this.toast(this.w('اكتب القيمة', 'Enter a value')); return; }
+    this.upCur((x) => Object.assign({}, x, { specs: (x.specs || []).concat([{ k: String(f.k || '').trim() || this.w('مواصفة', 'Spec'), v: String(f.v).trim() }]) }));
+    this.setState({ sheet: null, specF: { k: '', v: '' } });
+    this.toast(this.w('حُفظت المواصفة', 'Spec saved'));
+  }
+  delSpec(i) { const snap = this.snap(); this.upCur((x) => Object.assign({}, x, { specs: x.specs.filter((_, j) => j !== i) })); this.toast(this.w('حُذفت المواصفة', 'Spec deleted'), snap); }
+  copy(v) {
+    const fail = () => this.toast(this.w('النسخ يعمل في النسخة النهائية: ', 'Copy works in the final app: ') + v);
+    try { if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(v).then(() => this.toast(this.w('تم النسخ: ', 'Copied: ') + v)).catch(fail); else fail(); } catch (e) { fail(); }
+  }
+  saveOdo() {
+    const s = this.state, c = this.curCar(); if (!c) return;
+    const v = Math.round(this.P(s.odoIn));
+    if (!v) { this.toast(this.w('اكتب قراءة صحيحة', 'Enter a valid reading')); return; }
+    if (v < c.odo) { this.toast(this.w('القراءة أقل من آخر قراءة (' + this.num(c.odo) + ' كم)', 'Reading is below the last one (' + this.num(c.odo) + ' km)')); return; }
+    this.setState({ cars: s.cars.map((x) => (x.id === c.id ? Object.assign({}, x, { odo: v, odoLog: x.odoLog.concat([{ date: this.T0(), km: v }]) }) : x)), sheet: null });
+    this.toast(this.w('تم تحديث عداد «' + this.tx(c.name) + '»', '“' + this.tx(c.name) + '” odometer updated'));
+  }
+  openFuel(carId) { const c = this.car(carId) || this.curCar(); if (!c) return; this.setState({ sheet: 'fuel', fuelF: { carId: c.id, date: this.iso(this.T0()), liters: '', cost: '', km: String(c.odo), full: true } }); }
+  saveFuel() {
+    const s = this.state, f = s.fuelF || {}, c = this.car(f.carId); if (!c) return;
+    const L = this.P(f.liters), C = this.P(f.cost), K = Math.round(this.P(f.km));
+    if (!L) { this.toast(this.w('اكتب عدد اللترات', 'Enter liters')); return; }
+    if (!K) { this.toast(this.w('اكتب قراءة العداد', 'Enter odometer reading')); return; }
+    const e = { id: 'f' + s.nextF, date: this.pd(f.date) || this.T0(), km: K, liters: L, cost: C, full: f.full !== false };
+    const cars = s.cars.map((x) => (x.id === c.id ? Object.assign({}, x, { fuel: (x.fuel || []).concat([e]) }) : x));
+    this.setState({ cars: this.bumpCar(cars, c.id, K), sheet: null, nextF: s.nextF + 1, carSel: c.id, tab: 'cars', carSub: 'fuel', screen: 'home' });
+    this.toast(this.w('سُجّلت التعبئة', 'Fill-up saved') + (K > c.odo ? this.w(' · وتحدّث العداد', ' · odometer updated') : ''));
+  }
+  delFuel(carId, fid) { const snap = this.snap(); this.setState({ cars: this.state.cars.map((x) => (x.id === carId ? Object.assign({}, x, { fuel: x.fuel.filter((e) => e.id !== fid) }) : x)) }); this.toast(this.w('حُذفت التعبئة', 'Fill-up deleted'), snap); }
+  fuelStats(c) {
+    const F = ((c && c.fuel) || []).slice().sort((a, b) => a.km - b.km);
+    let dist = 0, lit = 0, cost = 0; const per = {};
+    for (let i = 1; i < F.length; i++) { const d = F[i].km - F[i - 1].km; if (d > 0 && F[i].full) { dist += d; lit += F[i].liters; cost += F[i].cost; per[F[i].id] = d / F[i].liters; } }
+    const now = this.T0();
+    const month = F.filter((e) => e.date.getFullYear() === now.getFullYear() && e.date.getMonth() === now.getMonth()).reduce((a, e) => a + e.cost, 0);
+    const rows = F.slice().sort((a, b) => b.date.getTime() - a.date.getTime()).map((e) => ({
+      main: this.num(e.liters, 2) + this.w(' لتر · ', ' L · ') + this.num(e.km) + this.w(' كم', ' km'),
+      date: this.fmt(e.date), eff: per[e.id] ? this.num(per[e.id], 1) + this.w(' كم/لتر', ' km/L') : (e.full ? this.w('أول تعبئة', 'first fill') : this.w('تعبئة جزئية', 'partial fill')),
+      cost: this.money(e.cost), del: () => this.delFuel(c.id, e.id)
+    }));
+    return { kmpl: lit ? this.num(dist / lit, 1) : '—', cpk: dist ? this.num(cost / dist * 1000, 0) : '—', month: this.num(month, 2), rows: rows, empty: rows.length === 0, count: rows.length };
+  }
+  saveCar() {
+    const s = this.state, f = s.carF || {};
+    const nm = String(f.name || '').trim();
+    if (!nm) { this.setState({ carErr: this.w('اكتب اسم السيارة', 'Enter a car name') }); return; }
+    const odo = Math.round(this.P(f.odo));
+    const T = this.T0();
+    if (s.carEditId) {
+      const cars = s.cars.map((c) => {
+        if (c.id !== s.carEditId) return c;
+        const pl = String(f.plate || '').trim();
+        const u = Object.assign({}, c, { name: f.nameObj && this.tx(f.nameObj) === nm ? f.nameObj : nm, plate: f.plateObj && this.tx(f.plateObj) === pl ? f.plateObj : pl, photo: f.photo || null });
+        if (odo > c.odo) { u.odo = odo; u.odoLog = c.odoLog.concat([{ date: T, km: odo }]); }
+        return u;
+      });
+      this.setState({ cars: cars, screen: 'home', tab: 'cars', carF: null, carEditId: null, carErr: '' });
+      this.toast(this.w('تم حفظ بيانات السيارة', 'Car saved'));
+      return;
+    }
+    const id = 'c' + s.nextC;
+    const c = { id: id, name: nm, plate: String(f.plate || '').trim(), photo: f.photo || null, odo: odo, odoLog: [{ date: T, km: odo }], fuel: [] };
+    this.setState({ cars: s.cars.concat([c]), nextC: s.nextC + 1, carSel: id, carSub: 'docs', screen: 'home', tab: 'cars', carF: null, carErr: '', sheet: null });
+    this.toast(this.w('أُضيفت السيارة — أضف وثائقها من القوالب', 'Car added — add its documents from the templates'));
+  }
+  KEY() { return [77, 84, 75, 45, 65, 77, 66, 45, 50, 48, 50, 54, 33, 115, 101, 99]; }
+  enc(str) { const b = new TextEncoder().encode(str), k = this.KEY(); let bin = ''; for (let i = 0; i < b.length; i++) bin += String.fromCharCode(b[i] ^ k[i % k.length]); return btoa(bin); }
+  dec(b64) { const bin = atob(String(b64).trim()), k = this.KEY(); const b = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) b[i] = bin.charCodeAt(i) ^ k[i % k.length]; return new TextDecoder().decode(b); }
+  exportBackup() {
+    const s = this.state, strip = (o) => Object.assign({}, o);
+    const payload = { app: 'asset-manager', v: 1, at: new Date().toISOString(), lang: s.lang, notifTime: s.notifTime, odoEvery: s.odoEvery, nextId: s.nextId, nextR: s.nextR, nextF: s.nextF, nextC: s.nextC, cars: s.cars.map(strip), items: s.items.map(strip) };
+    const data = 'UHDA1:' + this.enc(JSON.stringify(payload));
+    const name = 'uhda-backup-' + this.iso(this.T0()) + '.uhda';
+    const done = () => this.setState({ lastExport: new Date() });
+    let file = null;
+    try { file = new File([data], name, { type: 'application/octet-stream' }); } catch (e) { file = null; }
+    try {
+      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+        navigator.share({ files: [file], title: name }).then(() => { done(); this.toast(this.w('تم تصدير النسخة: ', 'Backup exported: ') + name); }).catch(() => {});
+        return;
+      }
+    } catch (e) {}
+    try {
+      const url = URL.createObjectURL(new Blob([data], { type: 'application/octet-stream' }));
+      const a = document.createElement('a'); a.href = url; a.download = name; a.click();
+      setTimeout(() => URL.revokeObjectURL(url), 5000);
+      done(); this.toast(this.w('تم إنشاء الملف: ', 'File created: ') + name);
+    } catch (e) { this.toast(this.w('التصدير يعمل من الهاتف في النسخة النهائية', 'Export works on the phone in the final app')); }
+  }
+  dlFile(data, name, type) {
+    try { const url = URL.createObjectURL(data instanceof Blob ? data : new Blob([data], { type: type || 'application/octet-stream' })); const a = document.createElement('a'); a.href = url; a.download = name; a.click(); setTimeout(() => URL.revokeObjectURL(url), 5000); return true; } catch (e) { return false; }
+  }
+  saveBackup() {
+    const s = this.state;
+    const payload = { app: 'asset-manager', v: 1, at: new Date().toISOString(), lang: s.lang, notifTime: s.notifTime, odoEvery: s.odoEvery, nextId: s.nextId, nextR: s.nextR, nextF: s.nextF, nextC: s.nextC, cars: s.cars, items: s.items };
+    const data = 'UHDA1:' + this.enc(JSON.stringify(payload)), name = 'uhda-backup-' + this.iso(this.T0()) + '.uhda';
+    const done = () => { this.setState({ lastExport: new Date() }); this.toast(this.w('حُفظت النسخة: ', 'Backup saved: ') + name); };
+    const fallback = () => { if (this.dlFile(data, name)) { this.setState({ lastExport: new Date() }); this.toast(this.w('حُفظت في التنزيلات — في التطبيق تختار المجلد بنفسك', 'Saved to Downloads — in the app you pick the folder')); } else this.toast(this.w('الحفظ يعمل من الهاتف في النسخة النهائية', 'Saving works on the phone in the final app')); };
+    try {
+      if (window.showSaveFilePicker) {
+        window.showSaveFilePicker({ suggestedName: name, types: [{ description: 'Uhda backup', accept: { 'application/octet-stream': ['.uhda'] } }] })
+          .then((h) => h.createWritable().then((wr) => wr.write(data).then(() => wr.close())))
+          .then(done)
+          .catch((err) => { if (!err || err.name !== 'AbortError') fallback(); });
+        return;
+      }
+    } catch (e) {}
+    fallback();
+  }
+  readImage(file) {
+    return new Promise((res) => {
+      const fr = new FileReader();
+      fr.onload = () => {
+        const src = String(fr.result || '');
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const sc = Math.min(1, 1600 / Math.max(img.width, img.height));
+            const cv = document.createElement('canvas');
+            cv.width = Math.round(img.width * sc); cv.height = Math.round(img.height * sc);
+            cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+            res(cv.toDataURL('image/jpeg', 0.82));
+          } catch (e) { res(src); }
+        };
+        img.onerror = () => res(src);
+        img.src = src;
+      };
+      fr.onerror = () => res('');
+      fr.readAsDataURL(file);
+    });
+  }
+  photoFile() {
+    const it = this.cur(); if (!it || !it.photo) return null;
+    try {
+      const p = String(it.photo).split(','), mime = (p[0].match(/data:([^;]+)/) || [])[1] || 'image/jpeg';
+      const bin = atob(p[1] || ''), u = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i);
+      return new File([u], 'uhda-' + this.tx(it.name).replace(/\s+/g, '-') + '.jpg', { type: mime });
+    } catch (e) { return null; }
+  }
+  sharePhoto() {
+    const f = this.photoFile();
+    try { if (f && navigator.canShare && navigator.canShare({ files: [f] })) { navigator.share({ files: [f] }).catch(() => {}); return; } } catch (e) {}
+    this.toast(this.w('المشاركة لواتساب وتطبيقات التواصل تعمل من الهاتف في النسخة النهائية', 'Sharing to WhatsApp and social apps works on the phone in the final app'));
+  }
+  savePhoto() {
+    const f = this.photoFile(); if (!f) return;
+    try {
+      if (/iPhone|iPad/.test(navigator.userAgent) && navigator.canShare && navigator.canShare({ files: [f] })) { navigator.share({ files: [f] }).catch(() => {}); this.toast(this.w('اختر «حفظ الصورة» لتنزل في الاستوديو', 'Choose “Save Image” to add it to Photos')); return; }
+    } catch (e) {}
+    if (this.dlFile(f, f.name)) this.toast(this.w('حُفظت الصورة في الاستوديو / التنزيلات', 'Photo saved to gallery / downloads'));
+    else this.toast(this.w('الحفظ في الاستوديو يعمل من الهاتف في النسخة النهائية', 'Saving to Photos works on the phone in the final app'));
+  }
+  onImportFile(e) {
+    const input = e.target, file = input.files && input.files[0];
+    if (!file) return;
+    const fail = () => this.toast(this.w('الملف غير صالح أو ليس نسخة من هذا التطبيق', 'Invalid file, or not a backup from this app'));
+    const reader = new FileReader();
+    reader.onload = () => {
+      try {
+        const txt = String(reader.result || '').trim();
+        const pre = txt.indexOf('UHDA1:') === 0 ? 6 : (txt.indexOf('AMB1:') === 0 ? 5 : 0);
+        if (!pre) { fail(); return; }
+        const obj = JSON.parse(this.dec(txt.slice(pre)), (k, v) => (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(v) ? new Date(v) : v));
+        if (!obj || obj.app !== 'asset-manager' || !Array.isArray(obj.cars) || !Array.isArray(obj.items)) { fail(); return; }
+        this.setState({ pending: obj, sheet: 'import' });
+      } catch (err) { fail(); }
+    };
+    reader.onerror = fail;
+    reader.readAsText(file);
+    try { input.value = ''; } catch (err) {}
+  }
+  confirmImport() {
+    const s = this.state, p = s.pending; if (!p) return;
+    const snap = this.snap();
+    this.setState({ cars: p.cars, items: p.items, nextId: p.nextId || s.nextId, nextR: p.nextR || s.nextR, nextF: p.nextF || s.nextF, nextC: p.nextC || s.nextC, notifTime: p.notifTime || s.notifTime, odoEvery: p.odoEvery || s.odoEvery, carSel: p.cars[0] ? p.cars[0].id : null, pending: null, sheet: null, screen: 'home', tab: 'cars' });
+    this.toast(this.w('تم استرجاع النسخة الاحتياطية', 'Backup restored'), snap);
+  }
+  report() {
+    const s = this.state;
+    const specOf = (it) => (it.specs || []).map((x) => this.tx(x.k) + ': ' + this.tx(x.v)).join(' · ');
+    const rowOf = (it) => { const v = this.view(it), sp = specOf(it); return { name: v.name, status: v.lvText, lv: v.lv, due: v.due || v.sub, specs: sp, hasSpecs: !!sp, u: v.u }; };
+    const byU = (a, b) => a.u - b.u;
+    const sections = [];
+    s.cars.forEach((c) => {
+      const fs = this.fuelStats(c);
+      const rows = s.items.filter((x) => x.carId === c.id).map(rowOf).sort(byU);
+      sections.push({ title: this.tx(c.name), sub: (c.plate ? this.tx(c.plate) + ' · ' : '') + this.w('العداد ', 'Odometer ') + this.num(c.odo) + this.w(' كم', ' km') + (fs.kmpl !== '—' ? ' · ' + fs.kmpl + this.w(' كم/لتر', ' km/L') : ''), hasSub: true, rows: rows });
+    });
+    const grp = (cat, title) => { const rows = s.items.filter((x) => !x.carId && x.cat === cat).map(rowOf).sort(byU); if (rows.length) sections.push({ title: title, sub: '', hasSub: false, rows: rows }); };
+    grp('doc', this.w('الوثائق الشخصية', 'Personal documents'));
+    grp('dev', this.w('الأجهزة', 'Devices'));
+    grp('custom', this.w('مخصص', 'Custom'));
+    return { when: this.w('أُنشئ في ', 'Generated ') + this.fmtT(new Date()), sections: sections };
+  }
+  DICT() {
+    return {
+      ar: { ver: 'عُهدة · 1.0', about: 'حول التطبيق', aboutTap: 'اضغط لعرض شاشة البداية', langBtn: 'EN', aLang: 'Switch to English', settings: 'الإعدادات', searchPh: 'ابحث: وثيقة، جهاز، قطعة، مقاس…', aSearch: 'بحث', attnTitle: 'تحتاج انتباهك', allGood: 'كل شيء ساري — لا يوجد ما يحتاج انتباهك الآن', carAllGood: 'هذه السيارة سليمة — لا مواعيد قريبة', updated: 'آخر تحديث', update: 'تحديث العداد', km: 'كم', odoDueMsg: 'حان وقت إدخال قراءة العداد ليُحدَّث المتبقي لكل القطع', noResults: 'لا توجد نتائج مطابقة', archTitle: 'المؤرشف — ضمان منتهي', switchCar: 'تبديل السيارة', chooseCar: 'اختر السيارة', addCarFull: 'إضافة سيارة', noPlate: 'بدون لوحة', editCar: 'تعديل بيانات السيارة', noParts: 'لا توجد قطع بعد', addPart: 'إضافة قطعة أو صيانة', noCarDocs: 'لا توجد وثائق لهذه السيارة بعد', tplQuick: 'قوالب سريعة — بلمسة', addCarDoc: 'وثيقة أخرى لهذه السيارة', kmpl: 'الاستهلاك', kmplU: 'كم/لتر', cpk: 'تكلفة الكيلو', cpkU: 'بيسة/كم', fuelMonth: 'وقود الشهر', omr: 'ر.ع', noFuel: 'لا توجد تعبئات بعد — سجّل أول تعبئة لحساب الاستهلاك', addFuel: 'تعبئة وقود', aDelFuel: 'حذف التعبئة', noCars: 'لم تُضِف أي سيارة بعد', addFirstCar: 'أضف سيارتك الأولى', add: 'إضافة', aNav: 'التنقل الرئيسي', aBack: 'رجوع', aEdit: 'تعديل', aDelete: 'حذف', reminders: 'التذكيرات', noRems: 'لا توجد تذكيرات — هذا العنصر لحفظ البيانات فقط.', addRem: 'إضافة تذكير', aDelRem: 'حذف التذكير', specsTitle: 'حافظة المواصفات — اضغط على أي سطر لنسخه', noSpecs: 'احفظ هنا ما يُنسى بسهولة: مقاس، نوع زيت، رقم حساب…', addSpec: 'إضافة مواصفة', aDelSpec: 'حذف المواصفة', aCopy: 'نسخ', photoTitle: 'الفاتورة / صورة الوثيقة', aZoom: 'تكبير الصورة', altPhoto: 'الصورة المرفقة', histTitle: 'سجل التاريخ والمصاريف', opsCount: 'عدد العمليات', totalSpend: 'إجمالي المصاريف', noHist: 'لا توجد عمليات سابقة بعد.', addRemFor: '+ إضافة تذكير لهذا العنصر', change: 'تغيير', quickPick: 'اختيار سريع — يعبّي القيم المعتادة', alertMethod: 'طريقة التنبيه', extraDetails: 'تفاصيل إضافية', alertBefore: 'التنبيه المسبق — اختر واحداً أو أكثر', altPreview: 'معاينة الصورة', takePhoto: 'تصوير أو اختيار صورة', totalDash: 'الإجمالي —', opsWord: 'عملية', noSpendRange: 'لا توجد مصاريف في هذه الفترة', byCat: 'حسب القسم', topCost: 'الأكثر تكلفة', recentOps: 'آخر العمليات', aClose: 'إغلاق', odoNow: 'قراءة العداد الآن (كم)', cost: 'التكلفة (ر.ع)', noteOpt: 'ملاحظة (اختياري)', notePh: 'مثال: اسم مركز الخدمة', saveLog: 'حفظ في السجل', newRem: 'تذكير جديد', tplTitle: 'قوالب مقترحة', remName: 'اسم التذكير', remNamePh: 'مثال: تنظيف الفلتر', type: 'النوع', repeatEvery: 'يتكرر كل', everyKm: 'يتكرر كل (كم)', date: 'التاريخ', remNameErr: 'اكتب اسم التذكير', addRemBtn: 'إضافة التذكير', newSpec: 'مواصفة جديدة', specK: 'الاسم', specKPh: 'مثال: مقاس الإطار', specV: 'القيمة', saveSpec: 'حفظ المواصفة', delMsg: 'سيُحذف العنصر مع تذكيراته وسجله وصوره. يمكنك التراجع خلال ثوانٍ.', delCarMsg: 'ستُحذف السيارة مع قطعها ووثائقها وسجل الوقود. يمكنك التراجع خلال ثوانٍ.', delBtn: 'حذف', cancel: 'إلغاء', odoSheet: 'قراءة العداد', lastRead: 'آخر قراءة:', aOdoIn: 'قراءة العداد الجديدة', livePrev: 'معاينة مباشرة للمتبقي', saveRead: 'حفظ القراءة', language: 'اللغة', notifTime: 'وقت وصول الإشعارات', odoRemind: 'تذكير بإدخال قراءة العداد', look: 'المظهر', aShare: 'مشاركة', aPrint: 'طباعة', undo: 'تراجع', aLogo: 'شعار عُهدة — اضغط لعرض شاشة البداية', verLong: 'الإصدار 1.0', tagline: 'ضماناتك ووثائقك في عُهدة آمنة', addCarTile: 'أضف سيارة', photoSafe: 'نسخة محفوظة داخل عُهدة — لن تضيع لو حذفتها من الاستوديو', saveGallery: 'حفظ في الاستوديو', sharePhoto: 'مشاركة', saveIn: 'حفظ في…', shareB: 'مشاركة', savePathHint: 'الآيفون: «حفظ في الملفات» وتختار iCloud Drive أو «على الآيفون». الأندرويد: يفتح مدير الملفات وتختار المجلد.', savePdf: 'حفظ PDF في…', sharePdf: 'مشاركة PDF', carPhoto: 'صورة السيارة', carName: 'اسم السيارة', carNamePh: 'مثال: الكامري البيضاء', plate: 'رقم اللوحة', platePh: 'مثال: 12345 أ ب', odoField: 'قراءة العداد الحالية (كم)', newCarHint: 'بعد الحفظ تقدر تضيف الملكية والتأمين والفحص بلمسة من القوالب.', delCar: 'حذف السيارة', saveCar: 'حفظ السيارة', car: 'السيارة', liters: 'اللترات', fuelCost: 'المبلغ (ر.ع)', odoAtFill: 'قراءة العداد عند التعبئة (كم)', tank: 'الخزان', saveFuel: 'حفظ التعبئة', bkTitle: 'النسخ الاحتياطي والاسترجاع', bkSub: 'بدون سيرفر وبدون تسجيل دخول — بياناتك على جهازك', bkRowDesc: 'نسخ تلقائي، ملف مشفّر، تقرير PDF', bk1Title: 'النسخ التلقائي للنظام', bk1Desc: 'تُحفظ بيانات التطبيق تلقائياً ضمن نسخة iCloud في الآيفون أو Android Auto Backup، وتعود عند تغيير الهاتف.', on: 'مفعّل', bk1Last: 'آخر نسخة تلقائية', bk2Title: 'ملف نسخة احتياطية مشفّر', bk2Desc: 'يجمع البيانات والصور في ملف واحد مشفّر (.uhda) وتحفظه في ملفاتك أو ترسله لنفسك عبر واتساب.', cars: 'سيارات', itemsW: 'عناصر', fills: 'تعبئات', exportB: 'تصدير نسخة احتياطية', importB: 'استيراد نسخة', bk3Title: 'تقرير PDF للطوارئ', bk3Desc: 'جدول مقروء بكل البيانات والتواريخ والمواصفات — مرجع لو تعطّل الهاتف.', openReport: 'عرض التقرير وتصديره', bkNote: 'الملف مشفّر تلقائياً بدون كلمة مرور: لا يُقرأ خارج التطبيق، لكن أي جهاز عليه التطبيق يقدر يفتحه — احفظه في مكان آمن.', impTitle: 'استرجاع نسخة احتياطية', impWarn: 'ستُستبدل كل البيانات الحالية بمحتوى الملف.', impConfirm: 'استبدال واسترجاع', repTitle: 'تقرير البيانات', colName: 'العنصر والمواصفات', colStatus: 'الحالة', colDue: 'الموعد القادم', printPdf: 'حفظ كـ PDF / طباعة' },
+      en: { ver: 'Uhda · 1.0', about: 'About', aboutTap: 'Tap to replay the splash screen', langBtn: 'ع', aLang: 'التبديل إلى العربية', settings: 'Settings', searchPh: 'Search: document, device, part, size…', aSearch: 'Search', attnTitle: 'Needs attention', allGood: 'All good — nothing needs your attention now', carAllGood: 'This car is in good shape — nothing due soon', updated: 'Updated', update: 'Update odometer', km: 'km', odoDueMsg: 'Time to enter the odometer reading to refresh all parts', noResults: 'No matching results', archTitle: 'Archived — warranty expired', switchCar: 'Switch car', chooseCar: 'Choose a car', addCarFull: 'Add a car', noPlate: 'No plate', editCar: 'Edit car details', noParts: 'No parts yet', addPart: 'Add part or service', noCarDocs: 'No documents for this car yet', tplQuick: 'Quick templates — one tap', addCarDoc: 'Another document for this car', kmpl: 'Economy', kmplU: 'km/L', cpk: 'Cost per km', cpkU: 'baisa/km', fuelMonth: 'Fuel this month', omr: 'OMR', noFuel: 'No fill-ups yet — log your first to calculate economy', addFuel: 'Fuel fill-up', aDelFuel: 'Delete fill-up', noCars: 'You haven’t added a car yet', addFirstCar: 'Add your first car', add: 'Add', aNav: 'Main navigation', aBack: 'Back', aEdit: 'Edit', aDelete: 'Delete', reminders: 'Reminders', noRems: 'No reminders — this item only stores data.', addRem: 'Add reminder', aDelRem: 'Delete reminder', specsTitle: 'Quick specs — tap a line to copy', noSpecs: 'Keep easy-to-forget details here: sizes, oil type, account numbers…', addSpec: 'Add spec', aDelSpec: 'Delete spec', aCopy: 'Copy', photoTitle: 'Invoice / document photo', aZoom: 'Enlarge photo', altPhoto: 'Attached photo', histTitle: 'History & expenses', opsCount: 'Operations', totalSpend: 'Total spent', noHist: 'No past operations yet.', addRemFor: '+ Add a reminder to this item', change: 'Change', quickPick: 'Quick pick — fills typical values', alertMethod: 'Alert type', extraDetails: 'More details', alertBefore: 'Advance alerts — pick one or more', altPreview: 'Photo preview', takePhoto: 'Take or choose a photo', totalDash: 'Total —', opsWord: 'operations', noSpendRange: 'No expenses in this period', byCat: 'By section', topCost: 'Most expensive', recentOps: 'Recent operations', aClose: 'Close', odoNow: 'Current odometer (km)', cost: 'Cost (OMR)', noteOpt: 'Note (optional)', notePh: 'e.g. service center name', saveLog: 'Save to history', newRem: 'New reminder', tplTitle: 'Suggested templates', remName: 'Reminder name', remNamePh: 'e.g. Clean filter', type: 'Type', repeatEvery: 'Repeats every', everyKm: 'Repeats every (km)', date: 'Date', remNameErr: 'Enter a reminder name', addRemBtn: 'Add reminder', newSpec: 'New spec', specK: 'Name', specKPh: 'e.g. Tire size', specV: 'Value', saveSpec: 'Save spec', delMsg: 'The item, its reminders, history and photos will be deleted. You can undo for a few seconds.', delCarMsg: 'The car, its parts, documents and fuel log will be deleted. You can undo for a few seconds.', delBtn: 'Delete', cancel: 'Cancel', odoSheet: 'Odometer', lastRead: 'Last reading:', aOdoIn: 'New odometer reading', livePrev: 'Live preview of remaining', saveRead: 'Save reading', language: 'Language', notifTime: 'Notification time', odoRemind: 'Odometer reading reminder', look: 'Appearance', aShare: 'Share', aPrint: 'Print', undo: 'Undo', aLogo: 'Uhda logo — tap to show the splash screen', verLong: 'Version 1.0', tagline: 'Your warranties and documents, safely kept', addCarTile: 'Add car', photoSafe: 'A copy is kept inside Uhda — safe even if deleted from your gallery', saveGallery: 'Save to Photos', sharePhoto: 'Share', saveIn: 'Save to…', shareB: 'Share', savePathHint: 'iPhone: “Save to Files”, then pick iCloud Drive or On My iPhone. Android: opens the file manager so you pick the folder.', savePdf: 'Save PDF to…', sharePdf: 'Share PDF', carPhoto: 'Car photo', carName: 'Car name', carNamePh: 'e.g. White Camry', plate: 'Plate number', platePh: 'e.g. 12345 AB', odoField: 'Current odometer (km)', newCarHint: 'After saving, add registration, insurance and inspection with one tap from the templates.', delCar: 'Delete car', saveCar: 'Save car', car: 'Car', liters: 'Liters', fuelCost: 'Amount (OMR)', odoAtFill: 'Odometer at fill-up (km)', tank: 'Tank', saveFuel: 'Save fill-up', bkTitle: 'Backup & restore', bkSub: 'No server, no sign-in — your data stays on your phone', bkRowDesc: 'Auto backup, encrypted file, PDF report', bk1Title: 'System auto backup', bk1Desc: 'App data is saved automatically in your iPhone’s iCloud backup or Android Auto Backup, and returns when you switch phones.', on: 'On', bk1Last: 'Last auto backup', bk2Title: 'Encrypted backup file', bk2Desc: 'Packs your data and photos into one encrypted file (.uhda) to save in Files or send to yourself on WhatsApp.', cars: 'Cars', itemsW: 'Items', fills: 'Fill-ups', exportB: 'Export backup', importB: 'Import backup', bk3Title: 'Emergency PDF report', bk3Desc: 'A readable table of all data, dates and specs — a reference if your phone fails.', openReport: 'View and export report', bkNote: 'The file is encrypted automatically without a password: it can’t be read outside the app, but any device with the app can open it — keep it somewhere safe.', impTitle: 'Restore a backup', impWarn: 'All current data will be replaced with the file’s contents.', impConfirm: 'Replace and restore', repTitle: 'Data report', colName: 'Item & specs', colStatus: 'Status', colDue: 'Next due', printPdf: 'Save as PDF / Print' }
+    };
+  }
+  spend() {
+    const s = this.state, y = this.T0().getFullYear();
+    const inR = (dt) => s.spendRange === 'all' || (s.spendRange === 'year' ? dt.getFullYear() === y : dt.getFullYear() === y - 1);
+    const sc = s.spendScope;
+    const inScope = (carId) => sc === 'all' || (sc === 'home' ? !carId : carId === sc);
+    const SN = { car: [this.w('صيانة السيارات', 'Car maintenance'), this.ICON('car')], fuel: [this.w('الوقود', 'Fuel'), this.ICON('fuel')], doc: [this.w('الوثائق', 'Documents'), this.ICON('doc')], dev: [this.w('الأجهزة', 'Devices'), this.ICON('dev')], custom: [this.w('مخصص', 'Custom'), this.ICON('custom')] };
+    const by = { car: 0, fuel: 0, doc: 0, dev: 0, custom: 0 }, byItem = {}, ops = [];
+    s.items.forEach((it) => { if (!inScope(it.carId || null)) return; (it.history || []).forEach((h) => { const c = Number(h.cost) || 0; if (!c || !inR(h.date)) return; by[it.cat] += c; byItem[it.id] = (byItem[it.id] || 0) + c; ops.push({ name: this.tx(it.name), note: this.tx(h.note), date: h.date, cost: c, icon: this.ICON(it.cat) }); }); });
+    s.cars.forEach((c) => { if (!inScope(c.id)) return; let sum = 0; (c.fuel || []).forEach((e) => { if (!inR(e.date) || !e.cost) return; by.fuel += e.cost; sum += e.cost; ops.push({ name: this.w('وقود · ', 'Fuel · ') + this.tx(c.name), note: this.num(e.liters, 2) + this.w(' لتر', ' L'), date: e.date, cost: e.cost, icon: this.ICON('fuel') }); }); if (sum) byItem['fuel_' + c.id] = sum; });
+    const total = ops.reduce((a, o) => a + o.cost, 0);
+    const keys = Object.keys(by).filter((k) => by[k] > 0);
+    const mx = Math.max(1, ...keys.map((k) => by[k]));
+    const cats = keys.sort((a, b) => by[b] - by[a]).map((k) => ({ label: SN[k][0], icon: SN[k][1], amount: this.money(by[k]), w: Math.round(by[k] / mx * 100), share: total ? Math.round(by[k] / total * 100) + '%' : '0%' }));
+    const top = Object.keys(byItem).map((id) => {
+      if (id.indexOf('fuel_') === 0) { const c = this.car(id.slice(5)); return { name: this.w('وقود · ', 'Fuel · ') + (c ? this.tx(c.name) : ''), v: byItem[id], open: () => this.setState({ tab: 'cars', carSel: id.slice(5), carSub: 'fuel', screen: 'home' }) }; }
+      const it = s.items.find((x) => String(x.id) === id); return it ? { name: this.tx(it.name) + (it.carId ? ' · ' + this.tx((this.car(it.carId) || {}).name) : ''), v: byItem[id], open: () => this.setState({ screen: 'detail', from: 'home', sel: it.id }) } : null;
+    }).filter(Boolean).sort((a, b) => b.v - a.v).slice(0, 5).map((x) => ({ name: x.name, amount: this.money(x.v), open: x.open }));
+    const recent = ops.slice().sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 8).map((o) => ({ name: o.name, note: o.note, date: this.fmt(o.date), cost: this.money(o.cost), icon: o.icon }));
+    const RT = { year: this.w('سنة ', 'Year ') + y, last: this.w('سنة ', 'Year ') + (y - 1), all: this.w('كل الفترات', 'All time') };
+    const ST = sc === 'all' ? this.w('الكل', 'All') : (sc === 'home' ? this.w('الوثائق والأجهزة', 'Docs & devices') : this.tx((this.car(sc) || {}).name));
+    return { total: this.money(total), count: ops.length, cats: cats, top: top, recent: recent, empty: ops.length === 0, has: ops.length > 0, rangeText: RT[s.spendRange], scopeText: ST };
+  }
+  renderVals() {
+    const s = this.state, en = this.en;
+    const all = s.items.map((it) => this.view(it));
+    const raw = this.cur();
+    const car = this.curCar();
+    const both = (v) => (v && typeof v === 'object' && !(v instanceof Date) ? (v.ar || '') + ' ' + (v.en || '') : String(v || ''));
+    const q = String(s.q || '').trim().toLowerCase();
+    const match = (v) => { if (!q) return true; const r0 = s.items.find((x) => x.id === v.id) || {}; return [both(r0.name), both(r0.number), both(r0.model), v.catLine].concat((r0.specs || []).map((x) => both(x.k) + ' ' + both(x.v))).concat((r0.rems || []).map((x) => both(x.name))).join(' ').toLowerCase().indexOf(q) >= 0; };
+    const byU = (a, b) => a.u - b.u;
+    const swipeHint = (n) => (n > 1 ? this.w('الدائرة = المتبقي · اسحب', 'Ring = remaining · swipe') : this.w('الدائرة = المتبقي', 'Ring = remaining'));
+    const markSolo = (arr) => arr.map((x) => Object.assign({}, x, { solo: arr.length === 1 ? 'solo' : '' }));
+
+    const carItems = car ? all.filter((v) => v.carId === car.id) : [];
+    const carParts = carItems.filter((v) => v.cat === 'car').sort(byU);
+    const carDocs = carItems.filter((v) => v.cat === 'doc').sort(byU);
+    const carAttn = markSolo(carItems.filter((v) => !v.arch && (v.lv === 'r' || v.lv === 'o')).sort(byU));
+    const fuel = car ? this.fuelStats(car) : { kmpl: '—', cpk: '—', month: '0', rows: [], empty: true, count: 0 };
+    let carV = { name: '', plate: '', digits: [], hasPhoto: false, photo: '', hasPlate: false, noPlate: true };
+    if (car) {
+      const lastLog = car.odoLog[car.odoLog.length - 1];
+      const od = lastLog ? -this.dd(lastLog.date) : 0;
+      const known = this.avgKnown(car);
+      carV = { name: this.tx(car.name), plate: this.tx(car.plate), hasPlate: !!car.plate, noPlate: !car.plate, hasPhoto: !!car.photo, photo: car.photo || '', odoText: this.num(car.odo), digits: String(car.odo).padStart(6, '0').split('').map((c) => ({ c: c })), avgLine: known ? Math.round(this.avg(car)) + this.w(' كم يومياً', ' km/day') : this.w('المعدّل يُحسب بعد قراءتين', 'average needs 2 readings'), odoAgo: od <= 0 ? this.w('اليوم', 'today') : this.w('قبل ' + this.dtext(od), this.dtext(od) + ' ago'), odoDue: od >= s.odoEvery && car.odoLog.length > 1 };
+    }
+    const carIdx = car ? s.cars.findIndex((c) => c.id === car.id) + 1 : 0;
+    const carCountText = s.cars.length > 1 ? this.w('السيارة ' + carIdx + ' من ' + s.cars.length, 'Car ' + carIdx + ' of ' + s.cars.length) : '';
+    const carList = s.cars.map((c) => {
+      const its = all.filter((v) => v.carId === c.id && !v.arch);
+      const r = its.filter((v) => v.lv === 'r').length, o = its.filter((v) => v.lv === 'o').length;
+      const isOn = !!car && c.id === car.id;
+      return { name: this.tx(c.name), meta: (c.plate ? this.tx(c.plate) + ' · ' : '') + this.num(c.odo) + this.w(' كم', ' km'), photo: c.photo || '', hasPhoto: !!c.photo, noPhoto: !c.photo, hasAttn: r + o > 0, lv: r ? 'r' : 'o', attnText: (r + o) + this.w(' تنبيه', ' alerts'), isOn: isOn, on: isOn ? 'on' : '', pick: () => this.setState({ carSel: c.id, sheet: null }) };
+    });
+    const carSubs = [['parts', this.w('القطع', 'Parts'), carParts.length], ['docs', this.w('الوثائق', 'Docs'), carDocs.length], ['fuel', this.w('الوقود', 'Fuel'), fuel.count]].map((x) => ({ label: x[1] + ' (' + x[2] + ')', on: s.carSub === x[0] ? 'on' : '', pick: () => this.setState({ carSub: x[0] }) }));
+    const carDocTpls = car ? this.CTPL().filter((t) => !carDocs.some((d) => d.name === this.tx(t))).map((t) => ({ label: this.tx(t), pick: () => this.setState({ screen: 'add', editId: null, formErr: '', showExtra: false, form: Object.assign(this.defaults('doc', car.id), { name: this.tx(t), nameObj: t }) }) })) : [];
+
+    const docsAll = all.filter((v) => v.cat !== 'car');
+    const live = docsAll.filter((v) => !v.arch), archAll = docsAll.filter((v) => v.arch);
+    const cnt = { r: 0, o: 0, g: 0, n: 0 }; live.forEach((v) => { cnt[v.lv]++; });
+    const tiles = [['r', 'متأخر', 'Overdue'], ['o', 'قريب', 'Due soon'], ['g', 'ساري', 'Valid']].map((x) => ({ key: x[0], label: en ? x[2] : x[1], count: cnt[x[0]], on: s.st === x[0] ? 'on' : '', pick: () => this.setState({ st: this.state.st === x[0] ? 'all' : x[0] }) }));
+    const CH = [['all', 'الكل', 'All'], ['doc', 'الوثائق', 'Documents'], ['dev', 'الأجهزة', 'Devices'], ['custom', 'مخصص', 'Custom']];
+    const docChips = CH.map((x) => ({ label: en ? x[2] : x[1], icon: this.ICON(x[0]), count: x[0] === 'all' ? live.length : live.filter((v) => v.cat === x[0]).length, on: s.cat === x[0] ? 'on' : '', pick: () => this.setState({ cat: x[0] }) }));
+    const docList = live.filter((v) => (s.cat === 'all' || v.cat === s.cat) && (s.st === 'all' || v.lv === s.st) && match(v)).sort(byU);
+    const archList = archAll.filter((v) => (s.cat === 'all' || v.cat === s.cat) && match(v));
+    const docAttn = markSolo(live.filter((v) => v.lv === 'r' || v.lv === 'o').sort(byU));
+
+    let cur = { name: '', ts: [], fields: [], hist: [], specList: [], photo: '', icon: '', lv: 'n', ringDash: '0 301.6' };
+    if (raw) {
+      const v = this.view(raw); const F = [];
+      const add = (l, val) => { if (val !== undefined && val !== null && val !== '') F.push({ label: l, value: String(val) }); };
+      if (raw.cat === 'doc') { add(this.w('رقم الوثيقة', 'Document number'), this.tx(raw.number)); add(this.w('تاريخ الإصدار', 'Issue date'), this.fmt(raw.issue)); }
+      if (raw.cat === 'car') { const b1 = (raw.rems || []).find((r) => r.id === 'b1'); if (b1) { add(this.w('آخر تركيب / تغيير', 'Last installed / changed'), this.fmt(b1.lastDate)); add(this.w('العداد عند التغيير', 'Odometer at change'), this.num(b1.lastKm) + this.w(' كم', ' km')); } add(this.w('آخر تكلفة', 'Last cost'), raw.cost ? this.money(raw.cost) : ''); }
+      if (raw.carId) add(this.w('السيارة', 'Car'), v.carName);
+      if (raw.cat === 'dev') { add(this.w('الموديل / الرقم التسلسلي', 'Model / serial no.'), this.tx(raw.model)); add(this.w('تاريخ الشراء', 'Purchase date'), this.fmt(raw.purchase)); add(this.w('مدة الضمان', 'Warranty period'), raw.warrantyN ? this.durText(raw.warrantyN, raw.warrantyU) : ''); }
+      if (raw.cat === 'custom') add(this.w('طريقة التنبيه', 'Alert type'), ({ date: this.w('تاريخ محدد', 'Fixed date'), repeat: this.w('تكرار دوري', 'Repeating'), none: this.w('بدون تنبيه — حفظ بيانات', 'No alert — data only') })[raw.mode]);
+      const hist = raw.history.slice().sort((a, b) => b.date.getTime() - a.date.getTime()).map((h) => ({ date: this.fmt(h.date), note: this.tx(h.note) || '—', cost: h.cost ? this.money(h.cost) : this.w('بدون تكلفة', 'No cost'), km: h.km ? this.num(h.km) + this.w(' كم', ' km') : '', hasKm: !!h.km }));
+      const total = raw.history.reduce((a, h) => a + (Number(h.cost) || 0), 0);
+      const specList = (raw.specs || []).map((x, i) => ({ k: this.tx(x.k), v: this.tx(x.v), copy: () => this.copy(this.tx(x.v)), del: () => this.delSpec(i) }));
+      const ts = v.ts.map((t) => Object.assign({}, t, { done: () => this.openRenew(t.id), del: () => this.delRem(t.id) }));
+      cur = Object.assign({}, v, {
+        ts: ts, remCount: ts.length, noTracks: ts.length === 0, fields: F, hasFields: F.length > 0,
+        specList: specList, noSpecs: specList.length === 0,
+        hist: hist, noHist: hist.length === 0, histCount: hist.length, histTotal: this.money(total),
+        hasPhoto: !!raw.photo, photo: raw.photo || '', photoBtn: raw.photo ? this.w('استبدال الصورة', 'Replace photo') : this.w('تصوير أو إرفاق صورة', 'Take or attach a photo'),
+        hasMain: !!v.mainRem, noMain: !v.mainRem, mainLabel: v.mainRem ? v.mainDoneLabel + ': ' + v.mainRemName : '',
+        doMain: () => { if (v.mainRem) this.openRenew(v.mainRem); }
+      });
+    }
+
+    const setF = (k) => (e) => this.setState({ form: Object.assign({}, this.state.form, { [k]: e.target.value }), formErr: '' });
+    const setRf = (k) => (e) => this.setState({ rf: Object.assign({}, this.state.rf, { [k]: e.target.value }) });
+    const setRem = (k) => (e) => this.setState({ remF: Object.assign({}, this.state.remF, { [k]: e.target.value }), remErr: false });
+    const setSpec = (k) => (e) => this.setState({ specF: Object.assign({}, this.state.specF, { [k]: e.target.value }) });
+    const setFuel = (k) => (e) => this.setState({ fuelF: Object.assign({}, this.state.fuelF, { [k]: e.target.value }) });
+    const setCar = (k) => (e) => this.setState({ carF: Object.assign({}, this.state.carF, { [k]: e.target.value }), carErr: '' });
+    const f = s.form, editing = !!s.editId;
+    const unitsFor = (val, setter) => this.UNITS().map((u) => ({ label: en ? u[2] : u[1], on: val === u[0] ? 'on' : '', pick: () => setter(u[0]) }));
+    const beforeFor = (arr, setter) => this.BOPTS().map((b) => { const on = (arr || []).indexOf(b[0]) >= 0; return { label: en ? b[2] : b[1], on: on ? 'on' : '', pick: () => setter(on ? arr.filter((x) => x !== b[0]) : (arr || []).concat([b[0]])) }; });
+    let mainFields = [], extraFields = [], presets = [], modes = [], formBefore = [], formCarOpts = [];
+    if (f) {
+      const defs = this.FD()[f.cat].slice();
+      if (f.cat === 'custom') {
+        if (f.mode === 'date') defs.push(['date', 'تاريخ التنبيه', 'Alert date', 'date', '', '', 0]);
+        if (f.mode === 'repeat') { defs.push(['every', 'يتكرر كل', 'Repeats every', 'dur', '1', '1', 0]); defs.push(['lastDate', 'بداية العد', 'Count starts on', 'date', '', '', 1]); }
+      }
+      if (!editing) { defs.push(['specK', 'مواصفة سريعة — الاسم', 'Quick spec — name', 'text', 'مثال: المقاس', 'e.g. Size', 1]); defs.push(['specV', 'مواصفة سريعة — القيمة', 'Quick spec — value', 'text', 'مثال: 235/45R18', 'e.g. 235/45R18', 1]); }
+      const fl = defs.map((x) => {
+        const key = x[0], type = x[3], isDur = type === 'dur';
+        const vk = isDur ? key + 'N' : key;
+        const o = { key: key, label: en ? x[2] : x[1], ph: en ? x[5] : x[4], x: x[6], isDur: isDur, isDate: type === 'date', isText: type !== 'date' && !isDur, im: type === 'num' ? 'numeric' : (type === 'dec' ? 'decimal' : 'text'), value: f[vk] == null ? '' : String(f[vk]), onChange: setF(vk) };
+        if (isDur) o.units = unitsFor(f[key + 'U'] || 'm', (u) => this.setState({ form: Object.assign({}, this.state.form, { [key + 'U']: u }) }));
+        return o;
+      });
+      mainFields = fl.filter((x) => !x.x); extraFields = fl.filter((x) => x.x);
+      if (!editing) presets = this.PRE(f.cat, f.carId).map((x) => ({ label: this.tx(x[0]), on: f.name === this.tx(x[0]) ? 'on' : '', pick: () => this.setState({ form: Object.assign({}, this.state.form, { name: this.tx(x[0]), nameObj: x[0] }, x[1]), formErr: '' }) }));
+      modes = [['repeat', 'تكرار دوري', 'Repeating'], ['date', 'تاريخ محدد', 'Fixed date'], ['none', 'بدون تنبيه', 'No alert']].map((x) => ({ label: en ? x[2] : x[1], on: f.mode === x[0] ? 'on' : '', pick: () => this.setState({ form: Object.assign({}, this.state.form, { mode: x[0] }) }) }));
+      formBefore = beforeFor(f.before || [], (arr) => this.setState({ form: Object.assign({}, this.state.form, { before: arr }) }));
+      if (f.cat === 'car' || f.cat === 'doc') {
+        const opts = (f.cat === 'doc' ? [[null, this.w('بدون', 'None')]] : []).concat(s.cars.map((c) => [c.id, this.tx(c.name)]));
+        formCarOpts = opts.map((o) => ({ label: o[1], on: (f.carId || null) === o[0] ? 'on' : '', pick: () => { const patch = { carId: o[0] }; const cr = o[0] ? this.car(o[0]) : null; if (f.cat === 'car' && cr && !this.state.editId) patch.lastKm = String(cr.odo); this.setState({ form: Object.assign({}, this.state.form, patch) }); } }));
+      }
+    }
+    const formHasPhoto = !!f && (f.cat === 'doc' || f.cat === 'dev');
+    const formHasBefore = !!f && (f.cat === 'doc' || f.cat === 'car' || (f.cat === 'custom' && f.mode !== 'none') || (f.cat === 'dev' && !!this.P(f.maintN)));
+    const FCAT = { car: [this.w('قطعة أو صيانة سيارة', 'Car part or service'), this.ICON('car')], doc: [this.w('وثيقة', 'Document'), this.ICON('doc')], dev: [this.w('جهاز', 'Device'), this.ICON('dev')], custom: [this.w('مخصص', 'Custom'), this.ICON('custom')] };
+    const newCarState = { screen: 'carForm', carF: { name: '', plate: '', odo: '', photo: null }, carEditId: null, carErr: '', sheet: null };
+    const needCar = (fn) => () => { if (!s.cars.length) { this.toast(this.w('أضف سيارة أولاً', 'Add a car first')); this.setState(newCarState); return; } fn(); };
+    const carSelId = car ? car.id : null;
+    const addGroups = [
+      { title: this.w('السيارات', 'Cars'), items: [
+        { label: this.w('قطعة أو صيانة', 'Part or service'), desc: this.w('زيت، بطارية، إطارات — بالزمن أو المسافة', 'Oil, battery, tires — by time or distance'), icon: this.ICON('car'), pick: needCar(() => this.setState({ form: this.defaults('car', carSelId), formErr: '', showExtra: false })) },
+        { label: this.w('وثيقة سيارة', 'Car document'), desc: this.w('ملكية، تأمين، فحص — تظهر في القسمين', 'Registration, insurance, inspection — shown in both sections'), icon: this.ICON('doc'), pick: needCar(() => this.setState({ form: this.defaults('doc', carSelId), formErr: '', showExtra: false })) },
+        { label: this.w('تعبئة وقود', 'Fuel fill-up'), desc: this.w('لترات ومبلغ وعداد — يُحسب الاستهلاك تلقائياً', 'Liters, amount, odometer — economy calculated'), icon: this.ICON('fuel'), pick: needCar(() => { this.setState({ screen: 'home', tab: 'cars' }); this.openFuel(carSelId); }) },
+        { label: this.w('سيارة جديدة', 'New car'), desc: this.w('الاسم واللوحة والعداد والصورة', 'Name, plate, odometer and photo'), icon: this.ICON('carplus'), pick: () => this.setState(newCarState) }
+      ] },
+      { title: this.w('الوثائق والأجهزة', 'Documents & devices'), items: [
+        { label: this.w('وثيقة شخصية', 'Personal document'), desc: this.w('بطاقة، رخصة، جواز — تنبيه قبل الانتهاء', 'ID, licence, passport — alerts before expiry'), icon: this.ICON('doc'), pick: () => this.setState({ form: this.defaults('doc', null), formErr: '', showExtra: false }) },
+        { label: this.w('جهاز', 'Device'), desc: this.w('ضمان + صيانة دورية + تذكيرات مخصصة', 'Warranty + maintenance + custom reminders'), icon: this.ICON('dev'), pick: () => this.setState({ form: this.defaults('dev'), formErr: '', showExtra: false }) },
+        { label: this.w('مخصص', 'Custom'), desc: this.w('سمِّه بنفسك واختر طريقة التنبيه', 'Name it yourself and pick how to be alerted'), icon: this.ICON('custom'), pick: () => this.setState({ form: this.defaults('custom'), formErr: '', showExtra: false }) }
+      ] }
+    ];
+    if (s.tab === 'docs') addGroups.reverse();
+    const lastCarOdo = car ? car.odo : 0;
+    const ov = this.P(s.odoIn) || lastCarOdo;
+    const odoPreview = [];
+    if (car) s.items.forEach((x) => { if (x.carId !== car.id) return; (x.rems || []).forEach((r) => { if (r.done || !Number(r.everyKm)) return; const left = Number(r.lastKm) + Number(r.everyKm) - ov; const lv = left < 0 ? 'r' : (left < 500 ? 'o' : 'g'); odoPreview.push({ name: this.tx(x.name) + (r.base ? '' : ' · ' + this.tx(r.name)), text: left < 0 ? this.w('تجاوز بـ ' + this.num(-left) + ' كم', 'Over by ' + this.num(-left) + ' km') : this.w('متبقي ' + this.num(left) + ' كم', this.num(left) + ' km left'), lv: lv, lvText: ({ r: this.w('متأخر', 'Overdue'), o: this.w('قريب', 'Due soon'), g: this.w('ساري', 'Valid') })[lv] }); }); });
+    const rf = s.rf || {};
+    const rr = raw && rf.remId ? (raw.rems || []).find((x) => x.id === rf.remId) : null;
+    const rfUsesKm = !!raw && !!raw.carId && !!rr && (raw.cat === 'car' || !!Number(rr.everyKm));
+    const rfExp = !!rr && rr.type === 'date' && !!rr.renew;
+    const rrName = rr ? this.tx(rr.name) : '';
+    const remF = s.remF || { name: '', kind: 'cycle', n: '3', u: 'm', km: '10000', date: this.iso(this.dA(7)), before: [3] };
+    const setRemF = (patch) => this.setState({ remF: Object.assign({}, this.state.remF || remF, patch), remErr: false });
+    const kinds = [['cycle', 'متكرر بالمدة', 'Repeating']].concat(raw && raw.cat === 'car' ? [['km', 'بالكيلومتر', 'By km']] : []).concat([['once', 'مرة واحدة', 'One time']]);
+    const remKinds = kinds.map((x) => ({ label: en ? x[2] : x[1], on: remF.kind === x[0] ? 'on' : '', pick: () => setRemF({ kind: x[0] }) }));
+    const remTpls = raw ? this.TPL(raw).map((x) => ({ label: this.tx(x[0]), on: remF.name === this.tx(x[0]) ? 'on' : '', pick: () => setRemF(Object.assign({ name: this.tx(x[0]), nameObj: x[0] }, x[1])) })) : [];
+    const fuelF = s.fuelF || { carId: carSelId, liters: '', cost: '', km: '', date: this.iso(this.T0()), full: true };
+    const fpl = (() => { const L = this.P(fuelF.liters), C = this.P(fuelF.cost); return L && C ? this.w('سعر اللتر: ', 'Price per liter: ') + this.num(C / L, 3) + this.w(' ر.ع', ' OMR') : this.w('اختر «ممتلئ» إذا عبّأت الخزان كاملاً — هكذا يُحسب الاستهلاك بدقة.', 'Choose “Full” when you fill the tank completely — that keeps the economy accurate.'); })();
+    const carF = s.carF || { name: '', plate: '', odo: '', photo: null };
+    const sp = s.tab === 'spend' ? this.spend() : { cats: [], top: [], recent: [] };
+    const nmCur = raw ? this.tx(raw.name) : '';
+    const tabT = { cars: this.w('سياراتي', 'My cars'), docs: this.w('وثائقي وأجهزتي', 'Docs & devices'), spend: this.w('المصاريف', 'Expenses') };
+    const nFuel = s.cars.reduce((a, c) => a + (c.fuel || []).length, 0);
+    const pend = s.pending;
+    return {
+      L: this.DICT()[en ? 'en' : 'ar'], dir: en ? 'ltr' : 'rtl', langCode: en ? 'en' : 'ar',
+      backPath: en ? 'M15 6l-6 6 6 6' : 'M9 6l6 6-6 6', fwdPath: en ? 'M9 6l6 6-6 6' : 'M15 6l-6 6 6 6',
+      ringTransform: 'rotate(-90 60 60)',
+      toggleLang: () => this.setLang(this.state.lang === 'en' ? 'ar' : 'en'),
+      langOpts: [['ar', 'العربية'], ['en', 'English']].map((x) => ({ label: x[1], on: (s.lang || 'ar') === x[0] ? 'on' : '', pick: () => this.setLang(x[0]) })),
+      splashOn: !!s.splash, splashCls: s.splash === 'out' ? 'out' : '', lg: s.dark ? { sq: '#14112B', card: '#7C6CF2', ln: '#FFFFFF', lnOp: '0.38', chk: '#14112B', art: '#A99CFF' } : { sq: '#3B2A8C', card: '#FFFFFF', ln: '#3B2A8C', lnOp: '0.22', chk: '#16124A', art: '#3B2A8C' }, showSplash: () => this.playSplash(), themeClass: s.dark ? 'dark' : '', isDark: !!s.dark, isLight: !s.dark,
+      isHome: s.screen === 'home' && !s.flip, isDetail: s.screen === 'detail' && !!raw, isAdd: s.screen === 'add', isCarForm: s.screen === 'carForm', isBackup: s.screen === 'backup', isReport: s.screen === 'report',
+      isCars: s.tab === 'cars', isDocs: s.tab === 'docs', isSpendTab: s.tab === 'spend', homeTitle: tabT[s.tab], showAddBtn: s.tab !== 'spend',
+      navTabs: [['cars', this.ICON('car')], ['docs', this.ICON('doc')], ['spend', this.ICON('chart')]].map((x) => ({ label: tabT[x[0]], icon: x[1], on: s.tab === x[0] ? 'on' : '', pick: () => this.setState({ tab: x[0], screen: 'home', sel: null }) })),
+      todayText: this.fmt(this.T0()),
+      hasCars: s.cars.length > 0, noCars: s.cars.length === 0, multiCars: s.cars.length > 1,
+      car: carV, carCountText: carCountText, carList: carList, carStrip: carList, openCarList: () => this.setState({ sheet: 'cars' }),
+      carSubs: carSubs, subParts: s.carSub === 'parts', subDocs: s.carSub === 'docs', subFuel: s.carSub === 'fuel',
+      carParts: carParts, noParts: carParts.length === 0, carDocs: carDocs, noCarDocs: carDocs.length === 0,
+      carAttn: carAttn, carAttnCount: carAttn.length, hasCarAttn: carAttn.length > 0, noCarAttn: carAttn.length === 0, carAttnHint: swipeHint(carAttn.length),
+      carDocTpls: carDocTpls, hasCarDocTpls: carDocTpls.length > 0, fuel: fuel,
+      addPartForCar: () => this.setState({ screen: 'add', editId: null, formErr: '', showExtra: false, form: this.defaults('car', carSelId) }),
+      addDocForCar: () => this.setState({ screen: 'add', editId: null, formErr: '', showExtra: false, form: this.defaults('doc', carSelId) }),
+      openFuelCur: () => this.openFuel(carSelId),
+      openCarNew: () => this.setState(newCarState),
+      openCarEdit: () => { if (car) this.setState({ screen: 'carForm', carF: { name: this.tx(car.name), nameObj: typeof car.name === 'object' ? car.name : null, plate: this.tx(car.plate), plateObj: car.plate && typeof car.plate === 'object' ? car.plate : null, odo: String(car.odo), photo: car.photo || null }, carEditId: car.id, carErr: '' }); },
+      q: s.q, onQ: (e) => this.setState({ q: e.target.value }),
+      tiles: tiles, docChips: docChips, docList: docList, docListEmpty: docList.length === 0,
+      docAttn: docAttn, docAttnCount: docAttn.length, hasDocAttn: docAttn.length > 0, noDocAttn: docAttn.length === 0, docAttnHint: swipeHint(docAttn.length),
+      archList: archList, archCount: archList.length, hasArch: archList.length > 0, showArch: !!s.showArch, archToggleText: s.showArch ? this.w('إخفاء', 'Hide') : this.w('عرض', 'Show'),
+      toggleArch: () => this.setState({ showArch: !this.state.showArch }),
+      sp: sp,
+      rangeOpts: [['year', 'هذه السنة', 'This year'], ['last', 'السنة الماضية', 'Last year'], ['all', 'الكل', 'All']].map((x) => ({ label: en ? x[2] : x[1], on: s.spendRange === x[0] ? 'on' : '', pick: () => this.setState({ spendRange: x[0] }) })),
+      scopeOpts: [['all', this.w('الكل', 'All')]].concat(s.cars.map((c) => [c.id, this.tx(c.name)])).concat([['home', this.w('الوثائق والأجهزة', 'Docs & devices')]]).map((x) => ({ label: x[1], on: s.spendScope === x[0] ? 'on' : '', pick: () => this.setState({ spendScope: x[0] }) })),
+      cur: cur,
+      back: () => this.setState({ screen: 'home', sel: null, zoom: false }),
+      goHome: () => this.setState({ screen: 'home', sel: null }),
+      openAdd: () => this.setState({ screen: 'add', form: null, formErr: '', editId: null, showExtra: false }),
+      openEdit: () => { if (raw) this.setState({ screen: 'add', form: this.toForm(raw), editId: raw.id, formErr: '', showExtra: false }); },
+      cancelForm: () => this.setState(this.state.editId ? { screen: 'detail', form: null, editId: null, formErr: '' } : { screen: 'home', form: null, formErr: '' }),
+      backToPick: () => this.setState({ form: null, formErr: '' }),
+      formTitle: editing ? this.w('تعديل العنصر', 'Edit item') : (f ? this.w('عنصر جديد', 'New item') : this.w('ماذا تريد أن تضيف؟', 'What would you like to add?')), formSub: editing ? this.w('غيّر ما تريد ثم احفظ', 'Change what you need, then save') : this.w('الحقول الأساسية فقط — والباقي اختياري', 'Essentials only — the rest is optional'),
+      saveLabel: editing ? this.w('حفظ التعديلات', 'Save changes') : this.w('حفظ', 'Save'), canChangeCat: !editing,
+      addPick: s.screen === 'add' && !f, addForm: s.screen === 'add' && !!f, addGroups: addGroups,
+      fcatLabel: f ? FCAT[f.cat][0] : '', fcatIcon: f ? FCAT[f.cat][1] : '',
+      formHasCar: !!f && (f.cat === 'car' || f.cat === 'doc') && s.cars.length > 0, formCarOpts: formCarOpts, formCarLabel: f && f.cat === 'doc' ? this.w('مرتبطة بسيارة؟', 'Linked to a car?') : this.w('السيارة', 'Car'),
+      mainFields: mainFields, extraFields: extraFields, hasExtra: extraFields.length > 0 || formHasPhoto || formHasBefore, extraCount: extraFields.length + (formHasPhoto ? 1 : 0) + (formHasBefore ? 1 : 0),
+      showExtra: !!s.showExtra, extraToggleText: s.showExtra ? this.w('إخفاء', 'Hide') : this.w('إظهار', 'Show'), toggleExtra: () => this.setState({ showExtra: !this.state.showExtra }),
+      presets: presets, hasPresets: presets.length > 0, modes: modes, isCustomForm: !!f && f.cat === 'custom',
+      formBefore: formBefore, formHasBefore: formHasBefore,
+      formHasPhoto: formHasPhoto, formPhoto: f && f.photo ? f.photo : '', hasFormPhoto: !!(f && f.photo),
+      formPhotoLabel: f && f.cat === 'doc' ? this.w('صورة الوثيقة', 'Document photo') : this.w('صورة الفاتورة وبطاقة الضمان', 'Invoice & warranty card photo'),
+      onFormPhoto: (e) => { const file = e.target.files && e.target.files[0]; if (file) this.readImage(file).then((u) => { if (u) this.setState({ form: Object.assign({}, this.state.form, { photo: u }) }); }); },
+      formErr: s.formErr, hasErr: !!s.formErr, saveForm: () => this.saveForm(),
+      carF: { name: carF.name || '', plate: carF.plate || '', odo: carF.odo || '', photo: carF.photo || '', hasPhoto: !!carF.photo, noPhoto: !carF.photo, photoBtn: carF.photo ? this.w('تغيير الصورة', 'Change photo') : this.w('تصوير السيارة أو اختيار صورة', 'Take or choose a car photo') },
+      carFormTitle: s.carEditId ? this.w('بيانات السيارة', 'Car details') : this.w('سيارة جديدة', 'New car'), carIsNew: !s.carEditId, carIsEdit: !!s.carEditId,
+      setCarName: setCar('name'), setCarPlate: setCar('plate'), setCarOdo: setCar('odo'),
+      onCarPhoto: (e) => { const file = e.target.files && e.target.files[0]; if (file) this.readImage(file).then((u) => { if (u) this.setState({ carF: Object.assign({}, this.state.carF, { photo: u }) }); }); },
+      carErr: s.carErr, hasCarErr: !!s.carErr, saveCar: () => this.saveCar(),
+      cancelCar: () => this.setState({ screen: 'home', carF: null, carEditId: null, carErr: '' }),
+      askDelCar: () => this.setState({ sheet: 'delCar' }), delCarTitle: this.w('حذف «', 'Delete “') + (s.carEditId ? this.tx((this.car(s.carEditId) || {}).name) : '') + this.w('»؟', '”?'),
+      confirmDelCar: () => { const id = this.state.carEditId, snap = this.snap(), nm = this.tx((this.car(id) || {}).name); const cars = this.state.cars.filter((c) => c.id !== id); this.setState({ cars: cars, items: this.state.items.filter((x) => x.carId !== id), carSel: cars[0] ? cars[0].id : null, sheet: null, screen: 'home', tab: 'cars', carF: null, carEditId: null }); this.toast(this.w('حُذفت «' + nm + '»', '“' + nm + '” deleted'), snap); },
+      onPhoto: (e) => { const file = e.target.files && e.target.files[0]; if (!file) return; this.readImage(file).then((u) => { if (!u) return; this.upCur((x) => Object.assign({}, x, { photo: u })); this.toast(this.w('حُفظت نسخة من الصورة داخل عُهدة', 'A copy of the photo is now kept inside Uhda')); }); },
+      openZoom: () => this.setState({ zoom: true }), closeZoom: () => this.setState({ zoom: false }), zoomOn: !!(s.zoom && raw && raw.photo),
+      share: () => { if (navigator.share) { navigator.share({ title: nmCur, text: nmCur }).catch(() => {}); } else { this.toast(this.w('المشاركة تعمل من الهاتف في النسخة النهائية', 'Sharing works from the phone in the final app')); } },
+      printIt: () => this.toast(this.w('الطباعة متاحة في النسخة النهائية', 'Printing is available in the final app')),
+      rf: { cost: rf.cost || '', note: rf.note || '', km: rf.km || '', exp: rf.exp || '' },
+      renewTitle: rr ? (rr.once ? this.w('تم: ', 'Done: ') : (rr.type === 'date' ? this.w('تجديد: ', 'Renew: ') : this.w('تمت: ', 'Done: '))) + rrName : '',
+      renewHint: '«' + nmCur + '» — ' + (rr && rr.once ? this.w('يُغلق هذا التذكير ويُحفظ في السجل.', 'This reminder will be closed and saved to history.') : this.w('تُحفظ العملية وتكلفتها في السجل، وتبدأ دورة عد جديدة من اليوم.', 'The operation and its cost are saved, and a new cycle starts today.')),
+      rfKm: rfUsesKm, rfExp: rfExp, rfExpLabel: raw && raw.cat === 'doc' ? this.w('تاريخ الانتهاء الجديد', 'New expiry date') : this.w('الموعد التالي', 'Next date'),
+      setRfCost: setRf('cost'), setRfNote: setRf('note'), setRfKm: setRf('km'), setRfExp: setRf('exp'),
+      confirmRenew: () => this.confirmRenew(),
+      fuelF: { liters: fuelF.liters || '', cost: fuelF.cost || '', km: fuelF.km || '', date: fuelF.date || '' },
+      fuelCarOpts: s.cars.map((c) => ({ label: this.tx(c.name), on: fuelF.carId === c.id ? 'on' : '', pick: () => this.setState({ fuelF: Object.assign({}, this.state.fuelF, { carId: c.id, km: String(c.odo) }) }) })),
+      tankOpts: [[true, 'ممتلئ', 'Full'], [false, 'جزئي', 'Partial']].map((x) => ({ label: en ? x[2] : x[1], on: (fuelF.full !== false) === x[0] ? 'on' : '', pick: () => this.setState({ fuelF: Object.assign({}, this.state.fuelF, { full: x[0] }) }) })),
+      setFuelL: setFuel('liters'), setFuelC: setFuel('cost'), setFuelK: setFuel('km'), setFuelD: setFuel('date'), fuelHint: fpl, saveFuel: () => this.saveFuel(),
+      openRem: () => this.setState({ sheet: 'rem', remF: { name: '', nameObj: null, kind: 'cycle', n: '3', u: 'm', km: '10000', date: this.iso(this.dA(7)), before: [3] }, remErr: false }),
+      remHint: this.w('يُضاف إلى «' + nmCur + '» وله عدّه وزر «تم» الخاص به', 'Added to “' + nmCur + '” with its own countdown and Done button'),
+      remF: remF, remKinds: remKinds, remTpls: remTpls, hasTpl: remTpls.length > 0, remErr: !!s.remErr,
+      kindEvery: remF.kind === 'cycle', kindKm: remF.kind === 'km', kindOnce: remF.kind === 'once',
+      remUnits: unitsFor(remF.u || 'm', (u) => setRemF({ u: u })),
+      remBefore: beforeFor(remF.before || [], (arr) => setRemF({ before: arr })),
+      setRemName: setRem('name'), setRemN: setRem('n'), setRemKm: setRem('km'), setRemDate: setRem('date'),
+      saveRem: () => this.saveRem(),
+      openSpec: () => this.setState({ sheet: 'spec', specF: { k: '', v: '' } }), specF: s.specF || { k: '', v: '' },
+      setSpecK: setSpec('k'), setSpecV: setSpec('v'), saveSpec: () => this.saveSpec(),
+      askDel: () => this.setState({ sheet: 'del' }), delTitle: this.w('حذف «' + nmCur + '»؟', 'Delete “' + nmCur + '”?'),
+      confirmDel: () => { const snap = this.snap(), id = this.state.sel; this.setState({ items: this.state.items.filter((x) => x.id !== id), sheet: null, screen: 'home', sel: null }); this.toast(this.w('حُذف «' + nmCur + '»', '“' + nmCur + '” deleted'), snap); },
+      bk: { autoLast: this.fmtT(s.autoAt), nCars: String(s.cars.length), nItems: String(s.items.length), nFuel: String(nFuel), lastExport: s.lastExport ? this.w('آخر تصدير: ', 'Last export: ') + this.fmtT(s.lastExport) : this.w('لم تُصدَّر أي نسخة يدوية بعد', 'No manual backup exported yet') },
+      openBackup: () => this.setState({ screen: 'backup', sheet: null }),
+      exportBackup: () => this.exportBackup(), saveBackup: () => this.saveBackup(), savePhoto: () => this.savePhoto(), sharePhoto: () => this.sharePhoto(),
+      sharePdf: () => this.toast(this.w('في التطبيق يُنشأ ملف PDF ويفتح نافذة المشاركة (واتساب، البريد…)', 'In the app this creates a PDF and opens the share sheet (WhatsApp, Mail…)')), onImportFile: (e) => this.onImportFile(e), confirmImport: () => this.confirmImport(),
+      impInfo: pend ? this.w('نسخة بتاريخ ', 'Backup from ') + this.fmtT(new Date(pend.at)) + ' · ' + pend.cars.length + this.w(' سيارات · ', ' cars · ') + pend.items.length + this.w(' عناصر', ' items') : '',
+      openReport: () => this.setState({ screen: 'report' }), backToBackup: () => this.setState({ screen: 'backup' }),
+      report: s.screen === 'report' ? this.report() : { when: '', sections: [] },
+      printReport: () => { try { window.print(); } catch (e) {} this.toast(this.w('في التطبيق يُنشأ ملف PDF ويفتح نافذة المشاركة', 'In the app this creates a PDF and opens the share sheet')); },
+      ...this.obVals(s),
+      sheetCars: s.sheet === 'cars', sheetImport: s.sheet === 'import', sheetRenew: s.sheet === 'renew', sheetRem: s.sheet === 'rem', sheetSpec: s.sheet === 'spec', sheetDel: s.sheet === 'del', sheetDelCar: s.sheet === 'delCar', sheetOdo: s.sheet === 'odo', sheetSettings: s.sheet === 'settings', sheetFuel: s.sheet === 'fuel', hasSheet: !!s.sheet,
+      closeSheet: () => this.setState({ sheet: null, pending: null }),
+      openOdo: () => this.setState({ sheet: 'odo', odoIn: String(lastCarOdo) }),
+      odoIn: s.odoIn, onOdo: (e) => this.setState({ odoIn: e.target.value }), odoPreview: odoPreview, hasOdoPreview: odoPreview.length > 0, saveOdo: () => this.saveOdo(),
+      openSettings: () => this.setState({ sheet: 'settings' }),
+      notifTime: s.notifTime, onNotif: (e) => this.setState({ notifTime: e.target.value }),
+      odoEveryOpts: [[7, 'كل أسبوع', 'Weekly'], [14, 'كل أسبوعين', 'Every 2 weeks'], [30, 'كل شهر', 'Monthly']].map((x) => ({ label: en ? x[2] : x[1], on: s.odoEvery === x[0] ? 'on' : '', pick: () => this.setState({ odoEvery: x[0] }) })),
+      themeOpts: [[false, 'نهاري', 'Light'], [true, 'ليلي', 'Dark']].map((x) => ({ label: en ? x[2] : x[1], on: !!s.dark === x[0] ? 'on' : '', pick: () => this.setState({ dark: x[0] }) })),
+      toast: s.toast, hasToast: !!s.toast, hasUndo: !!s.undo,
+      doUndo: () => { const u = this.state.undo; if (u) { clearTimeout(this._t); this.setState({ items: u.items, cars: u.cars, undo: null, toast: '' }); } }
+    };
+  }
+}

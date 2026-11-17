@@ -1,0 +1,133 @@
+name: بناء عُهدة (APK و IPA وصفحة الويب)
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'README.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-apps
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: صفحة الويب (بدون نت)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: بناء نسخة الويب
+        shell: bash
+        run: |
+          set -o pipefail
+          node scripts/build-web.mjs 2>&1 | tee web.log
+          mkdir -p out pkg/Uhda-web
+          cp index.html app.js dc-runtime.js sw.js manifest.webmanifest pkg/Uhda-web/
+          cp -r icons fonts lib pkg/Uhda-web/
+          (cd pkg && zip -qr ../out/Uhda-web-offline.zip Uhda-web)
+          ls -la out
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: web
+          path: |
+            web.log
+            out/*.zip
+          if-no-files-found: ignore
+
+  android:
+    name: APK (أندرويد)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: بناء APK
+        shell: bash
+        run: |
+          set -o pipefail
+          bash scripts/build-android.sh 2>&1 | tee android.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: android
+          path: |
+            android.log
+            out/*.apk
+          if-no-files-found: ignore
+
+  ios:
+    name: IPA (آيفون، بدون توقيع)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: بناء IPA
+        shell: bash
+        run: |
+          set -o pipefail
+          bash scripts/build-ios.sh 2>&1 | tee ios.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ios
+          path: |
+            ios.log
+            out/*.ipa
+          if-no-files-found: ignore
+
+  publish:
+    name: نشر الإصدار والسجلات
+    needs: [web, android, ios]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: dl
+      - name: نشر السجلات في فرع build-logs
+        shell: bash
+        run: |
+          mkdir -p /tmp/logs
+          find dl -name '*.log' -exec sh -c 'tail -c 400000 "$1" > "/tmp/logs/$(basename "$1")"' _ {} \;
+          {
+            echo "run=${{ github.run_number }}"
+            echo "sha=${{ github.sha }}"
+            echo "web=${{ needs.web.result }}"
+            echo "android=${{ needs.android.result }}"
+            echo "ios=${{ needs.ios.result }}"
+            find dl -name '*.apk' -o -name '*.ipa' -o -name '*.zip' | sed 's/^/file=/'
+          } > /tmp/logs/status.txt
+          cd /tmp/logs
+          git init -q -b build-logs
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A && git commit -q -m "سجلات البناء رقم ${{ github.run_number }}"
+          git push -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" build-logs
+      - name: نشر APK و IPA ونسخة الويب كإصدار
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          VER=$(node -p "require('./package.json').appVersion")
+          files=$(find dl -name '*.apk' -o -name '*.ipa' -o -name '*.zip' | tr '\n' ' ')
+          if [ -z "$files" ]; then echo "لا توجد ملفات للنشر"; exit 0; fi
+          tag="v${VER}-build${{ github.run_number }}"
+          gh release create "$tag" $files --target "${{ github.sha }}" --latest \
+            --title "عُهدة v${VER} (بناء ${{ github.run_number }})" \
+            --notes "APK: ثبّته مباشرة على أندرويد (اسمح بالتثبيت من مصادر غير معروفة). IPA: غير موقّع، وقّعه بتطبيق التوقيع ثم ثبّته. Uhda-web-offline.zip: نسخة الويب كاملة تعمل بدون إنترنت."

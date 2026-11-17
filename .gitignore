@@ -1,0 +1,8 @@
+node_modules/
+www/
+ios/
+android/
+out/
+Payload/
+build/
+tools/

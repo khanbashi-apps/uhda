@@ -1,0 +1,1139 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no, date=no, address=no, email=no">
+<meta name="theme-color" content="#0D1014">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="عُهدة">
+<title>عُهدة · Uhda 1.0</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
+<link rel="stylesheet" href="fonts/almarai.css">
+<style>
+body{margin:0}
+a{color:#0B6BA8}a:hover{color:#08507F}
+.app{--bg:#EFF2F5;--card:#FFFFFF;--card2:#F5F7FA;--ink:#0F1419;--mute:#55606B;--line:#DEE3E9;--acc:#0B6BA8;--accInk:#FFFFFF;--track:#E4E9EE;--r:#B91C1C;--rS:#FDECEC;--o:#9A5200;--oS:#FDF1DF;--g:#15703A;--gS:#E3F3E9;--n:#55606B;--nS:#E9EDF1;--shadow:0 1px 2px rgba(16,24,40,.06),0 6px 16px rgba(16,24,40,.05)}
+.app.dark{--bg:#0D1014;--card:#161B21;--card2:#1D232B;--ink:#EEF1F4;--mute:#9AA4AF;--line:#262E37;--acc:#7DD3FC;--accInk:#04121B;--track:#252D36;--r:#FF7A70;--rS:#3A1E1D;--o:#FFB547;--oS:#3A2B12;--g:#5EE08F;--gS:#13301F;--n:#9AA4AF;--nS:#232A31;--shadow:none}
+.app *{box-sizing:border-box}
+:where(.app) button{font:inherit;color:inherit;background:none;border:0;padding:0;margin:0;cursor:pointer;text-align:inherit}
+:where(.app) input{font:inherit;color:var(--ink)}
+.scroll{position:absolute;top:0;right:0;left:0;overflow-y:auto;scrollbar-width:none}
+.scroll::-webkit-scrollbar{display:none}
+.iconbtn{flex:none;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:1px solid var(--line);color:var(--ink);box-shadow:var(--shadow)}
+.addbtn{background:var(--acc);border-color:var(--acc);color:var(--accInk)}
+.langbtn{font-size:14px;font-weight:600;color:var(--acc)}
+.logobtn{flex:none;width:30px;height:30px;padding:0;border:0;background:none;border-radius:8px;overflow:hidden;cursor:pointer;display:block}
+.logobtn svg{display:block}
+.splash{position:absolute;inset:0;z-index:90;background:#F4F2FB;color:#16124A;transition:opacity .45s ease}
+.app.dark .splash{background:#0B0A18;color:#F2F0FF}
+.splash.out{opacity:0;pointer-events:none}
+.splash .sp-stage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px}
+.splash .sp-nm{font-weight:700;font-size:42px;line-height:1.5}
+.splash .uh{font-weight:700;font-size:14px;letter-spacing:.35em;padding-left:.35em;color:#3B2A8C}
+.app.dark .splash .uh{color:#A99CFF}
+.splash .sv{position:absolute;left:0;right:0;text-align:center;bottom:calc(66px + env(safe-area-inset-bottom));font-size:12px;font-weight:300;opacity:.75}
+.splash .sfoot{position:absolute;left:0;right:0;text-align:center;bottom:calc(36px + env(safe-area-inset-bottom));font-size:13px;font-weight:300;opacity:.75}
+.sp-k g,.sp-k path,.sp-k rect,.sp-k circle{transform-box:fill-box;transform-origin:center}
+.sp-sqo{stroke-dasharray:712;stroke-dashoffset:712;animation:spD712 .9s ease-in-out 0s forwards,spOut .3s ease 1.05s forwards}
+.sp-sq{animation:spFade .35s ease-out .85s both}
+.sp-cardo{stroke-dasharray:416;stroke-dashoffset:416;animation:spD416 .7s ease-in-out .3s forwards,spOut .3s ease 1.15s forwards}
+.sp-card{animation:spFade .35s ease-out 1s both}
+.sp-k .sp-ln{transform-origin:right center;animation:spGrow .3s ease-out both}
+.sp-k .sp-l1{animation-delay:1.15s}
+.sp-k .sp-l2{animation-delay:1.25s}
+.sp-k .sp-l3{animation-delay:1.35s}
+.sp-k .sp-l4{animation-delay:1.45s}
+.sp-bado{stroke-dasharray:170;stroke-dashoffset:170;animation:spD170 .4s ease-in-out 1.3s forwards,spOut .2s ease 1.75s forwards}
+.sp-badge{animation:spPop .35s cubic-bezier(.3,1.5,.5,1) 1.65s both}
+.sp-chk{stroke-dasharray:36;stroke-dashoffset:36;animation:spDraw .3s ease-out 1.9s forwards}
+.sp-name{animation:spUp .5s ease-out 2s both}
+.sp-latin{animation:spUp .5s ease-out 2.15s both}
+.sp-foot{animation:spFade .6s ease-out 2.25s both}
+@keyframes spD712{to{stroke-dashoffset:0}}
+@keyframes spD416{to{stroke-dashoffset:0}}
+@keyframes spD170{to{stroke-dashoffset:0}}
+@keyframes spDraw{to{stroke-dashoffset:0}}
+@keyframes spOut{to{opacity:0}}
+@keyframes spFade{from{opacity:0}to{opacity:1}}
+@keyframes spUp{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
+@keyframes spGrow{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes spPop{0%{transform:scale(.3);opacity:0}100%{transform:none;opacity:1}}
+@media (prefers-reduced-motion: reduce){.splash,.splash *{animation:none!important;transition:none!important}.sp-sqo,.sp-cardo,.sp-bado{opacity:0}.sp-chk{stroke-dashoffset:0}}
+.app{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.app *{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.app input,.app textarea{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+.app img,.app svg{-webkit-user-drag:none}
+.ob{position:absolute;inset:0;z-index:30;background:var(--bg);display:flex;flex-direction:column}
+.ob-top{display:flex;align-items:center;gap:10px;padding:14px 16px 6px;min-height:62px}
+.ob-prog{flex:1;display:flex;gap:6px}
+.ob-prog span{flex:1;height:5px;border-radius:3px;background:var(--track)}
+.ob-prog span.on{background:var(--acc)}
+.ob-step{flex:none;font-size:12px;color:var(--mute);white-space:nowrap}
+.ob-body{flex:1;min-height:0;overflow-y:auto;padding:8px 16px 24px;display:flex;flex-direction:column;gap:14px;scrollbar-width:none}
+.ob-body::-webkit-scrollbar{display:none}
+.ob-foot{padding:12px 16px calc(22px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);background:var(--bg)}
+.ob-h{margin:0;font-size:24px;font-weight:700;line-height:1.35}
+.ob-p{margin:0;font-size:14px;line-height:1.7;color:var(--mute)}
+.ob-hero{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:18px 0 6px}
+.ob-hero svg{display:block}
+.ob-feat{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+.ob-doc{display:flex;flex-direction:column;gap:10px;padding:6px 14px;border-radius:16px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+.ob-doc.on{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc);padding-bottom:14px}
+.ob-tog{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;text-align:start;font-size:15px;font-weight:500}
+.ob-box{flex:none;width:26px;height:26px;border-radius:8px;border:2px solid var(--line);display:grid;place-items:center;color:var(--accInk)}
+.ob-doc.on .ob-box{background:var(--acc);border-color:var(--acc)}
+.ob-note{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:14px;background:var(--card2);font-size:13px;line-height:1.7;color:var(--mute)}
+.about{display:flex;align-items:center;gap:14px;width:100%;padding:14px 16px;border-radius:18px;background:var(--card2);border:1px solid var(--line);text-align:start}
+.about .alogo{flex:none;width:52px;height:52px;display:block}
+.about .anm{font-size:16px;font-weight:700;line-height:1.4}
+.about .alat{font-size:11px;font-weight:700;letter-spacing:.3em;color:var(--mute)}
+.ver{font-size:10.5px;font-weight:500;color:var(--acc);border:1px solid var(--acc);padding:2px 8px;border-radius:6px;letter-spacing:.3px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow)}
+.search{display:flex;align-items:center;gap:8px;height:50px;padding:0 14px;border-radius:14px;background:var(--card);border:1px solid var(--line);color:var(--mute);box-shadow:var(--shadow)}
+.search:focus-within{border-color:var(--acc)}
+.search input{flex:1;min-width:0;border:0;outline:0;background:transparent;height:100%;font-size:16px;-webkit-appearance:none;appearance:none}
+.cap{font-size:11.5px;font-weight:500;color:var(--mute);letter-spacing:.2px}
+.sb{font-size:12.5px;color:var(--mute);line-height:1.55}
+.rs-r{stroke:var(--r)}.rs-o{stroke:var(--o)}.rs-g{stroke:var(--g)}.rs-n,.rs-x{stroke:var(--n)}
+.tx-r{color:var(--r)}.tx-o{color:var(--o)}.tx-g{color:var(--g)}.tx-n,.tx-x{color:var(--n)}
+.carousel{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;margin:0 -16px;padding:2px 16px 6px;scrollbar-width:none}
+.carousel::-webkit-scrollbar{display:none}
+.hcard{flex:0 0 86%;scroll-snap-align:start;scroll-margin-inline:16px;display:flex;align-items:center;gap:14px;padding:14px;border-radius:22px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);text-align:start}
+.hcard.solo{flex-basis:100%}
+.led{display:flex;align-items:center;gap:10px;padding:12px;border-radius:16px;background:var(--card);border:1px solid var(--line);min-height:60px;box-shadow:var(--shadow)}
+.led.on{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
+.led .n{font-size:22px;font-weight:600;line-height:1}
+.led .l{font-size:11.5px;color:var(--mute)}
+.ldot{flex:none;width:10px;height:10px;border-radius:3px}
+.d-r{background:var(--r)}.d-o{background:var(--o)}.d-g{background:var(--g)}.d-n,.d-x{background:var(--n)}
+.digit{width:30px;height:40px;border-radius:8px;background:var(--card2);border:1px solid var(--line);display:grid;place-items:center;font-size:21px;font-weight:300;font-variant-numeric:tabular-nums}
+.chips{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:0 16px}
+.chips::-webkit-scrollbar{display:none}
+.wrapchips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{flex:none;display:flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:6px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-size:13.5px;color:var(--mute);text-align:center}
+.chip .c{font-size:11.5px;padding:1px 6px;border-radius:6px;background:var(--card2)}
+.chip.on{border-color:var(--acc);color:var(--accInk);background:var(--acc);font-weight:600}
+.chip.add{border-style:dashed;color:var(--acc);border-color:var(--acc)}
+.lrow{display:flex;align-items:center;gap:12px;width:100%;padding:14px 4px;border-bottom:1px solid var(--line);text-align:start}
+.lrow:last-child{border-bottom:0}
+.ic{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--card2);color:var(--acc);overflow:hidden}
+.mid{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.nm{font-size:15px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.val{flex:none;display:flex;flex-direction:column;align-items:flex-end;min-width:76px;text-align:end}
+.val .b{font-size:21px;font-weight:600;line-height:1.15;font-variant-numeric:tabular-nums}
+.val .u{font-size:11px;color:var(--mute)}
+.pill{flex:none;font-size:11.5px;font-weight:500;padding:3px 9px;border-radius:7px;white-space:nowrap}
+.p-r{color:var(--r);background:var(--rS)}.p-o{color:var(--o);background:var(--oS)}.p-g{color:var(--g);background:var(--gS)}.p-n,.p-x{color:var(--n);background:var(--nS)}
+.plate{font-size:12.5px;font-weight:600;padding:3px 10px;border-radius:7px;border:1.5px solid var(--ink);letter-spacing:.5px}
+.carpick{display:flex;align-items:center;gap:6px;min-height:44px;max-width:100%;text-align:start}
+.sec{font-size:12.5px;font-weight:500;color:var(--mute);margin:0;letter-spacing:.2px}
+.bar{display:block;height:6px;border-radius:3px;background:var(--track);overflow:hidden}
+.fill{display:block;height:100%;border-radius:3px}
+.f-r{background:var(--r)}.f-o{background:var(--o)}.f-g{background:var(--g)}.f-n,.f-x{background:var(--n)}.f-a{background:var(--acc)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:0}
+.rem{display:flex;flex-direction:column;gap:6px;padding:14px 0;border-bottom:1px solid var(--line)}
+.rem:last-child{border-bottom:0}
+.primary{display:flex;align-items:center;justify-content:center;gap:8px;height:54px;border-radius:999px;background:var(--acc);color:var(--accInk);font-weight:600;font-size:16px;width:100%;text-align:center}
+.ghost{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;height:48px;border-radius:14px;border:1px solid var(--line);background:var(--card);font-size:14px;width:100%;text-align:center;cursor:pointer}
+.dashed{display:flex;align-items:center;justify-content:center;gap:8px;height:46px;border-radius:14px;border:1px dashed var(--acc);color:var(--acc);font-size:14px;font-weight:500;width:100%}
+.danger{display:flex;align-items:center;justify-content:center;gap:8px;height:52px;border-radius:999px;border:1px solid var(--r);background:var(--rS);color:var(--r);font-weight:600;font-size:15.5px;width:100%}
+.outline{flex:none;height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--acc);color:var(--acc);font-weight:500;font-size:13px}
+.mini{display:flex;align-items:center;gap:6px;height:40px;padding:0 14px;border-radius:999px;background:var(--acc);color:var(--accInk);font-size:13px;font-weight:600}
+.minix{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);color:var(--mute)}
+.link{color:var(--acc);font-weight:500;font-size:14px;min-height:44px;padding:0 6px}
+.nav{position:absolute;bottom:0;left:0;right:0;height:calc(72px + env(safe-area-inset-bottom));padding:6px 10px env(safe-area-inset-bottom);display:flex;align-items:stretch;background:var(--card);border-top:1px solid var(--line);z-index:5}
+.navb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;color:var(--mute);min-height:56px;text-align:center}
+.navb.on{color:var(--acc);font-weight:600}
+.fl{display:flex;flex-direction:column;gap:6px;font-size:12.5px;color:var(--mute)}
+.in{height:50px;border-radius:13px;border:1px solid var(--line);background:var(--card2);padding:0 14px;font-size:16px;outline:none;width:100%;min-width:0;-webkit-appearance:none;appearance:none;text-align:start}
+.in:focus{border-color:var(--acc)}
+.in.big{height:66px;font-size:30px;font-weight:600;text-align:center;letter-spacing:2px;font-variant-numeric:tabular-nums}
+.in[type=date],.in[type=time]{display:flex;align-items:center;position:relative}
+.in::-webkit-date-and-time-value{text-align:start;margin:0}
+.in[type=date]::-webkit-calendar-picker-indicator,.in[type=time]::-webkit-calendar-picker-indicator{position:absolute;inset-inline-end:0;top:0;width:52px;height:100%;opacity:0;cursor:pointer}
+.datebox{position:relative;display:block}
+.calic{position:absolute;inset-inline-end:15px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--mute)}
+.durrow{display:flex;gap:8px;align-items:stretch}
+.segs{display:flex;gap:4px;padding:4px;border-radius:14px;background:var(--card2);border:1px solid var(--line)}
+.seg{flex:1 1 0;min-width:0;min-height:42px;padding:4px;border-radius:10px;font-size:13px;line-height:1.25;color:var(--mute);display:flex;align-items:center;justify-content:center;text-align:center}
+.seg.on{background:var(--acc);color:var(--accInk);font-weight:600}
+.actionbar{position:absolute;bottom:0;left:0;right:0;padding:12px 16px calc(22px + env(safe-area-inset-bottom));background:var(--bg);border-top:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+.sheetwrap{position:absolute;inset:0;z-index:20}
+.scrim{position:absolute;inset:0;width:100%;height:100%;background:rgba(0,0,0,.5)}
+.sheet{position:absolute;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);border-radius:26px 26px 0 0;padding:10px 16px calc(24px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px;max-height:90%;overflow-y:auto}
+.grab{width:40px;height:5px;border-radius:5px;background:var(--line);align-self:center}
+.toast{position:absolute;bottom:96px;left:16px;right:16px;z-index:40;background:var(--ink);color:var(--bg);padding-block:8px;padding-inline-start:16px;padding-inline-end:8px;min-height:50px;border-radius:14px;font-size:14px;font-weight:500;display:flex;align-items:center;gap:10px}
+.undo{flex:none;height:36px;padding:0 14px;border-radius:10px;background:var(--bg);color:var(--ink);font-weight:600;font-size:13.5px}
+.zoom{position:absolute;inset:0;z-index:50;background:#000;display:flex;flex-direction:column}
+.zoombtn{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.14);color:#fff}
+.attach{position:relative;display:flex;align-items:center;justify-content:center;gap:8px;height:50px;border-radius:14px;border:1px dashed var(--acc);color:var(--acc);font-weight:500;font-size:14px;cursor:pointer}
+.hidefile{position:absolute;inset:0;opacity:0;width:100%;cursor:pointer}
+.catrow{display:flex;align-items:center;gap:14px;width:100%;padding:14px 16px;border-radius:18px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);text-align:start}
+.catrow.on{border-color:var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
+.err{color:var(--r);font-size:13.5px}
+.stat{display:flex;flex-direction:column;gap:2px;padding:12px;border-radius:14px;background:var(--card2);min-width:0}
+.sv{font-size:18px;font-weight:600;font-variant-numeric:tabular-nums}
+.hrow{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}
+.hrow:last-child{border-bottom:0}
+.specrow{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
+.specrow:last-child{border-bottom:0}
+.specbtn{flex:1;min-width:0;display:flex;align-items:center;gap:10px;padding:12px 0;min-height:52px;text-align:start}
+.extra{display:flex;align-items:center;justify-content:space-between;width:100%;height:48px;padding:0 14px;border-radius:14px;background:var(--card);border:1px solid var(--line);font-size:14px;font-weight:500}
+.carph{position:relative;display:grid;place-items:center;height:120px;border-radius:16px;background:var(--card2);border:1px dashed var(--line);color:var(--mute);overflow:hidden}
+.cstrip{flex:none;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px 4px}
+.cstrip::-webkit-scrollbar{display:none}
+.ctile{flex:none;position:relative;width:92px;min-height:96px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 6px;border-radius:16px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);text-align:center}
+.ctile.on{border-color:var(--acc);box-shadow:inset 0 0 0 1.5px var(--acc)}
+.ctile.on .ctname{color:var(--acc);font-weight:600}
+.cthumb{width:46px;height:46px;border-radius:13px;overflow:hidden;display:grid;place-items:center;background:var(--card2);color:var(--acc)}
+.ctname{font-size:12px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ctile.addt{border:1.5px dashed var(--acc);background:transparent;box-shadow:none;color:var(--acc)}
+.ctile.addt .ctname{font-weight:600}
+.ctile.addt .cthumb{background:transparent;border:1.5px dashed var(--acc)}
+.ctdot{position:absolute;top:8px;inset-inline-end:8px;width:9px;height:9px;border-radius:50%}
+.bkcard{display:flex;flex-direction:column;gap:12px}
+.bkhead{display:flex;align-items:flex-start;gap:12px}
+.rgrid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,.9fr) minmax(0,1fr);gap:8px;padding:9px 0;border-bottom:1px solid var(--line);font-size:12.5px;align-items:start}
+.rgrid:last-child{border-bottom:0}
+.rgrid.h{font-size:11px;color:var(--mute);font-weight:600;padding-top:4px}
+.rspec{display:block;font-size:11px;color:var(--mute);margin-top:2px;line-height:1.5}
+</style>
+<style>
+/* تشغيل مستقل: ملء الشاشة + منع التكبير والتحديد */
+html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none;background:#0D1014;-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+body:has(.app:not(.dark)){background:#EFF2F5}
+body:has(.app.dark .splash){background:#0B0A18}
+body:has(.app:not(.dark) .splash){background:#F4F2FB}
+#root{position:fixed;top:env(safe-area-inset-top);left:0;right:0;bottom:0;display:flex;justify-content:center}
+#root>.app{width:100%!important;max-width:560px;height:100%!important}
+@media (min-width:600px){#root>.app{border-inline:1px solid var(--line)}}
+input,textarea{-webkit-user-select:text;user-select:text}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<template id="dc-template">
+<div class="app {{themeClass}}" dir="{{dir}}" lang="{{langCode}}" style="direction: {{dir}}; width: 390px; height: 844px; position: relative; overflow: hidden; background: var(--bg); color: var(--ink); font-family: 'Almarai', system-ui, sans-serif; transition: background .25s">
+
+<sc-if value="{{isHome}}" hint-placeholder-val="{{ true }}">
+<div class="scroll" style="bottom: 72px; padding: 18px 16px 28px; display: flex; flex-direction: column; gap: 14px">
+  <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 10px">
+    <div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start; min-width: 0">
+      <h1 style="margin: 0; font-size: 24px; font-weight: 600; line-height: 1.2">{{homeTitle}}</h1>
+      <span class="sb">{{todayText}}</span>
+    </div>
+    <div style="display: flex; gap: 6px; flex: none">
+      <sc-if value="{{showAddBtn}}" hint-placeholder-val="{{ true }}"><button class="iconbtn addbtn" onClick="{{openAdd}}" aria-label="{{L.add}}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14 M5 12h14"></path></svg></button></sc-if>
+      <button class="iconbtn langbtn" onClick="{{toggleLang}}" aria-label="{{L.aLang}}">{{L.langBtn}}</button>
+      <button class="iconbtn" onClick="{{openSettings}}" aria-label="{{L.settings}}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h9 M17 7h3 M15 5v4 M4 17h3 M11 17h9 M9 15v4"></path></svg></button>
+    </div>
+  </div>
+
+  <sc-if value="{{isCars}}" hint-placeholder-val="{{ true }}">
+    <sc-if value="{{hasCars}}" hint-placeholder-val="{{ true }}">
+      <div class="cstrip" role="group" aria-label="{{L.chooseCar}}">
+        <sc-for list="{{carStrip}}" as="cs" hint-placeholder-count="2">
+          <button class="ctile {{cs.on}}" onClick="{{cs.pick}}">
+            <span class="cthumb">
+              <sc-if value="{{cs.hasPhoto}}" hint-placeholder-val="{{ false }}"><img src="{{cs.photo}}" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block"></sc-if>
+              <sc-if value="{{cs.noPhoto}}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16.5V12l2.4-5h11.2L20 12v4.5z M4 12h16 M7 16.5v2 M17 16.5v2"></path></svg></sc-if>
+            </span>
+            <span class="ctname">{{cs.name}}</span>
+            <sc-if value="{{cs.hasAttn}}" hint-placeholder-val="{{ false }}"><span class="ctdot d-{{cs.lv}}"></span></sc-if>
+          </button>
+        </sc-for>
+        <button class="ctile addt" onClick="{{openCarNew}}">
+          <span class="cthumb"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14 M5 12h14"></path></svg></span>
+          <span class="ctname">{{L.addCarTile}}</span>
+        </button>
+      </div>
+      <div class="panel" style="display: flex; flex-direction: column; gap: 12px">
+        <sc-if value="{{car.hasPhoto}}" hint-placeholder-val="{{ false }}">
+          <img src="{{car.photo}}" alt="{{car.name}}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 16px; display: block">
+        </sc-if>
+        <div style="display: flex; align-items: flex-start; gap: 10px">
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; align-items: flex-start">
+            <button class="carpick" onClick="{{openCarList}}" aria-label="{{L.switchCar}}">
+              <span style="font-size: 19px; font-weight: 600; line-height: 1.3">{{car.name}}</span>
+              <span style="flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: var(--card2); color: var(--acc)"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg></span>
+            </button>
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+              <sc-if value="{{car.hasPlate}}" hint-placeholder-val="{{ true }}"><span class="plate">{{car.plate}}</span></sc-if>
+              <sc-if value="{{car.noPlate}}" hint-placeholder-val="{{ false }}"><span class="sb">{{L.noPlate}}</span></sc-if>
+              <span class="cap">{{carCountText}}</span>
+            </div>
+          </div>
+          <button class="iconbtn" onClick="{{openCarEdit}}" aria-label="{{L.editCar}}"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z M14 6l4 4"></path></svg></button>
+        </div>
+        <div style="display: flex; align-items: center; gap: 6px; direction: ltr; justify-content: center">
+          <sc-for list="{{car.digits}}" as="dg" hint-placeholder-count="6"><span class="digit">{{dg.c}}</span></sc-for>
+          <span style="font-size: 14px; color: var(--mute); margin-left: 6px">{{L.km}}</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+          <span class="sb">{{L.updated}} {{car.odoAgo}} · {{car.avgLine}}</span>
+          <button class="outline" onClick="{{openOdo}}">{{L.update}}</button>
+        </div>
+        <sc-if value="{{car.odoDue}}" hint-placeholder-val="{{ false }}">
+          <div style="display: flex; gap: 8px; align-items: center; padding: 10px 12px; border-radius: 12px; background: var(--oS); color: var(--o); font-size: 12.5px">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z M10 20.5h4"></path></svg>
+            {{L.odoDueMsg}}
+          </div>
+        </sc-if>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px">
+          <h2 class="sec">{{L.attnTitle}} ({{carAttnCount}})</h2>
+          <sc-if value="{{hasCarAttn}}" hint-placeholder-val="{{ true }}"><span class="cap">{{carAttnHint}}</span></sc-if>
+        </div>
+        <sc-if value="{{hasCarAttn}}" hint-placeholder-val="{{ true }}">
+          <div class="carousel" dir="{{dir}}" style="direction: {{dir}}">
+            <sc-for list="{{carAttn}}" as="a" hint-placeholder-count="2">
+              <button class="hcard {{a.solo}}" onClick="{{a.open}}">
+                <div style="position: relative; width: 96px; height: 96px; flex: none">
+                  <svg viewBox="0 0 120 120" width="96" height="96" aria-hidden="true">
+                    <circle cx="60" cy="60" r="48" fill="none" stroke="var(--track)" stroke-width="11"></circle>
+                    <circle class="rs-{{a.lv}}" cx="60" cy="60" r="48" fill="none" stroke-width="11" stroke-linecap="round" stroke-dasharray="{{a.ringDash}}" transform="{{ringTransform}}"></circle>
+                  </svg>
+                  <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 13px">
+                    <span class="tx-{{a.lv}}" style="font-size: 22px; font-weight: 600; line-height: 1.05; font-variant-numeric: tabular-nums">{{a.big}}</span>
+                    <span class="cap" style="font-size: 10px; line-height: 1.3">{{a.unit}}</span>
+                  </div>
+                </div>
+                <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; align-items: flex-start">
+                  <span class="cap">{{a.catName}} · {{a.mainName}}</span>
+                  <span style="font-size: 16px; font-weight: 600; line-height: 1.3">{{a.name}}</span>
+                  <span class="sb tx-{{a.lv}}" style="font-weight: 500">{{a.sub}}</span>
+                  <span class="pill p-{{a.lv}}">{{a.lvText}}</span>
+                </div>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{noCarAttn}}" hint-placeholder-val="{{ false }}">
+          <div class="panel" style="display: flex; align-items: center; gap: 12px; padding: 14px">
+            <span class="ic" style="color: var(--g)"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+            <span style="font-size: 14px">{{L.carAllGood}}</span>
+          </div>
+        </sc-if>
+      </div>
+
+      <div class="segs"><sc-for list="{{carSubs}}" as="cs" hint-placeholder-count="3"><button class="seg {{cs.on}}" onClick="{{cs.pick}}">{{cs.label}}</button></sc-for></div>
+
+      <sc-if value="{{subParts}}" hint-placeholder-val="{{ true }}">
+        <div class="panel" style="padding: 4px 14px">
+          <sc-for list="{{carParts}}" as="it" hint-placeholder-count="4">
+            <button class="lrow" onClick="{{it.open}}">
+              <span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.icon}}"></path></svg></span>
+              <span class="mid"><span class="nm">{{it.name}}</span><span style="display: flex; align-items: center; gap: 6px"><span class="ldot d-{{it.lv}}" style="width: 7px; height: 7px"></span><span class="sb">{{it.lvText}} · {{it.mainName}}</span></span></span>
+              <span class="val"><span class="b tx-{{it.lv}}">{{it.big}}</span><span class="u">{{it.unit}}</span></span>
+            </button>
+          </sc-for>
+          <sc-if value="{{noParts}}" hint-placeholder-val="{{ false }}"><div style="padding: 20px 4px; color: var(--mute); font-size: 14px; text-align: center">{{L.noParts}}</div></sc-if>
+        </div>
+        <button class="dashed" onClick="{{addPartForCar}}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14 M5 12h14"></path></svg>{{L.addPart}}</button>
+      </sc-if>
+
+      <sc-if value="{{subDocs}}" hint-placeholder-val="{{ false }}">
+        <div class="panel" style="padding: 4px 14px">
+          <sc-for list="{{carDocs}}" as="it" hint-placeholder-count="2">
+            <button class="lrow" onClick="{{it.open}}">
+              <span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.icon}}"></path></svg></span>
+              <span class="mid"><span class="nm">{{it.name}}</span><span style="display: flex; align-items: center; gap: 6px"><span class="ldot d-{{it.lv}}" style="width: 7px; height: 7px"></span><span class="sb">{{it.lvText}} · {{it.due}}</span></span></span>
+              <span class="val"><span class="b tx-{{it.lv}}">{{it.big}}</span><span class="u">{{it.unit}}</span></span>
+            </button>
+          </sc-for>
+          <sc-if value="{{noCarDocs}}" hint-placeholder-val="{{ false }}"><div style="padding: 20px 4px; color: var(--mute); font-size: 14px; text-align: center">{{L.noCarDocs}}</div></sc-if>
+        </div>
+        <sc-if value="{{hasCarDocTpls}}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; flex-direction: column; gap: 8px">
+            <span class="sec">{{L.tplQuick}}</span>
+            <div class="wrapchips"><sc-for list="{{carDocTpls}}" as="p" hint-placeholder-count="3"><button class="chip add" onClick="{{p.pick}}">+ {{p.label}}</button></sc-for></div>
+          </div>
+        </sc-if>
+        <button class="dashed" onClick="{{addDocForCar}}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14 M5 12h14"></path></svg>{{L.addCarDoc}}</button>
+      </sc-if>
+
+      <sc-if value="{{subFuel}}" hint-placeholder-val="{{ false }}">
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+          <div class="stat"><span class="cap">{{L.kmpl}}</span><span class="sv">{{fuel.kmpl}}</span><span class="cap">{{L.kmplU}}</span></div>
+          <div class="stat"><span class="cap">{{L.cpk}}</span><span class="sv">{{fuel.cpk}}</span><span class="cap">{{L.cpkU}}</span></div>
+          <div class="stat"><span class="cap">{{L.fuelMonth}}</span><span class="sv">{{fuel.month}}</span><span class="cap">{{L.omr}}</span></div>
+        </div>
+        <div class="panel" style="padding: 4px 14px">
+          <sc-for list="{{fuel.rows}}" as="fr" hint-placeholder-count="3">
+            <div class="hrow">
+              <span class="ic"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 20V5h9v15 M4 20h11 M7.5 8.5h4 M14 9l3 2v6.5a1.5 1.5 0 0 0 3 0V9l-3-3"></path></svg></span>
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column"><span style="font-size: 14px">{{fr.main}}</span><span class="sb">{{fr.date}} · {{fr.eff}}</span></span>
+              <span style="font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums">{{fr.cost}}</span>
+              <button class="minix" onClick="{{fr.del}}" aria-label="{{L.aDelFuel}}" style="border: 0"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12 M18 6L6 18"></path></svg></button>
+            </div>
+          </sc-for>
+          <sc-if value="{{fuel.empty}}" hint-placeholder-val="{{ false }}"><div style="padding: 20px 4px; color: var(--mute); font-size: 14px; text-align: center">{{L.noFuel}}</div></sc-if>
+        </div>
+        <button class="primary" onClick="{{openFuelCur}}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14 M5 12h14"></path></svg>{{L.addFuel}}</button>
+      </sc-if>
+    </sc-if>
+    <sc-if value="{{noCars}}" hint-placeholder-val="{{ false }}">
+      <div class="panel" style="display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 28px 16px; text-align: center">
+        <span class="ic" style="width: 56px; height: 56px"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16.5V12l2.4-5h11.2L20 12v4.5z M4 12h16 M7 16.5v2 M17 16.5v2"></path></svg></span>
+        <span style="font-size: 15px">{{L.noCars}}</span>
+        <button class="primary" onClick="{{openCarNew}}">{{L.addFirstCar}}</button>
+      </div>
+    </sc-if>
+  </sc-if>
+
+  <sc-if value="{{isDocs}}" hint-placeholder-val="{{ false }}">
+    <label class="search">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a7 7 0 1 0 0 14a7 7 0 1 0 0-14z M20 20l-4-4"></path></svg>
+      <input type="search" value="{{q}}" onChange="{{onQ}}" placeholder="{{L.searchPh}}" aria-label="{{L.aSearch}}">
+    </label>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px">
+        <h2 class="sec">{{L.attnTitle}} ({{docAttnCount}})</h2>
+        <sc-if value="{{hasDocAttn}}" hint-placeholder-val="{{ true }}"><span class="cap">{{docAttnHint}}</span></sc-if>
+      </div>
+      <sc-if value="{{hasDocAttn}}" hint-placeholder-val="{{ true }}">
+        <div class="carousel" dir="{{dir}}" style="direction: {{dir}}">
+          <sc-for list="{{docAttn}}" as="a" hint-placeholder-count="2">
+            <button class="hcard {{a.solo}}" onClick="{{a.open}}">
+              <div style="position: relative; width: 96px; height: 96px; flex: none">
+                <svg viewBox="0 0 120 120" width="96" height="96" aria-hidden="true">
+                  <circle cx="60" cy="60" r="48" fill="none" stroke="var(--track)" stroke-width="11"></circle>
+                  <circle class="rs-{{a.lv}}" cx="60" cy="60" r="48" fill="none" stroke-width="11" stroke-linecap="round" stroke-dasharray="{{a.ringDash}}" transform="{{ringTransform}}"></circle>
+                </svg>
+                <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 13px">
+                  <span class="tx-{{a.lv}}" style="font-size: 22px; font-weight: 600; line-height: 1.05; font-variant-numeric: tabular-nums">{{a.big}}</span>
+                  <span class="cap" style="font-size: 10px; line-height: 1.3">{{a.unit}}</span>
+                </div>
+              </div>
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; align-items: flex-start">
+                <span class="cap">{{a.catLine}}</span>
+                <span style="font-size: 16px; font-weight: 600; line-height: 1.3">{{a.name}}</span>
+                <span class="sb tx-{{a.lv}}" style="font-weight: 500">{{a.sub}}</span>
+                <span class="pill p-{{a.lv}}">{{a.lvText}}</span>
+              </div>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{noDocAttn}}" hint-placeholder-val="{{ false }}">
+        <div class="panel" style="display: flex; align-items: center; gap: 12px; padding: 14px">
+          <span class="ic" style="color: var(--g)"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+          <span style="font-size: 14px">{{L.allGood}}</span>
+        </div>
+      </sc-if>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+      <sc-for list="{{tiles}}" as="t" hint-placeholder-count="3">
+        <button class="led {{t.on}}" onClick="{{t.pick}}">
+          <span class="ldot d-{{t.key}}"></span>
+          <span style="display: flex; flex-direction: column; gap: 3px; align-items: flex-start"><span class="n">{{t.count}}</span><span class="l">{{t.label}}</span></span>
+        </button>
+      </sc-for>
+    </div>
+    <div class="chips">
+      <sc-for list="{{docChips}}" as="c" hint-placeholder-count="4">
+        <button class="chip {{c.on}}" onClick="{{c.pick}}" style="white-space: nowrap">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>
+          {{c.label}}<span class="c">{{c.count}}</span>
+        </button>
+      </sc-for>
+    </div>
+    <div class="panel" style="padding: 4px 14px">
+      <sc-for list="{{docList}}" as="it" hint-placeholder-count="6">
+        <button class="lrow" onClick="{{it.open}}">
+          <span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.icon}}"></path></svg></span>
+          <span class="mid">
+            <span class="nm">{{it.name}}</span>
+            <span style="display: flex; align-items: center; gap: 6px; min-width: 0"><span class="ldot d-{{it.lv}}" style="width: 7px; height: 7px"></span><span class="sb" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.lvText}} · {{it.catLine}}</span></span>
+          </span>
+          <span class="val"><span class="b tx-{{it.lv}}">{{it.big}}</span><span class="u">{{it.unit}}</span></span>
+        </button>
+      </sc-for>
+      <sc-if value="{{docListEmpty}}" hint-placeholder-val="{{ false }}">
+        <div style="text-align: center; padding: 28px 8px; color: var(--mute); font-size: 14px">{{L.noResults}}</div>
+      </sc-if>
+    </div>
+    <sc-if value="{{hasArch}}" hint-placeholder-val="{{ true }}">
+      <button class="extra" onClick="{{toggleArch}}">
+        <span style="display: flex; align-items: center; gap: 8px"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16v4H4z M6 11v9h12v-9 M10 15h4"></path></svg>{{L.archTitle}} ({{archCount}})</span>
+        <span class="sb">{{archToggleText}}</span>
+      </button>
+      <sc-if value="{{showArch}}" hint-placeholder-val="{{ false }}">
+        <div class="panel" style="padding: 4px 14px">
+          <sc-for list="{{archList}}" as="it" hint-placeholder-count="1">
+            <button class="lrow" onClick="{{it.open}}">
+              <span class="ic" style="color: var(--mute)"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.icon}}"></path></svg></span>
+              <span class="mid"><span class="nm" style="color: var(--mute)">{{it.name}}</span><span class="sb">{{it.catLine}} · {{it.sub}}</span></span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+    </sc-if>
+  </sc-if>
+
+  <sc-if value="{{isSpendTab}}" hint-placeholder-val="{{ false }}">
+    <div class="segs"><sc-for list="{{rangeOpts}}" as="o" hint-placeholder-count="3"><button class="seg {{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+    <div class="chips"><sc-for list="{{scopeOpts}}" as="o" hint-placeholder-count="4"><button class="chip {{o.on}}" onClick="{{o.pick}}" style="white-space: nowrap">{{o.label}}</button></sc-for></div>
+    <div class="panel" style="display: flex; flex-direction: column; gap: 4px">
+      <span class="cap">{{L.totalDash}} {{sp.rangeText}} · {{sp.scopeText}}</span>
+      <span style="font-size: 32px; font-weight: 600; font-variant-numeric: tabular-nums">{{sp.total}}</span>
+      <span class="sb">{{sp.count}} {{L.opsWord}}</span>
+    </div>
+    <sc-if value="{{sp.empty}}" hint-placeholder-val="{{ false }}"><div class="panel" style="text-align: center; color: var(--mute); font-size: 14px">{{L.noSpendRange}}</div></sc-if>
+    <sc-if value="{{sp.has}}" hint-placeholder-val="{{ true }}">
+      <div class="panel" style="display: flex; flex-direction: column; gap: 14px">
+        <h2 class="sec">{{L.byCat}}</h2>
+        <sc-for list="{{sp.cats}}" as="c" hint-placeholder-count="4">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+              <span style="display: flex; align-items: center; gap: 8px; font-size: 14px"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="var(--acc)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>{{c.label}}</span>
+              <span style="font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums">{{c.amount}} <span class="sb">· {{c.share}}</span></span>
+            </div>
+            <span class="bar" style="height: 8px"><span class="fill f-a" style="width: {{c.w}}%"></span></span>
+          </div>
+        </sc-for>
+      </div>
+      <div class="panel" style="padding: 8px 16px">
+        <h2 class="sec" style="padding-top: 6px">{{L.topCost}}</h2>
+        <sc-for list="{{sp.top}}" as="tp" hint-placeholder-count="3">
+          <button class="row" onClick="{{tp.open}}" style="width: 100%"><span style="font-size: 14px; text-align: start">{{tp.name}}</span><span style="font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums">{{tp.amount}}</span></button>
+        </sc-for>
+      </div>
+      <div class="panel" style="padding: 8px 16px">
+        <h2 class="sec" style="padding-top: 6px">{{L.recentOps}}</h2>
+        <sc-for list="{{sp.recent}}" as="r" hint-placeholder-count="4">
+          <div class="hrow">
+            <span class="ic" style="width: 34px; height: 34px"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.icon}}"></path></svg></span>
+            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column"><span style="font-size: 14px">{{r.name}}</span><span class="sb">{{r.note}} · {{r.date}}</span></span>
+            <span style="font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums">{{r.cost}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </sc-if>
+</div>
+<nav class="nav" aria-label="{{L.aNav}}">
+  <sc-for list="{{navTabs}}" as="nt" hint-placeholder-count="3">
+    <button class="navb {{nt.on}}" onClick="{{nt.pick}}"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{nt.icon}}"></path></svg>{{nt.label}}</button>
+  </sc-for>
+</nav>
+</sc-if>
+
+<sc-if value="{{isDetail}}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="bottom: 90px; padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 14px">
+  <div style="display: flex; align-items: center; gap: 8px">
+    <button class="iconbtn" onClick="{{back}}" aria-label="{{L.aBack}}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{backPath}}"></path></svg></button>
+    <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+      <span class="cap">{{cur.catLine}}</span>
+      <h1 style="margin: 0; font-size: 20px; font-weight: 600; line-height: 1.25">{{cur.name}}</h1>
+    </div>
+    <button class="iconbtn" onClick="{{openEdit}}" aria-label="{{L.aEdit}}"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z M14 6l4 4"></path></svg></button>
+    <button class="iconbtn" onClick="{{askDel}}" aria-label="{{L.aDelete}}" style="color: var(--r)"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14 M10 7V4h4v3 M7 7l1 13h8l1-13"></path></svg></button>
+  </div>
+
+  <div class="panel" style="display: flex; align-items: center; gap: 16px">
+    <div style="position: relative; width: 112px; height: 112px; flex: none">
+      <svg viewBox="0 0 120 120" width="112" height="112" aria-hidden="true">
+        <circle cx="60" cy="60" r="48" fill="none" stroke="var(--track)" stroke-width="11"></circle>
+        <circle class="rs-{{cur.lv}}" cx="60" cy="60" r="48" fill="none" stroke-width="11" stroke-linecap="round" stroke-dasharray="{{cur.ringDash}}" transform="{{ringTransform}}"></circle>
+      </svg>
+      <div style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 0 14px">
+        <span class="tx-{{cur.lv}}" style="font-size: 25px; font-weight: 600; line-height: 1.05">{{cur.big}}</span>
+        <span class="cap" style="font-size: 10.5px; line-height: 1.3">{{cur.unit}}</span>
+      </div>
+    </div>
+    <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; align-items: flex-start">
+      <span class="pill p-{{cur.lv}}">{{cur.lvText}}</span>
+      <span class="cap">{{cur.mainName}}</span>
+      <span class="tx-{{cur.lv}}" style="font-size: 16px; font-weight: 600">{{cur.sub}}</span>
+      <span class="sb">{{cur.due}}</span>
+    </div>
+  </div>
+
+  <div class="panel" style="display: flex; flex-direction: column; padding-bottom: 14px">
+    <h2 class="sec">{{L.reminders}} ({{cur.remCount}})</h2>
+    <sc-for list="{{cur.ts}}" as="t" hint-placeholder-count="2">
+      <div class="rem">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px"><span style="font-size: 15px; font-weight: 600">{{t.name}}</span><span class="pill p-{{t.lv}}">{{t.lvText}}</span></div>
+        <span class="sb">{{t.typeText}}</span>
+        <span class="bar"><span class="fill f-{{t.lv}}" style="width: {{t.left}}%"></span></span>
+        <div style="display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap"><span class="sb tx-{{t.lv}}" style="font-weight: 500">{{t.text}}</span><span class="sb">{{t.dueText}}</span></div>
+        <sc-if value="{{t.hasPredict}}" hint-placeholder-val="{{ false }}"><span class="sb">{{t.predict}}</span></sc-if>
+        <sc-if value="{{t.hasBefore}}" hint-placeholder-val="{{ true }}"><span class="sb" style="display: flex; align-items: center; gap: 6px"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z M10 20.5h4"></path></svg>{{t.beforeText}}</span></sc-if>
+        <sc-if value="{{t.hasActions}}" hint-placeholder-val="{{ true }}">
+          <div style="display: flex; gap: 8px; margin-top: 4px">
+            <sc-if value="{{t.canDone}}" hint-placeholder-val="{{ true }}"><button class="mini" onClick="{{t.done}}"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{t.doneLabel}}</button></sc-if>
+            <sc-if value="{{t.custom}}" hint-placeholder-val="{{ false }}"><button class="minix" onClick="{{t.del}}" aria-label="{{L.aDelRem}}"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14 M10 7V4h4v3 M7 7l1 13h8l1-13"></path></svg></button></sc-if>
+          </div>
+        </sc-if>
+      </div>
+    </sc-for>
+    <sc-if value="{{cur.noTracks}}" hint-placeholder-val="{{ false }}"><span class="sb" style="padding: 10px 0">{{L.noRems}}</span></sc-if>
+    <button class="dashed" onClick="{{openRem}}" style="margin-top: 6px"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14 M5 12h14"></path></svg>{{L.addRem}}</button>
+  </div>
+
+  <div class="panel" style="display: flex; flex-direction: column; padding-bottom: 14px">
+    <h2 class="sec">{{L.specsTitle}}</h2>
+    <sc-for list="{{cur.specList}}" as="sp" hint-placeholder-count="2">
+      <div class="specrow">
+        <button class="specbtn" onClick="{{sp.copy}}" aria-label="{{L.aCopy}} {{sp.k}}">
+          <span class="sb" style="flex: none; min-width: 84px">{{sp.k}}</span>
+          <span style="flex: 1; min-width: 0; font-size: 15.5px; font-weight: 600">{{sp.v}}</span>
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="var(--acc)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8h11v12H8z M5 16V4h11"></path></svg>
+        </button>
+        <button class="minix" onClick="{{sp.del}}" aria-label="{{L.aDelSpec}}" style="border: 0"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12 M18 6L6 18"></path></svg></button>
+      </div>
+    </sc-for>
+    <sc-if value="{{cur.noSpecs}}" hint-placeholder-val="{{ false }}"><span class="sb" style="padding: 10px 0">{{L.noSpecs}}</span></sc-if>
+    <button class="dashed" onClick="{{openSpec}}" style="margin-top: 6px"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14 M5 12h14"></path></svg>{{L.addSpec}}</button>
+  </div>
+
+  <sc-if value="{{cur.hasFields}}" hint-placeholder-val="{{ true }}">
+    <div class="panel" style="padding: 4px 16px">
+      <sc-for list="{{cur.fields}}" as="fd" hint-placeholder-count="3">
+        <div class="row"><span class="sb">{{fd.label}}</span><span style="font-size: 14px; text-align: end">{{fd.value}}</span></div>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <div class="panel" style="display: flex; flex-direction: column; gap: 12px">
+    <h2 class="sec">{{L.photoTitle}}</h2>
+    <sc-if value="{{cur.hasPhoto}}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{openZoom}}" aria-label="{{L.aZoom}}" style="display: block; width: 100%; height: 180px; border-radius: 14px; overflow: hidden; background: var(--card2)"><img src="{{cur.photo}}" alt="{{L.altPhoto}}" style="width: 100%; height: 100%; object-fit: cover; display: block"></button>
+      <span class="sb" style="display: flex; align-items: center; gap: 6px; color: var(--g)"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M12 3l7 3v5c0 4.5-3 8-7 10c-4-2-7-5.5-7-10V6z M9 12l2 2 4-4"></path></svg>{{L.photoSafe}}</span>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+        <button class="ghost" onClick="{{savePhoto}}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11 M8 11l4 4 4-4 M5 19h14"></path></svg>{{L.saveGallery}}</button>
+        <button class="ghost" onClick="{{sharePhoto}}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11 M8 8l4-4 4 4 M5 13v6h14v-6"></path></svg>{{L.sharePhoto}}</button>
+      </div>
+    </sc-if>
+    <label class="attach">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z M12 10.5a3 3 0 1 0 0 6a3 3 0 1 0 0-6z"></path></svg>
+      <span>{{cur.photoBtn}}</span>
+      <input class="hidefile" type="file" accept="image/*" onChange="{{onPhoto}}" aria-label="{{cur.photoBtn}}">
+    </label>
+  </div>
+
+  <div class="panel" style="display: flex; flex-direction: column; gap: 12px">
+    <h2 class="sec">{{L.histTitle}}</h2>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+      <div class="stat"><span class="cap">{{L.opsCount}}</span><span class="sv">{{cur.histCount}}</span></div>
+      <div class="stat"><span class="cap">{{L.totalSpend}}</span><span class="sv">{{cur.histTotal}}</span></div>
+    </div>
+    <div>
+      <sc-for list="{{cur.hist}}" as="h" hint-placeholder-count="2">
+        <div class="hrow">
+          <span class="ldot" style="background: var(--acc)"></span>
+          <span style="flex: 1; min-width: 0; display: flex; flex-direction: column"><span style="font-size: 14px">{{h.note}}</span><span class="sb">{{h.date}}<sc-if value="{{h.hasKm}}" hint-placeholder-val="{{ false }}"> · {{h.km}}</sc-if></span></span>
+          <span style="font-size: 14px; font-weight: 500; font-variant-numeric: tabular-nums">{{h.cost}}</span>
+        </div>
+      </sc-for>
+      <sc-if value="{{cur.noHist}}" hint-placeholder-val="{{ false }}"><span class="sb">{{L.noHist}}</span></sc-if>
+    </div>
+  </div>
+</div>
+<div class="actionbar">
+  <sc-if value="{{cur.hasMain}}" hint-placeholder-val="{{ true }}">
+    <button class="primary" onClick="{{cur.doMain}}"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{cur.mainLabel}}</button>
+  </sc-if>
+  <sc-if value="{{cur.noMain}}" hint-placeholder-val="{{ false }}">
+    <button class="ghost" onClick="{{openRem}}">{{L.addRemFor}}</button>
+  </sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{isAdd}}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="bottom: 90px; padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 16px">
+  <div style="display: flex; align-items: center; gap: 12px">
+    <button class="iconbtn" onClick="{{cancelForm}}" aria-label="{{L.aBack}}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{backPath}}"></path></svg></button>
+    <div style="display: flex; flex-direction: column">
+      <h1 style="margin: 0; font-size: 21px; font-weight: 600">{{formTitle}}</h1>
+      <span class="sb">{{formSub}}</span>
+    </div>
+  </div>
+
+  <sc-if value="{{addPick}}" hint-placeholder-val="{{ true }}">
+    <sc-for list="{{addGroups}}" as="g" hint-placeholder-count="2">
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <h2 class="sec">{{g.title}}</h2>
+        <sc-for list="{{g.items}}" as="ac" hint-placeholder-count="3">
+          <button class="catrow" onClick="{{ac.pick}}">
+            <span class="ic" style="width: 46px; height: 46px"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ac.icon}}"></path></svg></span>
+            <span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{{ac.label}}</span><span class="sb">{{ac.desc}}</span></span>
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--mute)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{fwdPath}}"></path></svg>
+          </button>
+        </sc-for>
+      </div>
+    </sc-for>
+  </sc-if>
+
+  <sc-if value="{{addForm}}" hint-placeholder-val="{{ false }}">
+    <div class="panel" style="display: flex; align-items: center; gap: 12px; padding: 10px 14px">
+      <span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{fcatIcon}}"></path></svg></span>
+      <span style="flex: 1; font-weight: 500; font-size: 15px">{{fcatLabel}}</span>
+      <sc-if value="{{canChangeCat}}" hint-placeholder-val="{{ true }}"><button class="link" onClick="{{backToPick}}">{{L.change}}</button></sc-if>
+    </div>
+    <sc-if value="{{formHasCar}}" hint-placeholder-val="{{ false }}">
+      <div class="fl"><span>{{formCarLabel}}</span>
+        <div class="wrapchips"><sc-for list="{{formCarOpts}}" as="o" hint-placeholder-count="2"><button class="chip {{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+      </div>
+    </sc-if>
+    <sc-if value="{{hasPresets}}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <span class="sec">{{L.quickPick}}</span>
+        <div class="wrapchips"><sc-for list="{{presets}}" as="p" hint-placeholder-count="4"><button class="chip {{p.on}}" onClick="{{p.pick}}">{{p.label}}</button></sc-for></div>
+      </div>
+    </sc-if>
+    <sc-if value="{{isCustomForm}}" hint-placeholder-val="{{ false }}">
+      <div class="fl"><span>{{L.alertMethod}}</span>
+        <div class="segs"><sc-for list="{{modes}}" as="md" hint-placeholder-count="3"><button class="seg {{md.on}}" onClick="{{md.pick}}">{{md.label}}</button></sc-for></div>
+      </div>
+    </sc-if>
+    <sc-for list="{{mainFields}}" as="fd" hint-placeholder-count="3">
+      <sc-if value="{{fd.isText}}" hint-placeholder-val="{{ true }}"><label class="fl"><span>{{fd.label}}</span><input class="in" type="text" inputmode="{{fd.im}}" value="{{fd.value}}" placeholder="{{fd.ph}}" onChange="{{fd.onChange}}"></label></sc-if>
+      <sc-if value="{{fd.isDate}}" hint-placeholder-val="{{ false }}"><label class="fl"><span>{{fd.label}}</span><span class="datebox"><input class="in" type="date" value="{{fd.value}}" onChange="{{fd.onChange}}"><svg class="calic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4"></path></svg></span></label></sc-if>
+      <sc-if value="{{fd.isDur}}" hint-placeholder-val="{{ false }}"><div class="fl"><span>{{fd.label}}</span><div class="durrow"><input class="in" type="text" inputmode="numeric" value="{{fd.value}}" placeholder="{{fd.ph}}" onChange="{{fd.onChange}}" aria-label="{{fd.label}}" style="width: 84px; flex: none; text-align: center"><div class="segs" style="flex: 1; min-width: 0"><sc-for list="{{fd.units}}" as="un" hint-placeholder-count="4"><button class="seg {{un.on}}" onClick="{{un.pick}}">{{un.label}}</button></sc-for></div></div></div></sc-if>
+    </sc-for>
+    <sc-if value="{{hasExtra}}" hint-placeholder-val="{{ true }}">
+      <button class="extra" onClick="{{toggleExtra}}">
+        <span>{{L.extraDetails}} ({{extraCount}})</span>
+        <span class="sb">{{extraToggleText}}</span>
+      </button>
+      <sc-if value="{{showExtra}}" hint-placeholder-val="{{ false }}">
+        <sc-for list="{{extraFields}}" as="fd" hint-placeholder-count="3">
+          <sc-if value="{{fd.isText}}" hint-placeholder-val="{{ true }}"><label class="fl"><span>{{fd.label}}</span><input class="in" type="text" inputmode="{{fd.im}}" value="{{fd.value}}" placeholder="{{fd.ph}}" onChange="{{fd.onChange}}"></label></sc-if>
+          <sc-if value="{{fd.isDate}}" hint-placeholder-val="{{ false }}"><label class="fl"><span>{{fd.label}}</span><span class="datebox"><input class="in" type="date" value="{{fd.value}}" onChange="{{fd.onChange}}"><svg class="calic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4"></path></svg></span></label></sc-if>
+        </sc-for>
+        <sc-if value="{{formHasBefore}}" hint-placeholder-val="{{ true }}">
+          <div class="fl"><span>{{L.alertBefore}}</span>
+            <div class="wrapchips"><sc-for list="{{formBefore}}" as="b" hint-placeholder-count="6"><button class="chip {{b.on}}" onClick="{{b.pick}}">{{b.label}}</button></sc-for></div>
+          </div>
+        </sc-if>
+        <sc-if value="{{formHasPhoto}}" hint-placeholder-val="{{ true }}">
+          <div class="fl"><span>{{formPhotoLabel}}</span>
+            <sc-if value="{{hasFormPhoto}}" hint-placeholder-val="{{ false }}"><img src="{{formPhoto}}" alt="{{L.altPreview}}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 14px; display: block"></sc-if>
+            <label class="attach">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z M12 10.5a3 3 0 1 0 0 6a3 3 0 1 0 0-6z"></path></svg>
+              <span>{{L.takePhoto}}</span>
+              <input class="hidefile" type="file" accept="image/*" onChange="{{onFormPhoto}}" aria-label="{{L.takePhoto}}">
+            </label>
+          </div>
+        </sc-if>
+      </sc-if>
+    </sc-if>
+    <sc-if value="{{hasErr}}" hint-placeholder-val="{{ false }}"><span class="err" role="alert">{{formErr}}</span></sc-if>
+  </sc-if>
+</div>
+<sc-if value="{{addForm}}" hint-placeholder-val="{{ false }}">
+  <div class="actionbar"><button class="primary" onClick="{{saveForm}}">{{saveLabel}}</button></div>
+</sc-if>
+</sc-if>
+
+<sc-if value="{{isCarForm}}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="bottom: 90px; padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 16px">
+  <div style="display: flex; align-items: center; gap: 12px">
+    <button class="iconbtn" onClick="{{cancelCar}}" aria-label="{{L.aBack}}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{backPath}}"></path></svg></button>
+    <h1 style="margin: 0; font-size: 21px; font-weight: 600">{{carFormTitle}}</h1>
+  </div>
+  <div class="fl"><span>{{L.carPhoto}}</span>
+    <sc-if value="{{carF.hasPhoto}}" hint-placeholder-val="{{ false }}"><img src="{{carF.photo}}" alt="{{L.carPhoto}}" style="width: 100%; height: 160px; object-fit: cover; border-radius: 16px; display: block"></sc-if>
+    <sc-if value="{{carF.noPhoto}}" hint-placeholder-val="{{ true }}"><div class="carph"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16.5V12l2.4-5h11.2L20 12v4.5z M4 12h16 M7 16.5v2 M17 16.5v2"></path></svg></div></sc-if>
+    <label class="attach">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z M12 10.5a3 3 0 1 0 0 6a3 3 0 1 0 0-6z"></path></svg>
+      <span>{{carF.photoBtn}}</span>
+      <input class="hidefile" type="file" accept="image/*" onChange="{{onCarPhoto}}" aria-label="{{carF.photoBtn}}">
+    </label>
+  </div>
+  <label class="fl"><span>{{L.carName}}</span><input class="in" type="text" value="{{carF.name}}" placeholder="{{L.carNamePh}}" onChange="{{setCarName}}"></label>
+  <label class="fl"><span>{{L.plate}}</span><input class="in" type="text" value="{{carF.plate}}" placeholder="{{L.platePh}}" onChange="{{setCarPlate}}"></label>
+  <label class="fl"><span>{{L.odoField}}</span><input class="in" type="text" inputmode="numeric" value="{{carF.odo}}" placeholder="0" onChange="{{setCarOdo}}"></label>
+  <sc-if value="{{carIsNew}}" hint-placeholder-val="{{ true }}"><span class="sb">{{L.newCarHint}}</span></sc-if>
+  <sc-if value="{{hasCarErr}}" hint-placeholder-val="{{ false }}"><span class="err" role="alert">{{carErr}}</span></sc-if>
+  <sc-if value="{{carIsEdit}}" hint-placeholder-val="{{ false }}"><button class="ghost" onClick="{{askDelCar}}" style="color: var(--r); border-color: var(--r)">{{L.delCar}}</button></sc-if>
+</div>
+<div class="actionbar"><button class="primary" onClick="{{saveCar}}">{{L.saveCar}}</button></div>
+</sc-if>
+
+<sc-if value="{{isBackup}}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="bottom: 0; padding: 16px 16px 32px; display: flex; flex-direction: column; gap: 14px">
+  <div style="display: flex; align-items: center; gap: 12px">
+    <button class="iconbtn" onClick="{{goHome}}" aria-label="{{L.aBack}}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{backPath}}"></path></svg></button>
+    <div style="display: flex; flex-direction: column">
+      <h1 style="margin: 0; font-size: 20px; font-weight: 600">{{L.bkTitle}}</h1>
+      <span class="sb">{{L.bkSub}}</span>
+    </div>
+  </div>
+
+  <div class="panel bkcard">
+    <div class="bkhead">
+      <span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.5-8A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9z M9.5 13.5l2 2 3.5-3.5"></path></svg></span>
+      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+        <span style="font-size: 15px; font-weight: 600">{{L.bk1Title}}</span>
+        <span class="sb">{{L.bk1Desc}}</span>
+      </div>
+      <span class="pill p-g">{{L.on}}</span>
+    </div>
+    <div class="row" style="padding: 8px 0 0"><span class="sb">{{L.bk1Last}}</span><span style="font-size: 13.5px">{{bk.autoLast}}</span></div>
+  </div>
+
+  <div class="panel bkcard">
+    <div class="bkhead">
+      <span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11V8a6 6 0 0 1 12 0v3 M5 11h14v10H5z M12 15v2"></path></svg></span>
+      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+        <span style="font-size: 15px; font-weight: 600">{{L.bk2Title}}</span>
+        <span class="sb">{{L.bk2Desc}}</span>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+      <div class="stat"><span class="cap">{{L.cars}}</span><span class="sv">{{bk.nCars}}</span></div>
+      <div class="stat"><span class="cap">{{L.itemsW}}</span><span class="sv">{{bk.nItems}}</span></div>
+      <div class="stat"><span class="cap">{{L.fills}}</span><span class="sv">{{bk.nFuel}}</span></div>
+    </div>
+    <span class="sec">{{L.exportB}}</span>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+      <button class="primary" onClick="{{saveBackup}}" style="height: 50px; font-size: 15px"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h6l2 2h10v11H3z M12 11v5 M9.5 13.5L12 16l2.5-2.5"></path></svg>{{L.saveIn}}</button>
+      <button class="ghost" onClick="{{exportBackup}}" style="height: 50px; border-radius: 999px"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11 M8 8l4-4 4 4 M5 13v6h14v-6"></path></svg>{{L.shareB}}</button>
+    </div>
+    <span class="sb">{{L.savePathHint}}</span>
+    <label class="ghost">
+      <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4 M8 11l4 4 4-4 M5 13v6h14v-6"></path></svg>
+      <span>{{L.importB}}</span>
+      <input class="hidefile" type="file" accept=".uhda,.amb,application/octet-stream,text/plain" onChange="{{onImportFile}}" aria-label="{{L.importB}}">
+    </label>
+    <span class="sb">{{bk.lastExport}}</span>
+  </div>
+
+  <div class="panel bkcard">
+    <div class="bkhead">
+      <span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h9l4 4v14H6z M14 3v5h5 M9 12h7 M9 15.5h7 M9 19h4"></path></svg></span>
+      <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+        <span style="font-size: 15px; font-weight: 600">{{L.bk3Title}}</span>
+        <span class="sb">{{L.bk3Desc}}</span>
+      </div>
+    </div>
+    <button class="ghost" onClick="{{openReport}}">{{L.openReport}}</button>
+  </div>
+
+  <div style="display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: 14px; background: var(--card2); border: 1px solid var(--line)">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--mute)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M12 4a8 8 0 1 0 0 16a8 8 0 1 0 0-16z M12 11v5 M12 8h.01"></path></svg>
+    <span class="sb">{{L.bkNote}}</span>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{isReport}}" hint-placeholder-val="{{ false }}">
+<div class="scroll" style="bottom: 90px; padding: 16px 16px 24px; display: flex; flex-direction: column; gap: 12px">
+  <div style="display: flex; align-items: center; gap: 12px">
+    <button class="iconbtn" onClick="{{backToBackup}}" aria-label="{{L.aBack}}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{backPath}}"></path></svg></button>
+    <div style="display: flex; flex-direction: column">
+      <h1 style="margin: 0; font-size: 20px; font-weight: 600">{{L.repTitle}}</h1>
+      <span class="sb">{{report.when}}</span>
+    </div>
+  </div>
+  <sc-for list="{{report.sections}}" as="sec" hint-placeholder-count="3">
+    <div class="panel" style="padding: 12px 14px">
+      <h2 style="margin: 0; font-size: 15px; font-weight: 600">{{sec.title}}</h2>
+      <sc-if value="{{sec.hasSub}}" hint-placeholder-val="{{ false }}"><span class="sb">{{sec.sub}}</span></sc-if>
+      <div class="rgrid h" style="margin-top: 6px"><span>{{L.colName}}</span><span>{{L.colStatus}}</span><span>{{L.colDue}}</span></div>
+      <sc-for list="{{sec.rows}}" as="r" hint-placeholder-count="3">
+        <div class="rgrid">
+          <span style="min-width: 0"><span style="font-weight: 500">{{r.name}}</span><sc-if value="{{r.hasSpecs}}" hint-placeholder-val="{{ false }}"><span class="rspec">{{r.specs}}</span></sc-if></span>
+          <span><span class="pill p-{{r.lv}}" style="white-space: normal">{{r.status}}</span></span>
+          <span style="min-width: 0">{{r.due}}</span>
+        </div>
+      </sc-for>
+    </div>
+  </sc-for>
+</div>
+<div class="actionbar"><div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px"><button class="primary" onClick="{{printReport}}" style="font-size: 15px"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h6l2 2h10v11H3z M12 11v5 M9.5 13.5L12 16l2.5-2.5"></path></svg>{{L.savePdf}}</button><button class="ghost" onClick="{{sharePdf}}" style="height: 54px; border-radius: 999px"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11 M8 8l4-4 4 4 M5 13v6h14v-6"></path></svg>{{L.sharePdf}}</button></div></div>
+</sc-if>
+
+<sc-if value="{{hasSheet}}" hint-placeholder-val="{{ false }}">
+<div class="sheetwrap">
+  <button class="scrim" onClick="{{closeSheet}}" aria-label="{{L.aClose}}"></button>
+  <div class="sheet">
+    <span class="grab"></span>
+    <sc-if value="{{sheetCars}}" hint-placeholder-val="{{ false }}">
+      <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{L.chooseCar}}</h2>
+      <div style="display: flex; flex-direction: column; gap: 8px">
+        <sc-for list="{{carList}}" as="cl" hint-placeholder-count="2">
+          <button class="catrow {{cl.on}}" onClick="{{cl.pick}}">
+            <span class="ic" style="width: 52px; height: 52px">
+              <sc-if value="{{cl.hasPhoto}}" hint-placeholder-val="{{ false }}"><img src="{{cl.photo}}" alt="" style="width: 100%; height: 100%; object-fit: cover; display: block"></sc-if>
+              <sc-if value="{{cl.noPhoto}}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16.5V12l2.4-5h11.2L20 12v4.5z M4 12h16 M7 16.5v2 M17 16.5v2"></path></svg></sc-if>
+            </span>
+            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15.5px; font-weight: 600">{{cl.name}}</span><span class="sb">{{cl.meta}}</span></span>
+            <sc-if value="{{cl.hasAttn}}" hint-placeholder-val="{{ false }}"><span class="pill p-{{cl.lv}}">{{cl.attnText}}</span></sc-if>
+            <sc-if value="{{cl.isOn}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--acc)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if>
+          </button>
+        </sc-for>
+      </div>
+      <button class="dashed" onClick="{{openCarNew}}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14 M5 12h14"></path></svg>{{L.addCarFull}}</button>
+    </sc-if>
+    <sc-if value="{{sheetImport}}" hint-placeholder-val="{{ false }}">
+      <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{L.impTitle}}</h2>
+      <span class="sb">{{impInfo}}</span>
+      <span class="sb" style="color: var(--o)">{{L.impWarn}}</span>
+      <button class="danger" onClick="{{confirmImport}}">{{L.impConfirm}}</button>
+      <button class="ghost" onClick="{{closeSheet}}">{{L.cancel}}</button>
+    </sc-if>
+    <sc-if value="{{sheetRenew}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{renewTitle}}</h2>
+        <span class="sb">{{renewHint}}</span>
+      </div>
+      <sc-if value="{{rfKm}}" hint-placeholder-val="{{ false }}"><label class="fl"><span>{{L.odoNow}}</span><input class="in" type="text" inputmode="numeric" value="{{rf.km}}" onChange="{{setRfKm}}"></label></sc-if>
+      <sc-if value="{{rfExp}}" hint-placeholder-val="{{ false }}"><label class="fl"><span>{{rfExpLabel}}</span><span class="datebox"><input class="in" type="date" value="{{rf.exp}}" onChange="{{setRfExp}}"><svg class="calic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4"></path></svg></span></label></sc-if>
+      <label class="fl"><span>{{L.cost}}</span><input class="in" type="text" inputmode="decimal" value="{{rf.cost}}" placeholder="0" onChange="{{setRfCost}}"></label>
+      <label class="fl"><span>{{L.noteOpt}}</span><input class="in" type="text" value="{{rf.note}}" placeholder="{{L.notePh}}" onChange="{{setRfNote}}"></label>
+      <button class="primary" onClick="{{confirmRenew}}">{{L.saveLog}}</button>
+    </sc-if>
+    <sc-if value="{{sheetFuel}}" hint-placeholder-val="{{ false }}">
+      <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{L.addFuel}}</h2>
+      <sc-if value="{{multiCars}}" hint-placeholder-val="{{ true }}">
+        <div class="fl"><span>{{L.car}}</span><div class="wrapchips"><sc-for list="{{fuelCarOpts}}" as="o" hint-placeholder-count="2"><button class="chip {{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div></div>
+      </sc-if>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+        <label class="fl"><span>{{L.liters}}</span><input class="in" type="text" inputmode="decimal" value="{{fuelF.liters}}" placeholder="45" onChange="{{setFuelL}}"></label>
+        <label class="fl"><span>{{L.fuelCost}}</span><input class="in" type="text" inputmode="decimal" value="{{fuelF.cost}}" placeholder="10.750" onChange="{{setFuelC}}"></label>
+      </div>
+      <label class="fl"><span>{{L.odoAtFill}}</span><input class="in" type="text" inputmode="numeric" value="{{fuelF.km}}" onChange="{{setFuelK}}"></label>
+      <label class="fl"><span>{{L.date}}</span><span class="datebox"><input class="in" type="date" value="{{fuelF.date}}" onChange="{{setFuelD}}"><svg class="calic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4"></path></svg></span></label>
+      <div class="fl"><span>{{L.tank}}</span><div class="segs"><sc-for list="{{tankOpts}}" as="o" hint-placeholder-count="2"><button class="seg {{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div></div>
+      <span class="sb">{{fuelHint}}</span>
+      <button class="primary" onClick="{{saveFuel}}">{{L.saveFuel}}</button>
+    </sc-if>
+    <sc-if value="{{sheetRem}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{L.newRem}}</h2>
+        <span class="sb">{{remHint}}</span>
+      </div>
+      <sc-if value="{{hasTpl}}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-direction: column; gap: 8px"><span class="sec">{{L.tplTitle}}</span>
+          <div class="wrapchips"><sc-for list="{{remTpls}}" as="p" hint-placeholder-count="3"><button class="chip {{p.on}}" onClick="{{p.pick}}">{{p.label}}</button></sc-for></div>
+        </div>
+      </sc-if>
+      <label class="fl"><span>{{L.remName}}</span><input class="in" type="text" value="{{remF.name}}" placeholder="{{L.remNamePh}}" onChange="{{setRemName}}"></label>
+      <div class="fl"><span>{{L.type}}</span>
+        <div class="segs"><sc-for list="{{remKinds}}" as="k" hint-placeholder-count="3"><button class="seg {{k.on}}" onClick="{{k.pick}}">{{k.label}}</button></sc-for></div>
+      </div>
+      <sc-if value="{{kindEvery}}" hint-placeholder-val="{{ true }}">
+        <div class="fl"><span>{{L.repeatEvery}}</span><div class="durrow"><input class="in" type="text" inputmode="numeric" value="{{remF.n}}" onChange="{{setRemN}}" aria-label="{{L.repeatEvery}}" style="width: 84px; flex: none; text-align: center"><div class="segs" style="flex: 1; min-width: 0"><sc-for list="{{remUnits}}" as="un" hint-placeholder-count="4"><button class="seg {{un.on}}" onClick="{{un.pick}}">{{un.label}}</button></sc-for></div></div></div>
+      </sc-if>
+      <sc-if value="{{kindKm}}" hint-placeholder-val="{{ false }}"><label class="fl"><span>{{L.everyKm}}</span><input class="in" type="text" inputmode="numeric" value="{{remF.km}}" onChange="{{setRemKm}}"></label></sc-if>
+      <sc-if value="{{kindOnce}}" hint-placeholder-val="{{ false }}"><label class="fl"><span>{{L.date}}</span><span class="datebox"><input class="in" type="date" value="{{remF.date}}" onChange="{{setRemDate}}"><svg class="calic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4"></path></svg></span></label></sc-if>
+      <div class="fl"><span>{{L.alertBefore}}</span>
+        <div class="wrapchips"><sc-for list="{{remBefore}}" as="b" hint-placeholder-count="6"><button class="chip {{b.on}}" onClick="{{b.pick}}">{{b.label}}</button></sc-for></div>
+      </div>
+      <sc-if value="{{remErr}}" hint-placeholder-val="{{ false }}"><span class="err" role="alert">{{L.remNameErr}}</span></sc-if>
+      <button class="primary" onClick="{{saveRem}}">{{L.addRemBtn}}</button>
+    </sc-if>
+    <sc-if value="{{sheetSpec}}" hint-placeholder-val="{{ false }}">
+      <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{L.newSpec}}</h2>
+      <label class="fl"><span>{{L.specK}}</span><input class="in" type="text" value="{{specF.k}}" placeholder="{{L.specKPh}}" onChange="{{setSpecK}}"></label>
+      <label class="fl"><span>{{L.specV}}</span><input class="in" type="text" value="{{specF.v}}" placeholder="235/45R18" onChange="{{setSpecV}}"></label>
+      <button class="primary" onClick="{{saveSpec}}">{{L.saveSpec}}</button>
+    </sc-if>
+    <sc-if value="{{sheetDel}}" hint-placeholder-val="{{ false }}">
+      <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{delTitle}}</h2>
+      <span class="sb">{{L.delMsg}}</span>
+      <button class="danger" onClick="{{confirmDel}}">{{L.delBtn}}</button>
+      <button class="ghost" onClick="{{closeSheet}}">{{L.cancel}}</button>
+    </sc-if>
+    <sc-if value="{{sheetDelCar}}" hint-placeholder-val="{{ false }}">
+      <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{delCarTitle}}</h2>
+      <span class="sb">{{L.delCarMsg}}</span>
+      <button class="danger" onClick="{{confirmDelCar}}">{{L.delBtn}}</button>
+      <button class="ghost" onClick="{{closeSheet}}">{{L.cancel}}</button>
+    </sc-if>
+    <sc-if value="{{sheetOdo}}" hint-placeholder-val="{{ false }}">
+      <div style="display: flex; flex-direction: column; gap: 4px">
+        <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{L.odoSheet}} — {{car.name}}</h2>
+        <span class="sb">{{L.lastRead}} {{car.odoText}} {{L.km}} · {{car.odoAgo}}</span>
+      </div>
+      <input class="in big" type="text" inputmode="numeric" value="{{odoIn}}" onChange="{{onOdo}}" aria-label="{{L.aOdoIn}}">
+      <sc-if value="{{hasOdoPreview}}" hint-placeholder-val="{{ true }}">
+        <span class="sec">{{L.livePrev}}</span>
+        <div class="panel" style="padding: 2px 14px; background: var(--card2); box-shadow: none">
+          <sc-for list="{{odoPreview}}" as="op" hint-placeholder-count="3">
+            <div class="row"><span style="font-size: 14px">{{op.name}}</span><span style="display: flex; gap: 8px; align-items: center"><span class="sb tx-{{op.lv}}">{{op.text}}</span><span class="pill p-{{op.lv}}">{{op.lvText}}</span></span></div>
+          </sc-for>
+        </div>
+      </sc-if>
+      <button class="primary" onClick="{{saveOdo}}">{{L.saveRead}}</button>
+    </sc-if>
+    <sc-if value="{{sheetSettings}}" hint-placeholder-val="{{ false }}">
+      <h2 style="margin: 0; font-size: 19px; font-weight: 600">{{L.settings}}</h2>
+      <div class="fl"><span>{{L.language}}</span>
+        <div class="segs"><sc-for list="{{langOpts}}" as="o" hint-placeholder-count="2"><button class="seg {{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+      </div>
+      <div class="fl"><span>{{L.look}}</span>
+        <div class="segs"><sc-for list="{{themeOpts}}" as="o" hint-placeholder-count="2"><button class="seg {{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+      </div>
+      <label class="fl"><span>{{L.notifTime}}</span><span class="datebox"><input class="in" type="time" value="{{notifTime}}" onChange="{{onNotif}}"><svg class="calic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4a8 8 0 1 0 0 16a8 8 0 1 0 0-16z M12 8v4l3 2"></path></svg></span></label>
+      <div class="fl"><span>{{L.odoRemind}}</span>
+        <div class="segs"><sc-for list="{{odoEveryOpts}}" as="o" hint-placeholder-count="3"><button class="seg {{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+      </div>
+      <button class="catrow" onClick="{{openBackup}}">
+        <span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.5-8A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9z M12 16v-5 M9.5 13.5L12 11l2.5 2.5"></path></svg></span>
+        <span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 600">{{L.bkTitle}}</span><span class="sb">{{L.bkRowDesc}}</span></span>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--mute)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{fwdPath}}"></path></svg>
+      </button>
+      <h2 class="sec" style="margin-top: 4px">{{L.about}}</h2>
+      <button class="about" onClick="{{showSplash}}" aria-label="{{L.aLogo}}">
+        <svg class="alogo" viewBox="0 0 200 200" aria-hidden="true"><rect width="200" height="200" rx="46" fill="{{lg.sq}}"></rect><rect x="50" y="40" width="100" height="120" rx="15" fill="{{lg.card}}"></rect><rect x="66" y="62" width="72" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect><rect x="78" y="81" width="60" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect><rect x="88" y="100" width="50" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect><rect x="98" y="119" width="40" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect><circle cx="56" cy="152" r="27" fill="#3DDC97" stroke="{{lg.sq}}" stroke-width="7"></circle><path d="M44 152 L52.5 160.5 L68 144" fill="none" stroke="{{lg.chk}}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; align-items: flex-start"><span class="anm">عُهدة</span><span class="alat" dir="ltr">UHDA</span></span>
+        <span class="ver">{{L.verLong}}</span>
+      </button>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{zoomOn}}" hint-placeholder-val="{{ false }}">
+<div class="zoom">
+  <div style="display: flex; justify-content: space-between; padding: 16px">
+    <button class="zoombtn" onClick="{{closeZoom}}" aria-label="{{L.aClose}}"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12 M18 6L6 18"></path></svg></button>
+    <div style="display: flex; gap: 8px">
+      <button class="zoombtn" onClick="{{sharePhoto}}" aria-label="{{L.sharePhoto}}"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11 M8 8l4-4 4 4 M5 13v6h14v-6"></path></svg></button>
+      <button class="zoombtn" onClick="{{savePhoto}}" aria-label="{{L.saveGallery}}"><svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11 M8 11l4 4 4-4 M5 19h14"></path></svg></button>
+    </div>
+  </div>
+  <div style="flex: 1; overflow: auto; display: flex; align-items: center; justify-content: center; padding: 12px"><img src="{{cur.photo}}" alt="{{L.altPhoto}}" style="max-width: 100%; max-height: 100%; object-fit: contain"></div>
+</div>
+</sc-if>
+
+<sc-if value="{{obOn}}" hint-placeholder-val="{{ false }}">
+<div class="ob" role="dialog" aria-modal="true" aria-label="{{O.aria}}">
+  <sc-if value="{{obWelcome}}" hint-placeholder-val="{{ true }}">
+    <div class="ob-body" style="padding-top: 24px">
+      <div class="ob-hero">
+        <svg width="88" height="88" viewBox="0 0 200 200" aria-hidden="true"><rect width="200" height="200" rx="46" fill="{{lg.sq}}"></rect><rect x="50" y="40" width="100" height="120" rx="15" fill="{{lg.card}}"></rect><rect x="66" y="62" width="72" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect><rect x="78" y="81" width="60" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect><rect x="88" y="100" width="50" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect><rect x="98" y="119" width="40" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect><circle cx="56" cy="152" r="27" fill="#3DDC97" stroke="{{lg.sq}}" stroke-width="7"></circle><path d="M44 152 L52.5 160.5 L68 144" fill="none" stroke="{{lg.chk}}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        <h1 class="ob-h">{{O.hi}}</h1>
+        <p class="ob-p">{{O.hiSub}}</p>
+      </div>
+      <div class="ob-feat"><span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 16.5V12l2.4-5h11.2L20 12v4.5z M4 12h16 M7 16.5v2 M17 16.5v2"></path></svg></span><span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14.5px; font-weight: 600">{{O.f1}}</span><span class="sb">{{O.f1s}}</span></span></div>
+      <div class="ob-feat"><span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6.5h18v11H3z M7 10.5h5 M7 14h7 M16 10.5h1.5"></path></svg></span><span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14.5px; font-weight: 600">{{O.f2}}</span><span class="sb">{{O.f2s}}</span></span></div>
+      <div class="ob-feat"><span class="ic"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15z M10 20.5h4"></path></svg></span><span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14.5px; font-weight: 600">{{O.f3}}</span><span class="sb">{{O.f3s}}</span></span></div>
+      <div class="fl"><span>{{L.language}}</span>
+        <div class="segs"><sc-for list="{{langOpts}}" as="o" hint-placeholder-count="2"><button class="seg {{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+      </div>
+      <div class="fl"><span>{{L.look}}</span>
+        <div class="segs"><sc-for list="{{themeOpts}}" as="o" hint-placeholder-count="2"><button class="seg {{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+      </div>
+    </div>
+    <div class="ob-foot">
+      <button class="primary" onClick="{{obStart}}">{{O.start}}</button>
+      <label class="ghost"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4 4 0 0 1-.5-8A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9z M12 11v5 M9.5 13.5L12 16l2.5-2.5"></path></svg><span>{{O.restore}}</span><input class="hidefile" type="file" accept=".uhda,.amb,application/octet-stream,text/plain" onChange="{{obImport}}" aria-label="{{O.restore}}"></label>
+      <button class="link" style="align-self: center" onClick="{{obSkip}}">{{O.skip}}</button>
+    </div>
+  </sc-if>
+  <sc-if value="{{obStep}}" hint-placeholder-val="{{ false }}">
+    <div class="ob-top">
+      <button class="iconbtn" onClick="{{obBack}}" aria-label="{{O.back}}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{backPath}}"></path></svg></button>
+      <div class="ob-prog" aria-hidden="true"><sc-for list="{{obProg}}" as="pg" hint-placeholder-count="3"><span class="{{pg.on}}"></span></sc-for></div>
+      <span class="ob-step">{{obStepText}}</span>
+    </div>
+    <div class="ob-body">
+      <h1 class="ob-h">{{obTitle}}</h1>
+      <p class="ob-p">{{obSub}}</p>
+      <sc-if value="{{obCarStep}}" hint-placeholder-val="{{ true }}">
+        <label class="fl"><span>{{O.carName}}</span><input class="in" type="text" value="{{obCar.name}}" onChange="{{obCarName}}" placeholder="{{O.carNamePh}}"></label>
+        <label class="fl"><span>{{O.plate}}</span><input class="in" type="text" value="{{obCar.plate}}" onChange="{{obCarPlate}}" placeholder="{{O.platePh}}"></label>
+        <label class="fl"><span>{{O.odo}}</span><input class="in" type="text" inputmode="numeric" value="{{obCar.odo}}" onChange="{{obCarOdo}}" placeholder="{{O.odoPh}}"></label>
+      </sc-if>
+      <sc-if value="{{obDocsStep}}" hint-placeholder-val="{{ false }}">
+        <sc-for list="{{obGroups}}" as="gr" hint-placeholder-count="2">
+          <h2 class="sec" style="margin-top: 4px">{{gr.title}}</h2>
+          <sc-for list="{{gr.rows}}" as="dr" hint-placeholder-count="3">
+            <div class="ob-doc {{dr.on}}">
+              <button class="ob-tog" onClick="{{dr.pick}}" aria-pressed="{{dr.pressed}}"><span class="ob-box"><sc-if value="{{dr.isOn}}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></span><span style="flex: 1">{{dr.label}}</span></button>
+              <sc-if value="{{dr.isOn}}" hint-placeholder-val="{{ false }}"><label class="fl"><span>{{O.expiry}}</span><span class="datebox"><input class="in" type="date" value="{{dr.exp}}" onChange="{{dr.onExp}}"><svg class="calic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4"></path></svg></span></label></sc-if>
+            </div>
+          </sc-for>
+        </sc-for>
+      </sc-if>
+      <sc-if value="{{obRemStep}}" hint-placeholder-val="{{ false }}">
+        <label class="fl"><span>{{L.notifTime}}</span><span class="datebox"><input class="in" type="time" value="{{notifTime}}" onChange="{{onNotif}}"><svg class="calic" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4a8 8 0 1 0 0 16a8 8 0 1 0 0-16z M12 8v4l3 2"></path></svg></span></label>
+        <sc-if value="{{obHasCar}}" hint-placeholder-val="{{ true }}">
+          <div class="fl"><span>{{L.odoRemind}}</span>
+            <div class="segs"><sc-for list="{{odoEveryOpts}}" as="o" hint-placeholder-count="3"><button class="seg {{o.on}}" onClick="{{o.pick}}">{{o.label}}</button></sc-for></div>
+          </div>
+        </sc-if>
+        <div class="ob-note"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M12 4a8 8 0 1 0 0 16a8 8 0 1 0 0-16z M12 11v5 M12 8h.01"></path></svg><span>{{O.remNote}}</span></div>
+        <div class="ob-note"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 2px"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg><span>{{obSummary}}</span></div>
+      </sc-if>
+      <sc-if value="{{obHasErr}}" hint-placeholder-val="{{ false }}"><span class="err" role="alert">{{obErr}}</span></sc-if>
+    </div>
+    <div class="ob-foot">
+      <button class="primary" onClick="{{obNext}}">{{obNextText}}</button>
+      <sc-if value="{{obCarStep}}" hint-placeholder-val="{{ true }}"><button class="link" style="align-self: center" onClick="{{obNoCar}}">{{O.noCar}}</button></sc-if>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{ false }}"><div class="toast" role="status"><span style="flex: 1">{{toast}}</span><sc-if value="{{hasUndo}}" hint-placeholder-val="{{ false }}"><button class="undo" onClick="{{doUndo}}">{{L.undo}}</button></sc-if></div></sc-if>
+<sc-if value="{{splashOn}}" hint-placeholder-val="{{ false }}">
+<div class="splash {{splashCls}}" role="img" aria-label="{{L.aLogo}}">
+  <div class="sp-stage">
+    <svg class="sp-k" width="160" height="160" viewBox="0 0 200 200" overflow="visible" aria-hidden="true">
+      <g class="sp-sq"><rect width="200" height="200" rx="46" fill="{{lg.sq}}"></rect></g>
+      <rect class="sp-sqo" x="1.5" y="1.5" width="197" height="197" rx="45" fill="none" stroke="{{lg.art}}" stroke-width="3"></rect>
+      <g class="sp-card"><rect x="50" y="40" width="100" height="120" rx="15" fill="{{lg.card}}"></rect></g>
+      <rect class="sp-cardo" x="50" y="40" width="100" height="120" rx="15" fill="none" stroke="{{lg.art}}" stroke-width="3"></rect>
+      <g class="sp-ln sp-l1"><rect x="66" y="62" width="72" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect></g>
+      <g class="sp-ln sp-l2"><rect x="78" y="81" width="60" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect></g>
+      <g class="sp-ln sp-l3"><rect x="88" y="100" width="50" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect></g>
+      <g class="sp-ln sp-l4"><rect x="98" y="119" width="40" height="9" rx="4.5" fill="{{lg.ln}}" fill-opacity="{{lg.lnOp}}"></rect></g>
+      <circle class="sp-bado" cx="56" cy="152" r="27" fill="none" stroke="#3DDC97" stroke-width="3"></circle>
+      <g class="sp-badge"><circle cx="56" cy="152" r="27" fill="#3DDC97" stroke="{{lg.sq}}" stroke-width="7"></circle><path class="sp-chk" d="M44 152 L52.5 160.5 L68 144" fill="none" stroke="{{lg.chk}}" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path></g>
+    </svg>
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 2px">
+      <div class="sp-nm sp-name">عُهدة</div>
+      <div class="uh sp-latin" dir="ltr">UHDA</div>
+    </div>
+  </div>
+  <span class="sv sp-foot">{{L.verLong}}</span>
+  <span class="sfoot sp-foot">{{L.tagline}}</span>
+</div>
+<div hidden style="display: none">
+  <sc-if value="{{isLight}}" hint-placeholder-val="{{ false }}"><svg width="120" height="120" viewBox="0 0 200 200" aria-hidden="true"><rect width="200" height="200" rx="46" fill="#3B2A8C"></rect><rect x="50" y="40" width="100" height="120" rx="15" fill="#FFFFFF"></rect>
+<path transform="translate(128 63) scale(0.03024 -0.03024) translate(-330.0 -7.0)" d="M362 -456Q287 -456 222.5 -440.0Q158 -424 110.5 -392.5Q63 -361 36.0 -314.5Q9 -268 9 -206Q9 -125 44.5 -59.0Q80 7 147.5 56.5Q215 106 310.5 136.5Q406 167 526 177L493 25Q423 12 370.0 -3.0Q317 -18 279.0 -36.0Q241 -54 217.0 -76.0Q193 -98 181.5 -124.0Q170 -150 170 -180Q170 -220 198.0 -246.5Q226 -273 283.0 -286.0Q340 -299 425 -299Q472 -299 522.0 -293.5Q572 -288 615 -277L651 -402Q591 -426 538.5 -437.5Q486 -449 442.0 -452.5Q398 -456 362 -456ZM252 38Q210 56 168.5 85.5Q127 115 99.5 157.0Q72 199 72 253Q72 322 103.5 370.5Q135 419 192.0 444.5Q249 470 327 470Q374 470 418.5 459.5Q463 449 499 430L435 291Q407 303 380.5 308.5Q354 314 327 314Q272 314 249.5 292.0Q227 270 227 243Q227 225 238.5 208.5Q250 192 269.5 179.0Q289 166 313.5 156.0Q338 146 363 141Z" fill="#3B2A8C"></path>
+<rect x="66" y="92" width="72" height="9" rx="4.5" fill="#3B2A8C" opacity=".22"></rect>
+<rect x="88" y="111" width="50" height="9" rx="4.5" fill="#3B2A8C" opacity=".22"></rect>
+<rect x="98" y="130" width="40" height="9" rx="4.5" fill="#3B2A8C" opacity=".22"></rect>
+<circle cx="56" cy="152" r="27" fill="#3DDC97" stroke="#3B2A8C" stroke-width="7"></circle>
+<path d="M44 152 L52.5 160.5 L68 144" fill="none" stroke="#16124A" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{isDark}}" hint-placeholder-val="{{ true }}"><svg width="120" height="120" viewBox="0 0 200 200" aria-hidden="true"><rect width="200" height="200" rx="46" fill="#14112B"></rect><rect x="50" y="40" width="100" height="120" rx="15" fill="#7C6CF2"></rect>
+<path transform="translate(128 63) scale(0.03024 -0.03024) translate(-330.0 -7.0)" d="M362 -456Q287 -456 222.5 -440.0Q158 -424 110.5 -392.5Q63 -361 36.0 -314.5Q9 -268 9 -206Q9 -125 44.5 -59.0Q80 7 147.5 56.5Q215 106 310.5 136.5Q406 167 526 177L493 25Q423 12 370.0 -3.0Q317 -18 279.0 -36.0Q241 -54 217.0 -76.0Q193 -98 181.5 -124.0Q170 -150 170 -180Q170 -220 198.0 -246.5Q226 -273 283.0 -286.0Q340 -299 425 -299Q472 -299 522.0 -293.5Q572 -288 615 -277L651 -402Q591 -426 538.5 -437.5Q486 -449 442.0 -452.5Q398 -456 362 -456ZM252 38Q210 56 168.5 85.5Q127 115 99.5 157.0Q72 199 72 253Q72 322 103.5 370.5Q135 419 192.0 444.5Q249 470 327 470Q374 470 418.5 459.5Q463 449 499 430L435 291Q407 303 380.5 308.5Q354 314 327 314Q272 314 249.5 292.0Q227 270 227 243Q227 225 238.5 208.5Q250 192 269.5 179.0Q289 166 313.5 156.0Q338 146 363 141Z" fill="#FFFFFF"></path>
+<rect x="66" y="92" width="72" height="9" rx="4.5" fill="#FFFFFF" opacity=".38"></rect>
+<rect x="88" y="111" width="50" height="9" rx="4.5" fill="#FFFFFF" opacity=".38"></rect>
+<rect x="98" y="130" width="40" height="9" rx="4.5" fill="#FFFFFF" opacity=".38"></rect>
+<circle cx="56" cy="152" r="27" fill="#3DDC97" stroke="#14112B" stroke-width="7"></circle>
+<path d="M44 152 L52.5 160.5 L68 144" fill="none" stroke="#14112B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if>
+  <svg width="196" height="64" viewBox="4 -82 262 86" aria-hidden="true" style="margin-top: 6px"><path d="M20.16 -59.232000000000006Q17.183999999999997 -59.232000000000006 15.456 -61.104000000000006Q13.728 -62.976000000000006 13.728 -66.144Q13.728 -69.408 15.456 -71.232Q17.183999999999997 -73.05600000000001 20.16 -73.05600000000001Q23.136 -73.05600000000001 24.816 -71.232Q26.496 -69.408 26.496 -66.144Q26.496 -62.88 24.768 -61.056000000000004Q23.04 -59.232000000000006 20.16 -59.232000000000006ZM36.480000000000004 -59.232000000000006Q33.504 -59.232000000000006 31.775999999999996 -61.104000000000006Q30.048 -62.976000000000006 30.048 -66.144Q30.048 -69.408 31.775999999999996 -71.232Q33.504 -73.05600000000001 36.480000000000004 -73.05600000000001Q39.456 -73.05600000000001 41.136 -71.232Q42.816 -69.408 42.816 -66.144Q42.816 -62.976000000000006 41.088 -61.104000000000006Q39.36 -59.232000000000006 36.480000000000004 -59.232000000000006Z M30.144000000000002 0.96Q18.432000000000002 0.96 12.336000000000002 -4.6080000000000005Q6.24 -10.176 6.24 -21.12Q6.24 -24.864 7.008 -28.32Q7.776 -31.776 9.312 -34.944Q12.384 -41.28 17.856 -44.88Q23.328 -48.480000000000004 30.432000000000002 -48.480000000000004Q33.696 -48.480000000000004 36.672 -47.616Q39.648 -46.752 42.336 -45.024Q45.888 -42.72 48.576 -38.976Q51.264 -35.232 52.8 -30.672Q54.336 -26.112000000000002 54.336 -21.12Q54.336 -9.792 48.239999999999995 -4.416Q42.144 0.96 30.144000000000002 0.96ZM30.048000000000002 -10.752Q35.136 -10.752 37.536 -13.440000000000001Q39.936 -16.128 39.936 -21.6Q39.936 -25.824 38.592 -29.28Q37.248 -32.736000000000004 34.992000000000004 -34.848Q32.736000000000004 -36.96 29.952 -36.96Q27.264 -36.96 25.008 -34.896Q22.752 -32.832 21.408 -29.376Q20.064 -25.92 20.064 -21.6Q20.064 -16.032 22.512 -13.392Q24.96 -10.752 30.048000000000002 -10.752Z M64.896 -11.52H96.96000000000001Q96.0 -15.936 94.8 -19.536Q93.6 -23.136 92.16 -25.824Q89.28 -31.296 84.912 -35.28Q80.544 -39.264 74.208 -41.856L79.584 -55.296Q88.032 -51.936 94.27199999999999 -46.128Q100.512 -40.32 104.736 -31.776Q108.96000000000001 -23.232 111.36 -11.52H123.936Q124.416 -11.52 124.416 -11.136000000000001V-0.48Q124.416 0.0 123.936 0.0H64.896Z M134.784 -11.52Q132.864 -13.344 131.52 -16.608Q130.17600000000002 -19.872 130.17600000000002 -24.288Q130.17600000000002 -30.72 133.15200000000002 -35.616Q136.12800000000001 -40.512 141.12 -43.296Q146.112 -46.08 152.16 -46.08Q158.784 -46.08 163.632 -43.391999999999996Q168.48000000000002 -40.704 171.168 -36.0Q173.856 -31.296 173.856 -25.152V-11.52H187.2V-29.28Q187.2 -41.472 181.2 -48.0Q175.2 -54.528 163.68 -54.528Q156.48000000000002 -54.528 151.008 -53.664Q145.536 -52.800000000000004 140.352 -50.88L137.088 -61.824Q141.50400000000002 -63.36 145.776 -64.27199999999999Q150.048 -65.184 154.464 -65.616Q158.88 -66.048 163.68 -66.048Q182.592 -66.048 192.048 -56.928Q201.50400000000002 -47.808 201.50400000000002 -30.528000000000002V-11.52H213.50400000000002Q213.984 -11.52 213.984 -11.136000000000001V-0.48Q213.984 0.0 213.50400000000002 0.0H122.976Q122.49600000000001 0.0 122.49600000000001 -0.48V-11.136000000000001Q122.49600000000001 -11.52 122.976 -11.52ZM156.48000000000002 -11.52H159.55200000000002V-24.576Q159.55200000000002 -29.568 157.776 -31.823999999999998Q156.0 -34.08 152.256 -34.08Q148.99200000000002 -34.08 146.928 -31.344Q144.864 -28.608 144.864 -24.384Q144.864 -20.16 146.16000000000003 -17.28Q147.45600000000002 -14.4 150.048 -12.96Q152.64000000000001 -11.52 156.48000000000002 -11.52Z M235.392 -55.104Q232.704 -55.104 230.11200000000002 -55.968Q227.52 -56.83200000000001 225.12 -58.56L228.38400000000001 -63.26400000000001Q230.4 -62.016000000000005 232.128 -61.34400000000001Q233.856 -60.67200000000001 235.20000000000002 -60.67200000000001Q236.352 -60.67200000000001 237.36 -60.81600000000001Q238.368 -60.96000000000001 239.136 -61.152Q236.448 -65.08800000000001 236.448 -68.92800000000001Q236.448 -72.67200000000001 238.94400000000002 -74.92800000000001Q241.44 -77.18400000000001 245.376 -77.18400000000001Q249.216 -77.18400000000001 251.568 -74.976Q253.92000000000002 -72.768 253.92000000000002 -69.31200000000001Q253.92000000000002 -67.584 253.296 -65.856Q252.672 -64.128 251.328 -62.49600000000001Q248.736 -59.040000000000006 244.512 -57.072Q240.288 -55.104 235.392 -55.104ZM244.224 -63.072Q246.24 -64.224 247.152 -65.856Q248.064 -67.488 248.064 -68.92800000000001Q248.064 -70.176 247.248 -70.944Q246.43200000000002 -71.712 245.184 -71.712Q243.936 -71.712 243.024 -70.89600000000002Q242.112 -70.08000000000001 242.112 -68.44800000000001Q242.112 -67.296 242.64 -65.952Q243.168 -64.608 244.224 -63.072Z M212.544 0.0Q212.064 0.0 212.064 -0.48V-11.136000000000001Q212.064 -11.52 212.544 -11.52H227.328Q224.928 -12.672 223.2 -14.736Q221.472 -16.8 220.512 -19.536Q219.552 -22.272000000000002 219.552 -25.344Q219.552 -32.544000000000004 222.768 -37.728Q225.984 -42.912 231.936 -45.696Q237.888 -48.480000000000004 246.048 -48.480000000000004Q250.272 -48.480000000000004 254.88 -47.52Q259.488 -46.56 262.176 -45.312L258.144 -34.08Q254.496 -35.712 251.56799999999998 -36.336Q248.64 -36.96 245.664 -36.96Q241.728 -36.96 238.94400000000002 -35.519999999999996Q236.16 -34.08 234.72 -31.392Q233.28 -28.704 233.28 -24.768Q233.28 -20.928 234.768 -17.904Q236.256 -14.88 239.04000000000002 -13.2Q241.824 -11.52 245.568 -11.52H263.136V0.0Z" fill="currentColor"></path></svg>
+  <svg class="uh" width="92" height="17" viewBox="0 -22 130 23" aria-hidden="true"><path d="M11.37 0.18Q8.82 0.18 6.825 -0.885Q4.83 -1.95 3.69 -3.825Q2.55 -5.7 2.55 -8.07V-21.029999999999998H7.05V-8.34Q7.05 -7.08 7.635 -6.074999999999999Q8.219999999999999 -5.069999999999999 9.209999999999999 -4.47Q10.2 -3.8699999999999997 11.37 -3.8699999999999997Q12.6 -3.8699999999999997 13.605 -4.47Q14.61 -5.069999999999999 15.195 -6.074999999999999Q15.78 -7.08 15.78 -8.34V-21.029999999999998H20.13V-8.07Q20.13 -5.7 19.005 -3.825Q17.88 -1.95 15.899999999999999 -0.885Q13.92 0.18 11.37 0.18Z M45.67 0.0V-21.0H50.17V0.0ZM32.41 0.0V-21.0H36.91V0.0ZM34.24 -8.4V-12.54H47.95V-8.4Z M62.629999999999995 0.0V-21.0H71.27Q73.55 -21.0 75.44 -20.235Q77.33 -19.47 78.68 -18.075Q80.03 -16.68 80.75 -14.745Q81.47 -12.809999999999999 81.47 -10.5Q81.47 -8.16 80.75 -6.24Q80.03 -4.32 78.68 -2.9250000000000003Q77.33 -1.53 75.455 -0.765Q73.58 0.0 71.27 0.0ZM67.13 -3.3 66.65 -4.05H71.12Q72.47 -4.05 73.535 -4.5Q74.6 -4.95 75.365 -5.805Q76.13 -6.66 76.52 -7.845Q76.91 -9.03 76.91 -10.5Q76.91 -11.969999999999999 76.52 -13.155Q76.13 -14.34 75.365 -15.195Q74.6 -16.05 73.535 -16.5Q72.47 -16.95 71.12 -16.95H66.56L67.13 -17.64Z M89.46000000000001 0.0 97.71000000000001 -21.0H101.73000000000002L109.92000000000002 0.0H105.33000000000001L101.07000000000001 -11.309999999999999Q100.89000000000001 -11.82 100.63500000000002 -12.57Q100.38000000000001 -13.32 100.11000000000001 -14.16Q99.84000000000002 -15.0 99.61500000000001 -15.765Q99.39000000000001 -16.53 99.24000000000001 -17.009999999999998L100.05000000000001 -17.04Q99.87000000000002 -16.38 99.64500000000001 -15.645Q99.42000000000002 -14.91 99.16500000000002 -14.129999999999999Q98.91000000000001 -13.35 98.655 -12.629999999999999Q98.4 -11.91 98.16000000000001 -11.25L93.93 0.0ZM93.30000000000001 -4.41 94.80000000000001 -8.07H104.37L105.9 -4.41Z" fill="currentColor"></path></svg>
+  <span class="sv">{{L.verLong}}</span>
+  <span class="sfoot">{{L.tagline}}</span>
+</div>
+</sc-if>
+</div>
+</template>
+<script src="lib/preact.min.js"></script>
+<script src="dc-runtime.js"></script>
+<script src="app.js"></script>
+<script>
+DCStart(Component);
+if ('serviceWorker' in navigator && location.protocol === 'https:' && !(window.Capacitor && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform())) {
+  window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+}
+</script>
+</body>
+</html>
