@@ -1,0 +1,7 @@
+run=11
+sha=ebcdb52e8bcfaba063fcd25ba49358dce03510dd
+web=success
+android=success
+ios=abandoned
+file=dl/android/out/Uhda.apk
+file=dl/web/out/Uhda-web-offline.zip
