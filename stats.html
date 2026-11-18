@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#EFF2F5">
-<title>عُهدة · الإحصائيات v1</title>
+<title>عُهدة · الإحصائيات v1.1</title>
 <link rel="icon" type="image/png" sizes="32x32" href="icons/icon-32.png">
 <link rel="stylesheet" href="fonts/almarai.css">
 <style>
@@ -54,7 +54,7 @@ button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px 16p
   <header>
     <img src="icons/icon-180.png" alt="">
     <div><h1>إحصائيات عُهدة</h1><div class="sub" id="upd">عدد الأجهزة والتثبيتات — بدون أي بيانات شخصية</div></div>
-    <span class="ver">v1</span>
+    <span class="ver">v1.1</span>
   </header>
 
   <div id="login" class="card" hidden>
@@ -102,10 +102,12 @@ button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px 16p
   var $ = function (id) { return document.getElementById(id); };
   var fmt = function (n) { return Number(n || 0).toLocaleString('en-US'); };
 
+  // الرمز أرقام وحروف a-f فقط — نحذف أي مسافات أو علامات اتجاه مخفية تدخل مع النسخ واللصق
+  var clean = function (v) { return String(v || '').replace(/[^0-9a-f]/gi, '').toLowerCase(); };
   var key = '';
   var m = location.hash.match(/k=([0-9a-f]+)/i);
   if (m) { key = m[1]; try { localStorage.setItem(LS, key); } catch (e) {} history.replaceState(null, '', location.pathname); }
-  if (!key) { try { key = localStorage.getItem(LS) || ''; } catch (e) {} }
+  if (!key) { try { key = clean(localStorage.getItem(LS)); } catch (e) {} }
 
   function showLogin(msg) { $('view').hidden = true; $('login').hidden = false; $('err').textContent = msg || ''; }
 
@@ -147,7 +149,7 @@ button{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px 16p
     }).join('') || '<div class="empty">لا توجد بيانات بعد</div>';
   }
 
-  $('go').onclick = function () { key = ($('key').value || '').trim(); try { localStorage.setItem(LS, key); } catch (e) {} load(); };
+  $('go').onclick = function () { key = clean($('key').value); try { localStorage.setItem(LS, key); } catch (e) {} load(); };
   $('refresh').onclick = load;
   $('logout').onclick = function () { try { localStorage.removeItem(LS); } catch (e) {} key = ''; showLogin(); };
   load();
