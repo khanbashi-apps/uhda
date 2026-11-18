@@ -73,6 +73,7 @@ if ('serviceWorker' in navigator && location.protocol === 'https:' && !(window.C
   window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
 }
 </script>
+<script src="analytics.js" async></script>
 </body>
 </html>
 `;

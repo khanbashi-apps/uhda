@@ -29,7 +29,7 @@ jobs:
           set -o pipefail
           node scripts/build-web.mjs 2>&1 | tee web.log
           mkdir -p out pkg/Uhda-web
-          cp index.html app.js dc-runtime.js sw.js manifest.webmanifest pkg/Uhda-web/
+          cp index.html app.js analytics.js dc-runtime.js sw.js manifest.webmanifest pkg/Uhda-web/
           cp -r icons fonts lib pkg/Uhda-web/
           (cd pkg && zip -qr ../out/Uhda-web-offline.zip Uhda-web)
           ls -la out

@@ -1,6 +1,6 @@
 /* عُهدة · Uhda 1.0 — عامل الخدمة: عمل بدون إنترنت + تنبيهات في الخلفية */
 const CACHE = 'uhda-v1.0';
-const SHELL = ['./', 'index.html', 'app.js', 'dc-runtime.js', 'manifest.webmanifest', 'fonts/almarai.css',
+const SHELL = ['./', 'index.html', 'app.js', 'analytics.js', 'dc-runtime.js', 'manifest.webmanifest', 'fonts/almarai.css',
   'fonts/almarai-arabic-300-normal.woff2', 'fonts/almarai-arabic-400-normal.woff2', 'fonts/almarai-arabic-700-normal.woff2',
   'fonts/almarai-latin-300-normal.woff2', 'fonts/almarai-latin-400-normal.woff2', 'fonts/almarai-latin-700-normal.woff2',
   'lib/preact.min.js', 'lib/html2canvas.min.js', 'lib/jspdf.umd.min.js', 'icons/icon-180.png', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-32.png', 'icons/logo.png'];

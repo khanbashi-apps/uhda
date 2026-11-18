@@ -3,7 +3,7 @@
 set -euo pipefail
 node scripts/build-web.mjs
 rm -rf www && mkdir -p www
-cp index.html app.js dc-runtime.js sw.js manifest.webmanifest www/
+cp index.html app.js analytics.js dc-runtime.js sw.js manifest.webmanifest www/
 cp -r icons fonts lib www/
 cp node_modules/@capacitor/core/dist/capacitor.js www/capacitor.js
 # capacitor.js يُحمَّل قبل التطبيق داخل APK / IPA فقط
